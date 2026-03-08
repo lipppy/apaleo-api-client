@@ -1,0 +1,40 @@
+include README.md
+include pyproject.toml
+recursive-include src/apaleoapi py.typed *.py
+
+# Exclude development and testing files
+global-exclude __pycache__
+global-exclude *.py[co]
+global-exclude .pytest_cache
+global-exclude .coverage
+global-exclude htmlcov
+global-exclude .tox
+global-exclude .nox
+
+# Exclude development folders and files
+exclude noxfile.py
+exclude tasks.py
+exclude mkdocs.yml
+prune tests/
+prune docs/
+prune miscs/
+
+# Exclude environment and config files
+global-exclude .env*
+global-exclude .python-version
+global-exclude .vscode
+global-exclude .idea
+exclude .gitignore
+exclude .gitattributes
+exclude .pre-commit-config.yaml
+
+# Exclude CI/CD files
+prune .github/
+exclude .readthedocs.yml
+
+# Exclude OS and editor files
+global-exclude .DS_Store
+global-exclude Thumbs.db
+global-exclude *.swp
+global-exclude *.swo
+global-exclude *~

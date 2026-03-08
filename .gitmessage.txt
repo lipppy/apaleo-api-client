@@ -1,0 +1,63 @@
+# -----------------------------------------------------------
+# Commit message template
+# -----------------------------------------------------------
+# Format:
+#   <type>(scope): <Short overview (max 72 chars)>
+#
+# Description (optional):
+#   - You can add a more detailed description after an empty line.
+#   - Use bullet points if needed.
+#   - Maximum 72 characters per line.
+#   - The first line is the short description, followed by a blank line and then the more detailed explanation.
+#
+# Types (if you want to use conventional commit format):
+# feat              💡 A new feature
+# fix               🐛 A bug fix
+# chore             🔧 Maintenance tasks (e.g., config files, package updates)
+# docs              📚 Documentation only (README, comments, etc.)
+# refactor          🛠️ Code refactor (no new feature or bug fix)
+# style             🎨 Code style changes (formatting, spaces, linting – no logic changes)
+# test              ✅ Adding or modifying tests
+# perf              🚀 Performance improvement
+# ci                ⚙️ Changes to CI/CD configuration (GitHub Actions, pipelines, etc.)
+# build             🏗️ Build system or external dependencies (e.g., webpack, Docker)
+# revert            ⏪ Reverts a previous commit
+# env               🌍 Environment-related changes (e.g., .env files, Docker env config)
+# deps              📦 Managing dependencies (add/remove/update packages/modules)
+# config            ⚙️ Updates to config files (e.g., ESLint, Prettier, Webpack, tsconfig)
+# infra             🛠 Infrastructure changes (servers, database, cloud setups)
+# security          🔒 Security-related updates (auth logic, sanitization, etc.)
+# ux or ui          🎨 UI/UX improvements (usually for frontend, but can be used with APIs)
+# i18n              🌐 Internationalization or localization updates
+# accessibility     ♿️ Changes improving accessibility (mostly frontend, but not always)
+# analytics         📊 Adding or updating logging, metrics, or tracking
+# monitoring        📡 Changes related to monitoring tools (New Relic, Prometheus, etc.)
+# hotfix            🩹 Critical fix deployed quickly (usually used in emergencies)
+# prototype         🧪 Experimental or non-final feature work
+#
+# Scopes (optional):
+#   You can specify a scope to provide additional context about the commit.
+#   Example scopes: auth, api, ui, database, config, build, ci, docs, tests, etc.
+#
+# Examples:
+#   feat(auth): implement signup functionality
+#   fix(api): resolve data fetching issue
+#   chore: update dependencies and README
+#   docs(ui): improve component documentation
+#   refactor(database): optimize query performance
+#   style: apply code formatting rules
+#   test(api): add unit tests for endpoints
+#   perf(ui): enhance rendering speed
+#   ci: update GitHub Actions workflow
+#   build: switch to new build tool
+#   revert: undo previous commit abc1234
+#   env: add Docker environment configuration
+#   deps: upgrade React to latest version
+#
+# -----------------------------------------------------------
+# The following lines are ignored by Git.
+# -----------------------------------------------------------
+
+feat: <write a short, concise commit message here>
+
+# (Empty line for more detailed explanation, if needed.)
