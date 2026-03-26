@@ -1,0 +1,817 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A Python client library for the Apaleo API, providing easy access to Apaleo's features and functionalities.">
+      
+      
+      
+        <link rel="canonical" href="https://apaleo.github.io/apaleo-api-client-python/latest/contributing/">
+      
+      
+        <link rel="prev" href="../install/">
+      
+      
+        <link rel="next" href="../changelog/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+    
+    
+      
+        <title>Contributing - Apaleo API Client</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#contributing-to-apaleo-api-clientnnwe-welcome-contributions-to-the-apaleo-api-client-whether-youre-fixing-bugs-adding-features-improving-documentation-or-helping-with-testing-your-contributions-are-valuednn-ud83dude80-quick-start-for-contributorsnn-1-set-up-development-environmentnnbashn-fork-the-repository-on-github-first-then-clonengit-clone-httpsgithubcomyour-usernameapaleo-api-client-pythongitncd-apaleo-api-client-pythonnn-install-with-all-development-dependenciesnpoetry-install-with-devtestlintdocsnn-activate-the-virtual-environmentnpoetry-shellnn-verify-installationninv-helpnnn-2-check-everything-worksnnbashn-run-testsninv-testnn-run-lintingninv-lintnn-format-codeninv-formatnn-build-documentationninv-docsnnn-3-make-your-changesnnbashn-create-a-feature-branchngit-checkout-b-featureyour-feature-namenn-make-your-changesn-nn-run-tests-and-lintingninv-testninv-lintnn-commit-your-changesngit-add-ngit-commit-m-feat-add-your-feature-descriptionnn-push-to-your-forkngit-push-origin-featureyour-feature-namennn-4-submit-a-pull-requestnn1-go-to-the-github-repositoryn2-click-new-pull-requestn3-select-your-branchn4-fill-out-the-pr-templaten5-wait-for-review-feedbacknn-ud83dudcc4-project-structurenn-understanding-the-codebase-structurennnsrcapaleoapinu251cu2500u2500-__init__py-package-exportsnu251cu2500u2500-clientpy-main-apaleoapiclientnu251cu2500u2500-constantspy-api-endpoints-and-constantsnu251cu2500u2500-exceptionspy-custom-exception-classesnu251cu2500u2500-loggingpy-logging-configurationnu251cu2500u2500-schemaspy-pydantic-schema-definitionsnu251cu2500u2500-typingpy-type-definitionsnu2502nu251cu2500u2500-apaleo-api-domain-modulesnu2502-u251cu2500u2500-core-core-api-properties-inventorynu2502-u251cu2500u2500-identity-identity-authenticationnu2502-u251cu2500u2500-payment-payment-processingnu2502-u251cu2500u2500-webhook-webhook-managementnu2502-u251cu2500u2500-integration-third-party-integrationsnu2502-u251cu2500u2500-fiscalization-tax-and-compliancenu2502-u2514u2500u2500-profile-user-profilesnu2502nu251cu2500u2500-http-http-layernu2502-u251cu2500u2500-authpy-oauth2-authenticationnu2502-u2514u2500u2500-transportpy-http-transport-layernu2502nu2514u2500u2500-services-support-servicesn-u251cu2500u2500-list_fetcherpy-pagination-handlingn-u251cu2500u2500-response_handlerpy-response-processingn-u2514u2500u2500-response_validatorpy-response-validationnnn-ud83duddfaufe0f-development-workflownn-available-tasks-via-invokennbashninv-help-show-all-available-tasksnn-developmentninv-test-run-tests-with-pytestninv-test-nox-test-across-python-310-313ninv-test-unit-run-unit-tests-onlyninv-test-integration-run-integration-tests-onlynn-code-qualityninv-lint-run-all-linters-ruff-mypy-etcninv-format-format-code-ruff-format-isortninv-check-check-code-quality-without-fixingnn-documentation-ninv-docs-build-and-serve-documentationninv-docs-build-build-documentation-onlyninv-docs-clean-clean-generated-docsnn-buildingninv-build-build-packageninv-clean-clean-build-artifactsnnn-testing-workflownn-unit-testsnbashn-run-all-unit-testsnpytest-tests-m-unitnn-run-specific-test-filenpytest-teststest_clientpynn-run-with-coveragenpytest-tests-covapaleoapi-cov-reporthtmlnnn-integration-testsnbashn-run-integration-tests-requires-api-credentialsnapaleo_client_idtest-apaleo_client_secrettest-pytest-tests-m-integrationnnn-test-categoriesnwe-use-pytest-markers-to-categorize-testsnn-pytestmarkunit-fast-isolated-unit-testsn-pytestmarkintegration-tests-that-call-real-apisn-pytestmarkcontract-api-contract-validation-testsnn-code-stylennwe-use-these-tools-for-code-qualitynn-ruff-fast-python-linter-and-formattern-mypy-static-type-checkingn-isort-import-sortingn-pytest-testing-frameworknn-code-style-rulesn-line-length-100-charactersn-use-type-hints-for-all-public-apisn-follow-pep-8-and-black-formattingn-docstrings-for-all-public-functionsclassesn-use-dataclasses-for-structured-datann-ud83dudd25-adding-new-featuresnn-adding-a-new-api-domainnn1-create-directory-structuren-bashn-mkdir-p-srcapaleoapiapaleonewdomainv1apisdataclassesschemasn-touch-srcapaleoapiapaleonewdomain__init__pyn-touch-srcapaleoapiapaleonewdomainv1__init__pynnn2-create-the-adaptern-pythonn-srcapaleoapiapaleonewdomainv1apisexamplepyn-from-apaleoapiserviceslist_fetcher-import-listfetchern-from-apaleoapiservicesresponse_handler-import-responsehandlern-n-class-newdomainv1exampleadaptern-def-__init__self-transport-list_fetcher-response_handlern-self_transport-transportn-self_list_fetcher-list_fetchern-self_response_handler-response_handlern-n-async-def-list_itemsself-paramsnonen-implement-your-api-calln-passnnn3-add-to-main-clientn-pythonn-srcapaleoapiclientpyn-from-apaleonewdomainv1apisexample-import-newdomainv1exampleadaptern-n-class-apaleoapiclientn-def-__init__self-n-n-selfnew_domain-self_create_new_domain_adaptern-n-def-_create_new_domain_adapterselfn-return-newdomainv1exampleadaptern-transportself_transportn-list_fetcherself_list_fetchern-response_handlerself_response_handlern-nnn-adding-dataclasses-and-schemasnn1-create-pydantic-schemasn-pythonn-srcapaleoapiapaleonewdomainv1schemasexamplepyn-from-pydantic-import-basemodel-fieldn-from-typing-import-optionaln-n-class-itemlistparamsmodelbasemodeln-page_size-optionalint-fielddefault50-ge1-le100n-page_number-optionalint-fielddefault1-ge1nnn2-create-dataclassesn-pythonn-srcapaleoapiapaleonewdomainv1dataclassesexamplepyn-from-dataclasses-import-dataclassn-from-typing-import-optionaln-n-dataclassn-class-itemlistparamsn-page_size-optionalint-50n-page_number-optionalint-1nnn-writing-testsnn-unit-test-examplenpythonnimport-pytestnfrom-unittestmock-import-mock-asyncmocknfrom-apaleoapiapaleonewdomainv1apisexample-import-newdomainv1exampleadapternnclass-testnewdomainadaptern-def-setup_methodselfn-selftransport-asyncmockn-selflist_fetcher-mockn-selfresponse_handler-mockn-selfadapter-newdomainv1exampleadaptern-transportselftransportn-list_fetcherselflist_fetchern-response_handlerselfresponse_handlern-n-n-pytestmarkasyncion-async-def-test_list_items_successselfn-setup-mocksn-expected_response-items-count-0n-selfresponse_handlerhandlereturn_value-expected_responsen-n-executen-result-await-selfadapterlist_itemsn-n-verifyn-assert-result-expected_responsen-selftransportgetassert_called_oncennn-integration-test-examplenpythonnimport-pytestnfrom-apaleoapi-import-apaleoapiclientnnpytestmarkintegrationnclass-testnewdomainintegrationn-pytestfixturen-async-def-clientselfn-client-apaleoapiclientn-client_idtest-idn-client_secrettest-secretn-dry_runtrue-use-dry_run-for-safe-testingn-n-yield-clientn-await-clientaclosen-n-pytestmarkasyncion-async-def-test_list_items_integrationself-clientn-result-await-clientnew_domainv1examplelist_itemsn-assert-hasattrresult-itemsn-assert-hasattrresult-countnnn-ud83dudcd6-documentationnn-api-documentationnwe-use-mkdocstrings-to-auto-generate-api-docs-from-docstringsnnpythonnclass-exampleadaptern-adapter-for-example-api-operationsn-n-this-adapter-provides-access-to-example-related-functionalityn-in-the-apaleo-apin-n-attributesn-base_url-the-base-url-for-example-api-endpointsn-n-examplenpythonn-adapter-clientnew_domainv1examplen-items-await-adapterlist_itemsn-n-n-n-async-def-list_itemsself-params-optionalitemlistparams-none-itemlistn-list-all-items-with-optional-filteringn-n-argsn-params-optional-filtering-and-pagination-parametersn-n-returnsn-itemlist-a-paginated-list-of-itemsn-n-raisesn-validationerror-if-parameters-are-invalidn-notfounderror-if-no-items-are-foundn-n-examplenpythonn-from-apaleoapiapaleonewdomainv1dataclasses-import-itemlistparamsn-n-params-itemlistparamspage_size10n-items-await-adapterlist_itemsparamsn-printffound-itemscount-itemsn-n-n-implementation-heren-passnnn-user-guide-documentationnadd-examples-to-the-appropriate-documentation-filesnn-update-docsapimd-for-api-referencen-add-examples-to-user-guidesn-update-readmemd-if-adding-major-featuresnn-ud83dudc1b-bug-fixesnn-bug-report-workflownn1-reproduce-the-bugn-pythonn-create-minimal-reproduction-casen-import-asyncion-from-apaleoapi-import-apaleoapiclientn-n-async-def-reproduce_bugn-client-apaleoapiclientclient_idtest-client_secrettestn-steps-to-reproducen-await-clientaclosen-n-asynciorunreproduce_bugnnn2-write-a-failing-testn-pythonn-def-test_bug_reproductionn-test-that-demonstrates-the-bugn-passnnn3-fix-the-bugn-make-minimal-changes-to-fix-the-issuen-ensure-existing-tests-still-passn-add-regression-testnn4-verify-the-fixn-bashn-inv-testn-inv-lintnnn-ud83dudcc5-release-processnnfor-maintainersnn-version-bumpingnwe-use-semantic-versioningnn-major-breaking-api-changesn-minor-new-features-backwards-compatiblen-patch-bug-fixes-backwards-compatiblennbashn-update-version-in-pyprojecttomlnpoetry-version-patchminormajornn-update-changelogmdn-git-commit-and-tagngit-add-ngit-commit-m-chore-bump-version-to-vxyzngit-tag-vxyzngit-push-origin-main-tagsnnn-release-checklistn-all-tests-pass-across-python-310-313n-documentation-is-up-to-daten-changelogmd-is-updatedn-version-is-bumped-in-pyprojecttomln-git-tag-matches-package-versionn-github-release-is-createdn-package-is-published-to-pypinn-ud83dude80-advanced-contributingnn-performance-contributionsnn-use-asyncio-profiling-for-async-coden-benchmark-beforeafter-changesn-consider-memory-usage-for-large-datasetsn-test-with-various-network-conditionsnn-security-contributionsnn-never-log-sensitive-information-credentials-tokensn-use-environment-variables-for-test-credentialsn-follow-owasp-guidelines-for-http-clientsn-consider-timing-attacks-in-authenticationnn-api-design-principlesnn-favor-async-methods-for-io-operationsn-use-type-hints-for-all-public-apisn-make-required-parameters-explicitn-provide-sensible-defaults-for-optional-parametersn-use-dataclasses-for-complex-parametersn-handle-errors-gracefully-with-typed-exceptionsnn-ud83dudcc9-commit-message-formatnnwe-follow-conventional-commitsnnntypescope-descriptionnnoptional-bodynnoptional-footersnnntypesn-feat-a-new-featuren-fix-a-bug-fixn-docs-documentation-changesn-style-code-style-changes-formatting-etcn-refactor-code-changes-that-neither-fix-bugs-nor-add-featuresn-test-adding-or-updating-testsn-chore-maintenance-tasksnnexamplesnnfeatcore-add-property-search-functionalitynnfixauth-handle-token-refresh-race-conditionnndocs-update-installation-guide-for-poetry-usersnntestintegration-add-tests-for-pagination-edge-casesnnn-nn-ud83dudc99-thank-younnevery-contribution-helps-make-apaleo-api-client-better-for-everyone-whether-youre-fixing-a-typo-adding-a-feature-or-helping-with-documentation-your-efforts-are-appreciatednnquestions-dont-hesitate-ton-open-a-discussionn-ask-in-issuesn-reach-out-to-the-maintainersnnhappy-coding-ud83dude80" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Apaleo API Client" class="md-header__button md-logo" aria-label="Apaleo API Client" data-md-component="logo">
+      
+  <img src="../logo-white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Apaleo API Client
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Contributing
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/apaleo/apaleo-api-client-python" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href=".." class="md-tabs__link">
+          
+  
+  
+  Get Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../reference/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Apaleo API Client" class="md-nav__button md-logo" aria-label="Apaleo API Client" data-md-component="logo">
+      
+  <img src="../logo-white.svg" alt="logo">
+
+    </a>
+    Apaleo API Client
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/apaleo/apaleo-api-client-python" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Get Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Get Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Welcome to Apaleo API Client
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../why/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why use Apaleo API Client
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../help_with_apaleo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Help with Apaleo API Client
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="contributing-to-apaleo-api-clientnnwe-welcome-contributions-to-the-apaleo-api-client-whether-youre-fixing-bugs-adding-features-improving-documentation-or-helping-with-testing-your-contributions-are-valuednn-ud83dude80-quick-start-for-contributorsnn-1-set-up-development-environmentnnbashn-fork-the-repository-on-github-first-then-clonengit-clone-httpsgithubcomyour-usernameapaleo-api-client-pythongitncd-apaleo-api-client-pythonnn-install-with-all-development-dependenciesnpoetry-install-with-devtestlintdocsnn-activate-the-virtual-environmentnpoetry-shellnn-verify-installationninv-helpnnn-2-check-everything-worksnnbashn-run-testsninv-testnn-run-lintingninv-lintnn-format-codeninv-formatnn-build-documentationninv-docsnnn-3-make-your-changesnnbashn-create-a-feature-branchngit-checkout-b-featureyour-feature-namenn-make-your-changesn-nn-run-tests-and-lintingninv-testninv-lintnn-commit-your-changesngit-add-ngit-commit-m-feat-add-your-feature-descriptionnn-push-to-your-forkngit-push-origin-featureyour-feature-namennn-4-submit-a-pull-requestnn1-go-to-the-github-repositoryn2-click-new-pull-requestn3-select-your-branchn4-fill-out-the-pr-templaten5-wait-for-review-feedbacknn-ud83dudcc4-project-structurenn-understanding-the-codebase-structurennnsrcapaleoapinu251cu2500u2500-__init__py-package-exportsnu251cu2500u2500-clientpy-main-apaleoapiclientnu251cu2500u2500-constantspy-api-endpoints-and-constantsnu251cu2500u2500-exceptionspy-custom-exception-classesnu251cu2500u2500-loggingpy-logging-configurationnu251cu2500u2500-schemaspy-pydantic-schema-definitionsnu251cu2500u2500-typingpy-type-definitionsnu2502nu251cu2500u2500-apaleo-api-domain-modulesnu2502-u251cu2500u2500-core-core-api-properties-inventorynu2502-u251cu2500u2500-identity-identity-authenticationnu2502-u251cu2500u2500-payment-payment-processingnu2502-u251cu2500u2500-webhook-webhook-managementnu2502-u251cu2500u2500-integration-third-party-integrationsnu2502-u251cu2500u2500-fiscalization-tax-and-compliancenu2502-u2514u2500u2500-profile-user-profilesnu2502nu251cu2500u2500-http-http-layernu2502-u251cu2500u2500-authpy-oauth2-authenticationnu2502-u2514u2500u2500-transportpy-http-transport-layernu2502nu2514u2500u2500-services-support-servicesn-u251cu2500u2500-list_fetcherpy-pagination-handlingn-u251cu2500u2500-response_handlerpy-response-processingn-u2514u2500u2500-response_validatorpy-response-validationnnn-ud83duddfaufe0f-development-workflownn-available-tasks-via-invokennbashninv-help-show-all-available-tasksnn-developmentninv-test-run-tests-with-pytestninv-test-nox-test-across-python-310-313ninv-test-unit-run-unit-tests-onlyninv-test-integration-run-integration-tests-onlynn-code-qualityninv-lint-run-all-linters-ruff-mypy-etcninv-format-format-code-ruff-format-isortninv-check-check-code-quality-without-fixingnn-documentation-ninv-docs-build-and-serve-documentationninv-docs-build-build-documentation-onlyninv-docs-clean-clean-generated-docsnn-buildingninv-build-build-packageninv-clean-clean-build-artifactsnnn-testing-workflownn-unit-testsnbashn-run-all-unit-testsnpytest-tests-m-unitnn-run-specific-test-filenpytest-teststest_clientpynn-run-with-coveragenpytest-tests-covapaleoapi-cov-reporthtmlnnn-integration-testsnbashn-run-integration-tests-requires-api-credentialsnapaleo_client_idtest-apaleo_client_secrettest-pytest-tests-m-integrationnnn-test-categoriesnwe-use-pytest-markers-to-categorize-testsnn-pytestmarkunit-fast-isolated-unit-testsn-pytestmarkintegration-tests-that-call-real-apisn-pytestmarkcontract-api-contract-validation-testsnn-code-stylennwe-use-these-tools-for-code-qualitynn-ruff-fast-python-linter-and-formattern-mypy-static-type-checkingn-isort-import-sortingn-pytest-testing-frameworknn-code-style-rulesn-line-length-100-charactersn-use-type-hints-for-all-public-apisn-follow-pep-8-and-black-formattingn-docstrings-for-all-public-functionsclassesn-use-dataclasses-for-structured-datann-ud83dudd25-adding-new-featuresnn-adding-a-new-api-domainnn1-create-directory-structuren-bashn-mkdir-p-srcapaleoapiapaleonewdomainv1apisdataclassesschemasn-touch-srcapaleoapiapaleonewdomain__init__pyn-touch-srcapaleoapiapaleonewdomainv1__init__pynnn2-create-the-adaptern-pythonn-srcapaleoapiapaleonewdomainv1apisexamplepyn-from-apaleoapiserviceslist_fetcher-import-listfetchern-from-apaleoapiservicesresponse_handler-import-responsehandlern-n-class-newdomainv1exampleadaptern-def-__init__self-transport-list_fetcher-response_handlern-self_transport-transportn-self_list_fetcher-list_fetchern-self_response_handler-response_handlern-n-async-def-list_itemsself-paramsnonen-implement-your-api-calln-passnnn3-add-to-main-clientn-pythonn-srcapaleoapiclientpyn-from-apaleonewdomainv1apisexample-import-newdomainv1exampleadaptern-n-class-apaleoapiclientn-def-__init__self-n-n-selfnew_domain-self_create_new_domain_adaptern-n-def-_create_new_domain_adapterselfn-return-newdomainv1exampleadaptern-transportself_transportn-list_fetcherself_list_fetchern-response_handlerself_response_handlern-nnn-adding-dataclasses-and-schemasnn1-create-pydantic-schemasn-pythonn-srcapaleoapiapaleonewdomainv1schemasexamplepyn-from-pydantic-import-basemodel-fieldn-from-typing-import-optionaln-n-class-itemlistparamsmodelbasemodeln-page_size-optionalint-fielddefault50-ge1-le100n-page_number-optionalint-fielddefault1-ge1nnn2-create-dataclassesn-pythonn-srcapaleoapiapaleonewdomainv1dataclassesexamplepyn-from-dataclasses-import-dataclassn-from-typing-import-optionaln-n-dataclassn-class-itemlistparamsn-page_size-optionalint-50n-page_number-optionalint-1nnn-writing-testsnn-unit-test-examplenpythonnimport-pytestnfrom-unittestmock-import-mock-asyncmocknfrom-apaleoapiapaleonewdomainv1apisexample-import-newdomainv1exampleadapternnclass-testnewdomainadaptern-def-setup_methodselfn-selftransport-asyncmockn-selflist_fetcher-mockn-selfresponse_handler-mockn-selfadapter-newdomainv1exampleadaptern-transportselftransportn-list_fetcherselflist_fetchern-response_handlerselfresponse_handlern-n-n-pytestmarkasyncion-async-def-test_list_items_successselfn-setup-mocksn-expected_response-items-count-0n-selfresponse_handlerhandlereturn_value-expected_responsen-n-executen-result-await-selfadapterlist_itemsn-n-verifyn-assert-result-expected_responsen-selftransportgetassert_called_oncennn-integration-test-examplenpythonnimport-pytestnfrom-apaleoapi-import-apaleoapiclientnnpytestmarkintegrationnclass-testnewdomainintegrationn-pytestfixturen-async-def-clientselfn-client-apaleoapiclientn-client_idtest-idn-client_secrettest-secretn-dry_runtrue-use-dry_run-for-safe-testingn-n-yield-clientn-await-clientaclosen-n-pytestmarkasyncion-async-def-test_list_items_integrationself-clientn-result-await-clientnew_domainv1examplelist_itemsn-assert-hasattrresult-itemsn-assert-hasattrresult-countnnn-ud83dudcd6-documentationnn-api-documentationnwe-use-mkdocstrings-to-auto-generate-api-docs-from-docstringsnnpythonnclass-exampleadaptern-adapter-for-example-api-operationsn-n-this-adapter-provides-access-to-example-related-functionalityn-in-the-apaleo-apin-n-attributesn-base_url-the-base-url-for-example-api-endpointsn-n-examplenpythonn-adapter-clientnew_domainv1examplen-items-await-adapterlist_itemsn-n-n-n-async-def-list_itemsself-params-optionalitemlistparams-none-itemlistn-list-all-items-with-optional-filteringn-n-argsn-params-optional-filtering-and-pagination-parametersn-n-returnsn-itemlist-a-paginated-list-of-itemsn-n-raisesn-validationerror-if-parameters-are-invalidn-notfounderror-if-no-items-are-foundn-n-examplenpythonn-from-apaleoapiapaleonewdomainv1dataclasses-import-itemlistparamsn-n-params-itemlistparamspage_size10n-items-await-adapterlist_itemsparamsn-printffound-itemscount-itemsn-n-n-implementation-heren-passnnn-user-guide-documentationnadd-examples-to-the-appropriate-documentation-filesnn-update-docsapimd-for-api-referencen-add-examples-to-user-guidesn-update-readmemd-if-adding-major-featuresnn-ud83dudc1b-bug-fixesnn-bug-report-workflownn1-reproduce-the-bugn-pythonn-create-minimal-reproduction-casen-import-asyncion-from-apaleoapi-import-apaleoapiclientn-n-async-def-reproduce_bugn-client-apaleoapiclientclient_idtest-client_secrettestn-steps-to-reproducen-await-clientaclosen-n-asynciorunreproduce_bugnnn2-write-a-failing-testn-pythonn-def-test_bug_reproductionn-test-that-demonstrates-the-bugn-passnnn3-fix-the-bugn-make-minimal-changes-to-fix-the-issuen-ensure-existing-tests-still-passn-add-regression-testnn4-verify-the-fixn-bashn-inv-testn-inv-lintnnn-ud83dudcc5-release-processnnfor-maintainersnn-version-bumpingnwe-use-semantic-versioningnn-major-breaking-api-changesn-minor-new-features-backwards-compatiblen-patch-bug-fixes-backwards-compatiblennbashn-update-version-in-pyprojecttomlnpoetry-version-patchminormajornn-update-changelogmdn-git-commit-and-tagngit-add-ngit-commit-m-chore-bump-version-to-vxyzngit-tag-vxyzngit-push-origin-main-tagsnnn-release-checklistn-all-tests-pass-across-python-310-313n-documentation-is-up-to-daten-changelogmd-is-updatedn-version-is-bumped-in-pyprojecttomln-git-tag-matches-package-versionn-github-release-is-createdn-package-is-published-to-pypinn-ud83dude80-advanced-contributingnn-performance-contributionsnn-use-asyncio-profiling-for-async-coden-benchmark-beforeafter-changesn-consider-memory-usage-for-large-datasetsn-test-with-various-network-conditionsnn-security-contributionsnn-never-log-sensitive-information-credentials-tokensn-use-environment-variables-for-test-credentialsn-follow-owasp-guidelines-for-http-clientsn-consider-timing-attacks-in-authenticationnn-api-design-principlesnn-favor-async-methods-for-io-operationsn-use-type-hints-for-all-public-apisn-make-required-parameters-explicitn-provide-sensible-defaults-for-optional-parametersn-use-dataclasses-for-complex-parametersn-handle-errors-gracefully-with-typed-exceptionsnn-ud83dudcc9-commit-message-formatnnwe-follow-conventional-commitsnnntypescope-descriptionnnoptional-bodynnoptional-footersnnntypesn-feat-a-new-featuren-fix-a-bug-fixn-docs-documentation-changesn-style-code-style-changes-formatting-etcn-refactor-code-changes-that-neither-fix-bugs-nor-add-featuresn-test-adding-or-updating-testsn-chore-maintenance-tasksnnexamplesnnfeatcore-add-property-search-functionalitynnfixauth-handle-token-refresh-race-conditionnndocs-update-installation-guide-for-poetry-usersnntestintegration-add-tests-for-pagination-edge-casesnnn-nn-ud83dudc99-thank-younnevery-contribution-helps-make-apaleo-api-client-better-for-everyone-whether-youre-fixing-a-typo-adding-a-feature-or-helping-with-documentation-your-efforts-are-appreciatednnquestions-dont-hesitate-ton-open-a-discussionn-ask-in-issuesn-reach-out-to-the-maintainersnnhappy-coding-ud83dude80">Contributing to Apaleo API Client\n\nWe welcome contributions to the Apaleo API Client! Whether you're fixing bugs, adding features, improving documentation, or helping with testing, your contributions are valued.\n\n## \ud83d\ude80 <strong>Quick Start for Contributors</strong>\n\n### <strong>1. Set Up Development Environment</strong>\n\n<code>bash\n# Fork the repository on GitHub first, then clone\ngit clone https://github.com/YOUR-USERNAME/apaleo-api-client-python.git\ncd apaleo-api-client-python\n\n# Install with all development dependencies\npoetry install --with dev,test,lint,docs\n\n# Activate the virtual environment\npoetry shell\n\n# Verify installation\ninv help\n</code>\n\n### <strong>2. Check Everything Works</strong>\n\n<code>bash\n# Run tests\ninv test\n\n# Run linting\ninv lint\n\n# Format code\ninv format\n\n# Build documentation\ninv docs\n</code>\n\n### <strong>3. Make Your Changes</strong>\n\n<code>bash\n# Create a feature branch\ngit checkout -b feature/your-feature-name\n\n# Make your changes\n# ...\n\n# Run tests and linting\ninv test\ninv lint\n\n# Commit your changes\ngit add .\ngit commit -m \"feat: add your feature description\"\n\n# Push to your fork\ngit push origin feature/your-feature-name\n</code>\n\n### <strong>4. Submit a Pull Request</strong>\n\n1. Go to the GitHub repository\n2. Click \"New Pull Request\"\n3. Select your branch\n4. Fill out the PR template\n5. Wait for review feedback\n\n## \ud83d\udcc4 <strong>Project Structure</strong>\n\n Understanding the codebase structure:\n\n<code>\nsrc/apaleoapi/\n\u251c\u2500\u2500 __init__.py          # Package exports\n\u251c\u2500\u2500 client.py            # Main ApaleoAPIClient\n\u251c\u2500\u2500 constants.py         # API endpoints and constants\n\u251c\u2500\u2500 exceptions.py        # Custom exception classes\n\u251c\u2500\u2500 logging.py           # Logging configuration\n\u251c\u2500\u2500 schemas.py           # Pydantic schema definitions\n\u251c\u2500\u2500 typing.py            # Type definitions\n\u2502\n\u251c\u2500\u2500 apaleo/              # API domain modules\n\u2502   \u251c\u2500\u2500 core/            # Core API (properties, inventory)\n\u2502   \u251c\u2500\u2500 identity/        # Identity &amp; authentication\n\u2502   \u251c\u2500\u2500 payment/         # Payment processing\n\u2502   \u251c\u2500\u2500 webhook/         # Webhook management\n\u2502   \u251c\u2500\u2500 integration/     # Third-party integrations\n\u2502   \u251c\u2500\u2500 fiscalization/   # Tax and compliance\n\u2502   \u2514\u2500\u2500 profile/         # User profiles\n\u2502\n\u251c\u2500\u2500 http/                # HTTP layer\n\u2502   \u251c\u2500\u2500 auth.py          # OAuth2 authentication\n\u2502   \u2514\u2500\u2500 transport.py     # HTTP transport layer\n\u2502\n\u2514\u2500\u2500 services/            # Support services\n    \u251c\u2500\u2500 list_fetcher.py  # Pagination handling\n    \u251c\u2500\u2500 response_handler.py  # Response processing\n    \u2514\u2500\u2500 response_validator.py  # Response validation\n</code>\n\n## \ud83d\uddfa\ufe0f <strong>Development Workflow</strong>\n\n### <strong>Available Tasks (via invoke)</strong>\n\n<code>bash\ninv help                 # Show all available tasks\n\n# Development\ninv test                 # Run tests with pytest\ninv test-nox            # Test across Python 3.10-3.13\ninv test-unit           # Run unit tests only\ninv test-integration    # Run integration tests only\n\n# Code Quality\ninv lint                 # Run all linters (ruff, mypy, etc.)\ninv format               # Format code (ruff format, isort)\ninv check                # Check code quality without fixing\n\n# Documentation  \ninv docs                 # Build and serve documentation\ninv docs-build          # Build documentation only\ninv docs-clean          # Clean generated docs\n\n# Building\ninv build                # Build package\ninv clean                # Clean build artifacts\n</code>\n\n### <strong>Testing Workflow</strong>\n\n#### <strong>Unit Tests</strong>\n<code>bash\n# Run all unit tests\npytest tests/ -m unit\n\n# Run specific test file\npytest tests/test_client.py\n\n# Run with coverage\npytest tests/ --cov=apaleoapi --cov-report=html\n</code>\n\n#### <strong>Integration Tests</strong>\n<code>bash\n# Run integration tests (requires API credentials)\nAPALEO_CLIENT_ID=test APALEO_CLIENT_SECRET=test pytest tests/ -m integration\n</code>\n\n#### <strong>Test Categories</strong>\nWe use pytest markers to categorize tests:\n\n- <code>@pytest.mark.unit</code> - Fast, isolated unit tests\n- <code>@pytest.mark.integration</code> - Tests that call real APIs\n- <code>@pytest.mark.contract</code> - API contract validation tests\n\n### <strong>Code Style</strong>\n\nWe use these tools for code quality:\n\n- <strong>ruff</strong> - Fast Python linter and formatter\n- <strong>mypy</strong> - Static type checking\n- <strong>isort</strong> - Import sorting\n- <strong>pytest</strong> - Testing framework\n\n#### <strong>Code Style Rules</strong>\n- Line length: 100 characters\n- Use type hints for all public APIs\n- Follow PEP 8 and Black formatting\n- Docstrings for all public functions/classes\n- Use dataclasses for structured data\n\n## \ud83d\udd25 <strong>Adding New Features</strong>\n\n### <strong>Adding a New API Domain</strong>\n\n1. <strong>Create directory structure:</strong>\n   <code>bash\n   mkdir -p src/apaleoapi/apaleo/newdomain/v1/{apis,dataclasses,schemas}\n   touch src/apaleoapi/apaleo/newdomain/__init__.py\n   touch src/apaleoapi/apaleo/newdomain/v1/__init__.py\n</code>\n\n2. <strong>Create the adapter:</strong>\n   <code>python\n   # src/apaleoapi/apaleo/newdomain/v1/apis/example.py\n   from apaleoapi.services.list_fetcher import ListFetcher\n   from apaleoapi.services.response_handler import ResponseHandler\n   \n   class NewDomainV1ExampleAdapter:\n       def __init__(self, transport, list_fetcher, response_handler):\n           self._transport = transport\n           self._list_fetcher = list_fetcher\n           self._response_handler = response_handler\n   \n       async def list_items(self, params=None):\n           # Implement your API call\n           pass\n</code>\n\n3. <strong>Add to main client:</strong>\n   <code>python\n   # src/apaleoapi/client.py\n   from .apaleo.newdomain.v1.apis.example import NewDomainV1ExampleAdapter\n   \n   class ApaleoAPIClient:\n       def __init__(self, ...):\n           # ...\n           self.new_domain = self._create_new_domain_adapter()\n   \n       def _create_new_domain_adapter(self):\n           return NewDomainV1ExampleAdapter(\n               transport=self._transport,\n               list_fetcher=self._list_fetcher,\n               response_handler=self._response_handler\n           )\n</code>\n\n### <strong>Adding Dataclasses and Schemas</strong>\n\n1. <strong>Create Pydantic schemas:</strong>\n   <code>python\n   # src/apaleoapi/apaleo/newdomain/v1/schemas/example.py\n   from pydantic import BaseModel, Field\n   from typing import Optional\n   \n   class ItemListParamsModel(BaseModel):\n       page_size: Optional[int] = Field(default=50, ge=1, le=100)\n       page_number: Optional[int] = Field(default=1, ge=1)\n</code>\n\n2. <strong>Create dataclasses:</strong>\n   <code>python\n   # src/apaleoapi/apaleo/newdomain/v1/dataclasses/example.py\n   from dataclasses import dataclass\n   from typing import Optional\n   \n   @dataclass\n   class ItemListParams:\n       page_size: Optional[int] = 50\n       page_number: Optional[int] = 1\n</code>\n\n### <strong>Writing Tests</strong>\n\n#### <strong>Unit Test Example</strong>\n<code>python\nimport pytest\nfrom unittest.mock import Mock, AsyncMock\nfrom apaleoapi.apaleo.newdomain.v1.apis.example import NewDomainV1ExampleAdapter\n\nclass TestNewDomainAdapter:\n    def setup_method(self):\n        self.transport = AsyncMock()\n        self.list_fetcher = Mock()\n        self.response_handler = Mock()\n        self.adapter = NewDomainV1ExampleAdapter(\n            transport=self.transport,\n            list_fetcher=self.list_fetcher,\n            response_handler=self.response_handler\n        )\n    \n    @pytest.mark.asyncio\n    async def test_list_items_success(self):\n        # Setup mocks\n        expected_response = {\"items\": [], \"count\": 0}\n        self.response_handler.handle.return_value = expected_response\n        \n        # Execute\n        result = await self.adapter.list_items()\n        \n        # Verify\n        assert result == expected_response\n        self.transport.get.assert_called_once()\n</code>\n\n#### <strong>Integration Test Example</strong>\n<code>python\nimport pytest\nfrom apaleoapi import ApaleoAPIClient\n\n@pytest.mark.integration\nclass TestNewDomainIntegration:\n    @pytest.fixture\n    async def client(self):\n        client = ApaleoAPIClient(\n            client_id=\"test-id\",\n            client_secret=\"test-secret\",\n            dry_run=True  # Use dry_run for safe testing\n        )\n        yield client\n        await client.aclose()\n    \n    @pytest.mark.asyncio\n    async def test_list_items_integration(self, client):\n        result = await client.new_domain.v1.example.list_items()\n        assert hasattr(result, 'items')\n        assert hasattr(result, 'count')\n</code>\n\n## \ud83d\udcd6 <strong>Documentation</strong>\n\n### <strong>API Documentation</strong>\nWe use <a href="https://mkdocstrings.github.io/">mkdocstrings</a> to auto-generate API docs from docstrings:\n\n<code>python\nclass ExampleAdapter:\n    \"\"\"Adapter for Example API operations.\n    \n    This adapter provides access to example-related functionality\n    in the Apaleo API.\n    \n    Attributes:\n        base_url: The base URL for example API endpoints.\n    \n    Example:\n</code>python\n        adapter = client.new_domain.v1.example\n        items = await adapter.list_items()\n        <code>\n    \"\"\"\n    \n    async def list_items(self, params: Optional[ItemListParams] = None) -&gt; ItemList:\n        \"\"\"List all items with optional filtering.\n        \n        Args:\n            params: Optional filtering and pagination parameters.\n            \n        Returns:\n            ItemList: A paginated list of items.\n            \n        Raises:\n            ValidationError: If parameters are invalid.\n            NotFoundError: If no items are found.\n            \n        Example:\n</code>python\n            from apaleoapi.apaleo.newdomain.v1.dataclasses import ItemListParams\n            \n            params = ItemListParams(page_size=10)\n            items = await adapter.list_items(params)\n            print(f\"Found {items.count} items\")\n            <code>\n        \"\"\"\n        # Implementation here\n        pass\n</code>\n\n### <strong>User Guide Documentation</strong>\nAdd examples to the appropriate documentation files:\n\n- Update <a href="docs/api.md">docs/api.md</a> for API reference\n- Add examples to user guides\n- Update <a href="README.md">README.md</a> if adding major features\n\n## \ud83d\udc1b <strong>Bug Fixes</strong>\n\n### <strong>Bug Report Workflow</strong>\n\n1. <strong>Reproduce the bug:</strong>\n   <code>python\n   # Create minimal reproduction case\n   import asyncio\n   from apaleoapi import ApaleoAPIClient\n   \n   async def reproduce_bug():\n       client = ApaleoAPIClient(client_id=\"test\", client_secret=\"test\")\n       # Steps to reproduce...\n       await client.aclose()\n   \n   asyncio.run(reproduce_bug())\n</code>\n\n2. <strong>Write a failing test:</strong>\n   <code>python\n   def test_bug_reproduction():\n       # Test that demonstrates the bug\n       pass\n</code>\n\n3. <strong>Fix the bug:</strong>\n   - Make minimal changes to fix the issue\n   - Ensure existing tests still pass\n   - Add regression test\n\n4. <strong>Verify the fix:</strong>\n   <code>bash\n   inv test\n   inv lint\n</code>\n\n## \ud83d\udcc5 <strong>Release Process</strong>\n\n<em>(For maintainers)</em>\n\n### <strong>Version Bumping</strong>\nWe use <a href="https://semver.org/">semantic versioning</a>:\n\n- <strong>MAJOR</strong>: Breaking API changes\n- <strong>MINOR</strong>: New features, backwards compatible\n- <strong>PATCH</strong>: Bug fixes, backwards compatible\n\n<code>bash\n# Update version in pyproject.toml\npoetry version patch|minor|major\n\n# Update CHANGELOG.md\n# Git commit and tag\ngit add .\ngit commit -m \"chore: bump version to vX.Y.Z\"\ngit tag vX.Y.Z\ngit push origin main --tags\n</code>\n\n### <strong>Release Checklist</strong>\n- [ ] All tests pass across Python 3.10-3.13\n- [ ] Documentation is up to date\n- [ ] CHANGELOG.md is updated\n- [ ] Version is bumped in pyproject.toml\n- [ ] Git tag matches package version\n- [ ] GitHub release is created\n- [ ] Package is published to PyPI\n\n## \ud83d\ude80 <strong>Advanced Contributing</strong>\n\n### <strong>Performance Contributions</strong>\n\n- Use <code>asyncio</code> profiling for async code\n- Benchmark before/after changes\n- Consider memory usage for large datasets\n- Test with various network conditions\n\n### <strong>Security Contributions</strong>\n\n- Never log sensitive information (credentials, tokens)\n- Use environment variables for test credentials\n- Follow OWASP guidelines for HTTP clients\n- Consider timing attacks in authentication\n\n### <strong>API Design Principles</strong>\n\n- Favor async methods for I/O operations\n- Use type hints for all public APIs\n- Make required parameters explicit\n- Provide sensible defaults for optional parameters\n- Use dataclasses for complex parameters\n- Handle errors gracefully with typed exceptions\n\n## \ud83d\udcc9 <strong>Commit Message Format</strong>\n\nWe follow <a href="https://www.conventionalcommits.org/">Conventional Commits</a>:\n\n<code>\n&lt;type&gt;([scope]): &lt;description&gt;\n\n[optional body]\n\n[optional footer(s)]\n</code>\n\n<strong>Types:</strong>\n- <code>feat</code>: A new feature\n- <code>fix</code>: A bug fix\n- <code>docs</code>: Documentation changes\n- <code>style</code>: Code style changes (formatting, etc.)\n- <code>refactor</code>: Code changes that neither fix bugs nor add features\n- <code>test</code>: Adding or updating tests\n- <code>chore</code>: Maintenance tasks\n\n<strong>Examples:</strong>\n<code>\nfeat(core): add property search functionality\n\nfix(auth): handle token refresh race condition\n\ndocs: update installation guide for Poetry users\n\ntest(integration): add tests for pagination edge cases\n</code>\n\n---\n\n## \ud83d\udc99 <strong>Thank You!</strong>\n\nEvery contribution helps make Apaleo API Client better for everyone. Whether you're fixing a typo, adding a feature, or helping with documentation, your efforts are appreciated!\n\n<strong>Questions?</strong> Don't hesitate to:\n- <a href="https://github.com/apaleo/apaleo-api-client-python/discussions">Open a discussion</a>\n- <a href="https://github.com/apaleo/apaleo-api-client-python/issues">Ask in issues</a>\n- Reach out to the maintainers\n\nHappy coding! \ud83d\ude80</h1>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 9v12H1V9zm4 12a2 2 0 0 1-2-2V9c0-.55.22-1.05.59-1.41L14.17 1l1.06 1.06c.27.27.44.64.44 1.05l-.03.32L14.69 8H21a2 2 0 0 1 2 2v2c0 .26-.05.5-.14.73l-3.02 7.05C19.54 20.5 18.83 21 18 21zm0-2h9.03L21 12v-2h-8.79l1.13-5.32L9 9.03z"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 15V3h4v12zM15 3a2 2 0 0 1 2 2v10c0 .55-.22 1.05-.59 1.41L9.83 23l-1.06-1.06c-.27-.27-.44-.64-.44-1.06l.03-.31.95-4.57H3a2 2 0 0 1-2-2v-2c0-.26.05-.5.14-.73l3.02-7.05C4.46 3.5 5.17 3 6 3zm0 2H5.97L3 12v2h8.78l-1.13 5.32L15 14.97z"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.tabs.link", "content.code.annotate", "content.code.copy", "announce.dismiss", "navigation.tabs", "navigation.instant", "navigation.instant.prefetch", "navigation.instant.preview", "navigation.instant.progress", "navigation.path", "navigation.sections", "navigation.top", "navigation.tracking", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
