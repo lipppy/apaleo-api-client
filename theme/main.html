@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+<!-- BEGIN announce block -->
+{% block announce %}
+  {% include 'announce.html' ignore missing %}
+{% endblock %}
+<!-- END announce block -->
+{% block content %}
+  {{ super() }}
+{% endblock %}
