@@ -1,0 +1,1067 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "apaleo Identity API",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/v1/account/invitations": {
+      "get": {
+        "tags": [
+          "Invitation"
+        ],
+        "summary": "Returns a list of invitations for the current account",
+        "description": "Returns a list of all invitations to the current account.<br>You must have at least one of these scopes: 'identity:account-users.manage, identity:account-users.read'.",
+        "operationId": "ApiAccountInvitationsGet",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "propertyId",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/InvitationListModel"
+            }
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "499": {
+            "description": "Client closed request."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "identity:account-users.manage",
+              "identity:account-users.read"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Invitation"
+        ],
+        "summary": "Invites a user to the current account",
+        "description": "Invites a person to the current account with the requested roles and properties.\n\r\nWhen you specify 'IsAccountAdmin', the user will automatically have access to all properties in all roles.\n\r\nThe <i>user</i> will only be created or linked to the account, when the person accepts the invitation.<br>You must have this scope: 'identity:account-users.manage'.",
+        "operationId": "ApiAccountInvitationsPost",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/CreateInvitationModel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/InvitedUserToAccountResponseModel"
+            }
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "415": {
+            "description": "Unsupported media type."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "499": {
+            "description": "Client closed request."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "identity:account-users.manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/account/invitations/{email}": {
+      "delete": {
+        "tags": [
+          "Invitation"
+        ],
+        "summary": "Deletes an invitation for the current account if it exists",
+        "description": "<br>You must have this scope: 'identity:account-users.manage'.",
+        "operationId": "ApiAccountInvitationsByEmailDelete",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "email",
+            "description": "email of the invited person",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "499": {
+            "description": "Client closed request."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "identity:account-users.manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/roles": {
+      "get": {
+        "tags": [
+          "Roles"
+        ],
+        "summary": "Returns a static list of all roles.",
+        "description": "",
+        "operationId": "ApiRolesGet",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/RoleListModel"
+            }
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "499": {
+            "description": "Client closed request."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Returns a list of users for the current account.",
+        "description": "Returns a list of all users that have access to the current account.\r\nCan be paginated or not, if paginated then max page size is 100.<br>You must have at least one of these scopes: 'identity:account-users.manage, identity:account-users.read'.",
+        "operationId": "ApiUsersGet",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "propertyIds",
+            "description": "List of property ids to filter users by",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "in": "query",
+            "name": "email",
+            "description": "Filter users by email",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "enabled",
+            "description": "Filter users by enabled status",
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "pageNumber",
+            "description": "Page number, 1-based. Default value is 1 (if this is not set or not positive). Results in 204 if there are no items on that page.",
+            "type": "integer",
+            "default": 1
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "description": "Page size. If this is not set or not positive, the pageNumber is ignored and all items are returned.",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "description": "List of all fields that can be used to sort the results. Possible values are: firstname:asc, firstname:desc, lastname:asc, lastname:desc, email:asc, email:desc. All other values will be silently ignored.",
+            "type": "array",
+            "items": {
+              "enum": [
+                "firstname:asc",
+                "firstname:desc",
+                "lastname:asc",
+                "lastname:desc",
+                "email:asc",
+                "email:desc"
+              ],
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/UsersListModel"
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "499": {
+            "description": "Client closed request."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "identity:account-users.manage",
+              "identity:account-users.read"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/users/{userId}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Returns a user for the current account.",
+        "description": "Returns a user in the current account for a specific subjectId address.<br>You must have at least one of these scopes: 'identity:account-users.manage, identity:account-users.read'.",
+        "operationId": "ApiUsersByUserIdGet",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "description": "User's subjectId.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "schema": {
+              "$ref": "#/definitions/UserModel"
+            }
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "499": {
+            "description": "Client closed request."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "identity:account-users.manage",
+              "identity:account-users.read"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Modify user in an account.",
+        "description": "Modify user in an account.\r\nAllowed operations:\r\n- Replace firstName and lastName\r\n- Replace isAccountAdmin (setting it to true or false)\r\n- Replace enabled (setting it to true or false)\r\n- Replace properties<br>You must have this scope: 'identity:account-users.manage'.",
+        "operationId": "ApiUsersByUserIdPatch",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "description": "User's subjectId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "description": "Array of operations to perform",
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Operation"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success."
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "415": {
+            "description": "Unsupported media type."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "499": {
+            "description": "Client closed request."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "identity:account-users.manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/users/me": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Returns a current user.",
+        "description": "Returns details for the current user.<br>You must have at least one of these scopes: 'identity:account-users.manage, identity:account-users.read'.",
+        "operationId": "ApiUsersMeGet",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "schema": {
+              "$ref": "#/definitions/UserModel"
+            }
+          },
+          "404": {
+            "description": "The Request-URI could not be found."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "You are unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "499": {
+            "description": "Client closed request."
+          },
+          "500": {
+            "description": "An unexpected error occurred."
+          },
+          "503": {
+            "description": "The server is currently unavailable. Please try later."
+          },
+          "422": {
+            "description": "Validation errors in the request body or query params.",
+            "schema": {
+              "$ref": "#/definitions/MessageItemCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "identity:account-users.manage",
+              "identity:account-users.read"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "CreateInvitationModel": {
+      "required": [
+        "email"
+      ],
+      "type": "object",
+      "properties": {
+        "email": {
+          "format": "email",
+          "description": "Email address, used as the login",
+          "minLength": 1,
+          "type": "string"
+        },
+        "properties": {
+          "description": "Properties that user has access to. If the user is invited as account admin, this will be ignored.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isAccountAdmin": {
+          "description": "If set to `true`, user has full access to all properties. Defaults to false.",
+          "type": "boolean"
+        },
+        "roles": {
+          "description": "Roles that user has access to. If the user is invited as account admin, this will be ignored.",
+          "type": "array",
+          "items": {
+            "enum": [
+              "AccountAdmin",
+              "PropertyAdmin",
+              "Accountant",
+              "RevenueManager",
+              "ReservationManager",
+              "FrontDesk",
+              "FrontDeskSenior",
+              "Housekeeping",
+              "HousekeepingManager",
+              "Auditor",
+              "StaffManager"
+            ],
+            "type": "string"
+          }
+        },
+        "role": {
+          "description": "The role to be assigned to the user. If you specfiy this and 'Roles', the combination of both will be used.\r\nIf the user is invited as account admin, this will be ignored.",
+          "enum": [
+            "AccountAdmin",
+            "PropertyAdmin",
+            "FinanceManager",
+            "RevenueManager",
+            "ReservationOffice",
+            "FrontOffice",
+            "Housekeeping",
+            "HousekeepingManager",
+            "Auditor",
+            "StaffManager"
+          ],
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "InvitationAuditLogModel": {
+      "type": "object",
+      "properties": {
+        "aggregateType": {
+          "type": "string",
+          "readOnly": true
+        },
+        "accountCode": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isAccountAdmin": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "InvitationListModel": {
+      "required": [
+        "invitations"
+      ],
+      "type": "object",
+      "properties": {
+        "invitations": {
+          "description": "All invitations to the current account",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InvitationModel"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "InvitationModel": {
+      "required": [
+        "created",
+        "email",
+        "invitedBy",
+        "isAccountAdmin"
+      ],
+      "type": "object",
+      "properties": {
+        "email": {
+          "description": "Email address, used as the login",
+          "minLength": 1,
+          "type": "string"
+        },
+        "properties": {
+          "description": "Properties that user has access to",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isAccountAdmin": {
+          "description": "If set to `true`, user has full access to all properties.",
+          "type": "boolean"
+        },
+        "role": {
+          "description": "Role this user is invited to. If more than one, returns the first.",
+          "enum": [
+            "AccountAdmin",
+            "PropertyAdmin",
+            "FinanceManager",
+            "RevenueManager",
+            "ReservationOffice",
+            "FrontOffice",
+            "Housekeeping",
+            "HousekeepingManager",
+            "Auditor",
+            "StaffManager"
+          ],
+          "type": "string"
+        },
+        "roles": {
+          "description": "Roles that user has access to",
+          "type": "array",
+          "items": {
+            "enum": [
+              "AccountAdmin",
+              "PropertyAdmin",
+              "Accountant",
+              "RevenueManager",
+              "ReservationManager",
+              "FrontDesk",
+              "FrontDeskSenior",
+              "Housekeeping",
+              "HousekeepingManager",
+              "Auditor",
+              "StaffManager"
+            ],
+            "type": "string"
+          }
+        },
+        "invitedBy": {
+          "description": "Email of the user making the invitation",
+          "minLength": 1,
+          "type": "string"
+        },
+        "created": {
+          "format": "date-time",
+          "description": "Date the invitation was made",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "InvitedUserToAccountResponseModel": {
+      "required": [
+        "email"
+      ],
+      "type": "object",
+      "properties": {
+        "email": {
+          "description": "Email of invited user",
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MessageItemCollection": {
+      "type": "object",
+      "properties": {
+        "messages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "readOnly": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "Operation": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "type": "string"
+        },
+        "value": {
+          "type": "object"
+        },
+        "path": {
+          "type": "string"
+        }
+      }
+    },
+    "PropertyRolesAuditLogModel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Property Id related to this change",
+          "type": "string",
+          "readOnly": true
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "readOnly": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "PropertyRolesItemModel": {
+      "required": [
+        "id",
+        "roles"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "AccountAdmin",
+              "PropertyAdmin",
+              "Accountant",
+              "RevenueManager",
+              "ReservationManager",
+              "FrontDesk",
+              "FrontDeskSenior",
+              "Housekeeping",
+              "HousekeepingManager",
+              "Auditor",
+              "StaffManager"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "RoleListModel": {
+      "required": [
+        "roles"
+      ],
+      "type": "object",
+      "properties": {
+        "roles": {
+          "description": "A list of all existing roles",
+          "type": "array",
+          "items": {
+            "enum": [
+              "AccountAdmin",
+              "PropertyAdmin",
+              "Accountant",
+              "RevenueManager",
+              "ReservationManager",
+              "FrontDesk",
+              "FrontDeskSenior",
+              "Housekeeping",
+              "HousekeepingManager",
+              "Auditor",
+              "StaffManager"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "UserAuditLogModel": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "isAccountAdmin": {
+          "type": "boolean"
+        },
+        "propertiesRoles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PropertyRolesAuditLogModel"
+          }
+        },
+        "aggregateType": {
+          "type": "string",
+          "readOnly": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "UserItemModel": {
+      "required": [
+        "email",
+        "enabled",
+        "firstName",
+        "isAccountAdmin",
+        "isMfaEnabled",
+        "isPasskeysEnabled",
+        "lastName",
+        "subjectId"
+      ],
+      "type": "object",
+      "properties": {
+        "subjectId": {
+          "format": "uuid",
+          "description": "Unique user identifier.",
+          "type": "string"
+        },
+        "firstName": {
+          "description": "First name",
+          "minLength": 1,
+          "type": "string"
+        },
+        "lastName": {
+          "description": "Last name",
+          "minLength": 1,
+          "type": "string"
+        },
+        "email": {
+          "description": "Email address, used as the login",
+          "minLength": 1,
+          "type": "string"
+        },
+        "properties": {
+          "description": "Properties that user has access to",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PropertyRolesItemModel"
+          }
+        },
+        "enabled": {
+          "description": "If set to `false`, the user is disabled for this account and cannot log in",
+          "type": "boolean"
+        },
+        "isAccountAdmin": {
+          "description": "If set to `true`, user has full access to all properties.",
+          "type": "boolean"
+        },
+        "isMfaEnabled": {
+          "description": "If set to `true` then user has the MFA enabled.",
+          "type": "boolean"
+        },
+        "isPasskeysEnabled": {
+          "description": "If set to `true`, user has Passkeys enabled.",
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "UserModel": {
+      "required": [
+        "email",
+        "firstName",
+        "isAccountAdmin",
+        "isMfaEnabled",
+        "lastName",
+        "subjectId"
+      ],
+      "type": "object",
+      "properties": {
+        "subjectId": {
+          "format": "uuid",
+          "description": "Unique user identifier.",
+          "type": "string"
+        },
+        "firstName": {
+          "description": "First name",
+          "minLength": 1,
+          "type": "string"
+        },
+        "lastName": {
+          "description": "Last name",
+          "minLength": 1,
+          "type": "string"
+        },
+        "email": {
+          "description": "Email address, used as the login",
+          "minLength": 1,
+          "type": "string"
+        },
+        "enabled": {
+          "description": "If set to `false`, the user is disabled for this account and cannot log in",
+          "type": "boolean"
+        },
+        "isAccountAdmin": {
+          "description": "If set to `true`, user has full access to all properties.",
+          "type": "boolean"
+        },
+        "isMfaEnabled": {
+          "description": "If set to `true` then user has the MFA enabled.",
+          "type": "boolean"
+        },
+        "properties": {
+          "description": "List of properties to which user has access.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "propertyRoles": {
+          "description": "List of properties to which user has access.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PropertyRolesItemModel"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"subjectId\": \"50ff45e2-9393-4040-8138-a782ce121c13\",\n  \"firstName\": \"Milosz\",\n  \"lastName\": \"Jones\",\n  \"email\": \"user1@apaleo.com\",\n  \"enabled\": true,\n  \"isAccountAdmin\": false,\n  \"isMfaEnabled\": true,\n  \"properties\": [\n    \"MUC\"\n  ],\n  \"propertyRoles\": [\n    {\n      \"id\": \"MUC\",\n      \"roles\": [\n        \"FrontDesk\",\n        \"Accountant\"\n      ]\n    }\n  ]\n}"
+    },
+    "UsersListModel": {
+      "required": [
+        "count",
+        "users"
+      ],
+      "type": "object",
+      "properties": {
+        "users": {
+          "description": "A collection of users that have access to the current account",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserItemModel"
+          }
+        },
+        "count": {
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false,
+      "example": "{\n  \"users\": [\n    {\n      \"subjectId\": \"3cdb2db2-3be9-48c7-8422-0265f4a1b9d2\",\n      \"firstName\": \"Riaz\",\n      \"lastName\": \"Sparks\",\n      \"email\": \"user1@apaleo.com\",\n      \"properties\": [],\n      \"enabled\": true,\n      \"isAccountAdmin\": true,\n      \"isMfaEnabled\": true,\n      \"isPasskeysEnabled\": true\n    },\n    {\n      \"subjectId\": \"98e3788d-3060-4f95-beb1-ec0cd27006d1\",\n      \"firstName\": \"Milosz\",\n      \"lastName\": \"Jones\",\n      \"email\": \"user1@apaleo.com\",\n      \"properties\": [\n        {\n          \"id\": \"MUC\",\n          \"roles\": [\n            \"FrontDesk\",\n            \"Accountant\"\n          ]\n        }\n      ],\n      \"enabled\": true,\n      \"isAccountAdmin\": false,\n      \"isMfaEnabled\": true,\n      \"isPasskeysEnabled\": true\n    }\n  ],\n  \"count\": 2\n}"
+    }
+  },
+  "securityDefinitions": {
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "implicit",
+      "authorizationUrl": "https://identity.apaleo.com/connect/authorize",
+      "scopes": {
+        "identity:account-users.manage": "Manage account users",
+        "identity:clients.manage": "Manage clients",
+        "identity:external-identity-providers.manage": "Manage external identity providers"
+      }
+    }
+  }
+}

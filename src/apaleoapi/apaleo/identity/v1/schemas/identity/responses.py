@@ -1,0 +1,85 @@
+from uuid import UUID
+
+from pydantic import AwareDatetime, Field
+
+from apaleoapi.apaleo.identity.v1.enums.identity import RoleAccessTo, RoleInvitedTo
+from apaleoapi.schemas import ExtendedBaseModel, ListBaseModel
+
+
+class InvitationAuditLogModel(ExtendedBaseModel):
+    aggregate_type: str | None = Field(None, alias="aggregateType")
+    account_code: str | None = Field(None, alias="accountCode")
+    email: str | None = None
+    properties: list[str] | None = None
+    roles: list[str] | None = None
+    is_account_admin: bool | None = Field(None, alias="isAccountAdmin")
+
+
+class InvitationModel(ExtendedBaseModel):
+    email: str = Field(..., min_length=1)
+    properties: list[str] | None = Field(None)
+    is_account_admin: bool = Field(..., alias="isAccountAdmin")
+    role: RoleInvitedTo | None = Field(None)
+    roles: list[RoleAccessTo] | None = Field(None)
+    invited_by: str = Field(..., alias="invitedBy", min_length=1)
+    created: AwareDatetime = Field(...)
+
+
+class InvitedUserToAccountResponseModel(ExtendedBaseModel):
+    email: str = Field(..., min_length=1)
+
+
+class PropertyRolesAuditLogModel(ExtendedBaseModel):
+    id: str | None = Field(None)
+    roles: list[str] | None = None
+
+
+class PropertyRolesItemModel(ExtendedBaseModel):
+    id: str = Field(..., min_length=1)
+    roles: list[RoleAccessTo] = Field(...)
+
+
+class RoleListModel(ExtendedBaseModel):
+    roles: list[RoleAccessTo] = Field(...)
+
+
+class UserAuditLogModel(ExtendedBaseModel):
+    first_name: str | None = Field(None, alias="firstName")
+    last_name: str | None = Field(None, alias="lastName")
+    email: str | None = None
+    enabled: bool | None = None
+    is_account_admin: bool | None = Field(None, alias="isAccountAdmin")
+    properties_roles: list[PropertyRolesAuditLogModel] | None = Field(None, alias="propertiesRoles")
+    aggregate_type: str | None = Field(None, alias="aggregateType")
+
+
+class UserItemModel(ExtendedBaseModel):
+    subject_id: UUID = Field(..., alias="subjectId")
+    first_name: str = Field(..., alias="firstName", min_length=1)
+    last_name: str = Field(..., alias="lastName", min_length=1)
+    email: str = Field(..., min_length=1)
+    properties: list[PropertyRolesItemModel] | None = Field(None)
+    enabled: bool = Field(...)
+    is_account_admin: bool = Field(..., alias="isAccountAdmin")
+    is_mfa_enabled: bool = Field(..., alias="isMfaEnabled")
+    is_passkeys_enabled: bool = Field(..., alias="isPasskeysEnabled")
+
+
+class UserModel(ExtendedBaseModel):
+    subject_id: UUID = Field(..., alias="subjectId")
+    first_name: str = Field(..., alias="firstName", min_length=1)
+    last_name: str = Field(..., alias="lastName", min_length=1)
+    email: str = Field(..., min_length=1)
+    enabled: bool | None = Field(None)
+    is_account_admin: bool = Field(..., alias="isAccountAdmin")
+    is_mfa_enabled: bool = Field(..., alias="isMfaEnabled")
+    properties: list[str] | None = Field(None)
+    property_roles: list[PropertyRolesItemModel] | None = Field(None, alias="propertyRoles")
+
+
+class UsersListModel(ListBaseModel[UserItemModel]):
+    items: list[UserItemModel] = Field(default_factory=list, alias="users")
+
+
+class InvitationListModel(ExtendedBaseModel):
+    invitations: list[InvitationModel] = Field(default_factory=list)

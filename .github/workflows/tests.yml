@@ -1,0 +1,99 @@
+# This workflow runs the test suite for the Apaleo API Client package, including coverage reporting.
+# It is triggered on pushes to the main branch and on pull requests, but can be adjusted to run on other branches or on a schedule as needed.
+
+name: "Apaleo API Client CI - Tests"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  test:
+    name: Run Tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+
+    env:
+      POETRY_VIRTUALENVS_IN_PROJECT: "true"     # create .venv inside repo for stable caching
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+      PYTHONUNBUFFERED: "1"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache Poetry & virtualenv
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.cache/pypoetry
+            ./.venv
+          key: >-
+            poetry-${{ runner.os }}-py${{ matrix.python-version }}-
+            ${{ hashFiles('poetry.lock') }}
+          restore-keys: |
+            poetry-${{ runner.os }}-py${{ matrix.python-version }}-
+
+      - name: Detect Python version (for cache key)
+        id: pyver
+        run: |
+          echo "version=${{ matrix.python-version }}" >> "$GITHUB_OUTPUT"
+
+      - name: Install Poetry
+        # pipx is typically preinstalled on GitHub runners; fall back to pip if needed.
+        run: |
+          if command -v pipx >/dev/null 2>&1; then
+            pipx install --force poetry
+          else
+            python -m pip install --upgrade pip
+            python -m pip install --no-cache-dir poetry
+          fi
+          poetry --version
+
+      - name: Configure Poetry
+        run: |
+          poetry config virtualenvs.in-project true
+          poetry env use "$(python -c 'import sys;print(".".join(map(str, sys.version_info[:3])))')"
+
+      - name: Install dependencies (with test group)
+        # Use lockfile; install with root package to make 'apaleoapi' module available
+        run: |
+          poetry install --no-interaction --no-ansi --with test
+
+      - name: Show tool versions
+        run: |
+          poetry run python --version
+          poetry run pytest --version
+          poetry run coverage --version
+
+      - name: Create necessary directories
+        run: |
+          mkdir -p logs data share htmlcov
+
+      - name: Run tests with coverage
+        run: |
+          poetry run coverage run -m pytest --junitxml=test-results.xml
+          poetry run coverage xml
+          poetry run coverage html
+          poetry run coverage report
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        if: matrix.python-version == '3.12'
+        with:
+          fail_ci_if_error: false

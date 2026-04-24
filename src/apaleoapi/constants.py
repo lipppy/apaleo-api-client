@@ -1,0 +1,10 @@
+# Apaleo API URL constants
+APALEO_API_TOKEN_URL: str = "https://identity.apaleo.com/connect/token"
+APALEO_API_AUTHORIZE_URL: str = "https://identity.apaleo.com/connect/authorize"
+APALEO_API_CORE_URL: str = "https://api.apaleo.com/"
+APALEO_API_IDENTITY_URL: str = "https://identity.apaleo.com/"
+APALEO_API_WEBHOOK_URL: str = "https://webhook.apaleo.com/"
+APALEO_API_INTEGRATION_URL: str = "https://integration.apaleo.com/"
+APALEO_API_FISCALIZATION_URL: str = "https://fiscalization.apaleo.com/"
+APALEO_API_PAYMENT_URL: str = "https://payment.apaleo.com/"
+APALEO_API_PROFILE_URL: str = "https://profile.apaleo.com/"

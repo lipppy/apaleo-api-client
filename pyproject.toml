@@ -1,0 +1,177 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "apaleo-api-client"
+version = "0.1.0"
+description = "Python async API wrapper for Apaleo Swagger"
+authors = ["Gábor Lipták <shearer83@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "apaleoapi", from = "src" }]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.14"
+dacite = "^1.9.2"
+httpx = "^0.28.1"
+pydantic = {extras = ["email"], version = "^2.12.5"}
+httpx-retries = "^0.4.6"
+polyfactory = "^3.3.0"
+strenum = { version = "^0.4.15", python = "<3.11" }
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+invoke = "^2.2.0"
+debugpy = "^1.8.15"
+datamodel-code-generator = {extras = ["ruff"], version = "^0.54.0"}
+nox = "^2026.2.9"
+
+[tool.poetry.group.lint]
+optional = true
+
+[tool.poetry.group.lint.dependencies]
+isort = "^6.0.1"
+ruff = "^0.12.4"
+pre-commit = "^4.2.0"
+mypy = "^1.17.0"
+flake8-pyproject = "^1.2.3"
+types-requests = "^2.32.4.20250611"
+types-pytz = "^2025.2.0.20250809"
+types-python-dateutil = "^2.9.0.20251008"
+
+[tool.poetry.group.test]
+optional = true
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.4"
+coverage = "^7.8"
+freezegun = "^1.5.2"
+pytest-asyncio = "^1.0.0"
+
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+mkdocs = "^1.6.1"
+mkdocs-material = "^9.7.4"
+mkdocstrings = {extras = ["python"], version = "^1.0.3"}
+
+
+[tool.isort]
+# Black compatibility
+profile = "black"
+
+# Match line length with ruff
+line_length = 100
+
+# Skip files listed in .gitignore
+skip_gitignore = true
+
+# Skip migrations files
+skip = ["migrations", "versions", ".venv"]
+
+# Treat 'apaleoapi' as a first-party module
+known_firstparty = "apaleoapi"
+sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+
+
+[tool.ruff]
+line-length = 100
+fix = true
+exclude = [
+    "*/.venv/*",
+    "*sqlite3*"
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "B", "C90", "N"]
+ignore = ["B008"]
+
+
+[tool.flake8]
+exclude = [
+    ".git",
+    ".tox",
+    ".nox",
+    "__pycache__",
+    "build",
+    "dist",
+    "venv",
+    ".venv",
+    "miscs"
+]
+
+max-line-length = 100
+
+ignore = [
+    "E203",  # whitespace before ':'
+    "E262",  # inline comment should start with '# '
+    "E265",  # block comment should start with '# '
+    "W503",  # line break before binary operator
+    "E731"   # do not assign a lambda expression, use a def
+]
+
+
+[tool.mypy]
+exclude = [
+    "tasks.py",
+    "conftest.py",
+    "miscs/*"
+]
+strict = true
+follow_imports = "normal"
+files = ["src", "tests"]
+mypy_path = ["src", "tests"]
+namespace_packages = true
+scripts_are_modules = true
+explicit_package_bases = true
+
+# Strict settings
+check_untyped_defs = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+warn_unused_ignores = true
+warn_return_any = true
+warn_redundant_casts = true
+strict_optional = true
+
+# Optional settings
+ignore_missing_imports = true
+
+
+[tool.pytest.ini_options]
+addopts = "--import-mode=importlib"
+asyncio_mode = "auto"
+markers = [
+    "unit: unit tests",
+    "integration: integration tests",
+    "contract: port contract compliance tests",
+    "e2e: end-to-end tests",
+    "slow: slow tests"
+]
+norecursedirs = [
+  "build",
+  "dist",
+  "miscs"
+]
+
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "*/__init__.py",
+    "tests/*",
+    "*/tests/*",
+    "*/conftest.py",
+    "*/tasks.py",
+    "*/miscs/*"
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "if __name__ == ['\"]__main__['\"]:",
+]
