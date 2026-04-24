@@ -1,6 +1,9 @@
-try:
+import sys
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING or sys.version_info >= (3, 11):
     from enum import StrEnum
-except ImportError:
+else:
     from strenum import StrEnum
 
 
