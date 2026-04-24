@@ -43,16 +43,9 @@ jobs:
             ~/.cache/pip
             ~/.cache/pypoetry
             ./.venv
-          key: >-
-            poetry-${{ runner.os }}-py${{ matrix.python-version }}-
-            ${{ hashFiles('poetry.lock') }}
+          key: poetry-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
           restore-keys: |
             poetry-${{ runner.os }}-py${{ matrix.python-version }}-
-
-      - name: Detect Python version (for cache key)
-        id: pyver
-        run: |
-          echo "version=${{ matrix.python-version }}" >> "$GITHUB_OUTPUT"
 
       - name: Install Poetry
         # pipx is typically preinstalled on GitHub runners; fall back to pip if needed.
@@ -96,5 +89,6 @@ jobs:
         uses: codecov/codecov-action@v4
         if: matrix.python-version == '3.12'
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml
           fail_ci_if_error: false
