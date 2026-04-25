@@ -105,6 +105,15 @@ class CoreV1InventoryAdapter(BaseAdapter, CoreV1InventoryPort):
     async def create_property(self, idempotency_key: str) -> Any:
         raise NotImplementedError("Create property method is not implemented yet.")
 
+    async def count_properties(self) -> int:
+        """Get total count of properties."""
+        url = f"{self._base_path}/properties/$count"
+
+        return await self._get_resource_count(
+            url=url,
+            error_prefix="Failed to count properties",
+        )
+
     async def _get_property(
         self, property_id: str, params: PropertyGetParamsModel
     ) -> PropertyModel:

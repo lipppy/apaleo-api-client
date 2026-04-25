@@ -31,6 +31,10 @@ class CoreV1InventoryPort(Protocol):
         """Create a new property."""
         pass
 
+    async def count_properties(self) -> int:
+        """Get total count of properties."""
+        pass
+
     async def get_property(
         self, property_id: str, params: PropertyGetParams | None = None
     ) -> Property:

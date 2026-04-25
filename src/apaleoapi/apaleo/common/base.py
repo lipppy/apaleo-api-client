@@ -4,6 +4,10 @@ from typing import Any, Type, cast
 
 from dacite import from_dict
 
+from apaleoapi.apaleo.common.contracts.factory import CountFakerFactory
+from apaleoapi.apaleo.common.contracts.response import Count
+from apaleoapi.apaleo.common.schemas.factory import CountModelDefaultFactory
+from apaleoapi.apaleo.common.schemas.response import CountModel
 from apaleoapi.logging import get_logger
 from apaleoapi.ports.http.transport import AsyncTransportPort
 from apaleoapi.services.response_handler import ResponseHandler
@@ -17,6 +21,7 @@ from apaleoapi.typing import (
     TModel,
     TModelFactory,
     TParams,
+    TParamsModel,
     TPayload,
 )
 
@@ -38,7 +43,7 @@ class BaseAdapter:
         self,
         url: str,
         params: TParams | None = None,
-        params_model_cls: Type[TModel] | None = None,
+        params_model_cls: Type[TParamsModel] | None = None,
         *,
         model_cls: Type[TModel],
         faker_factory: Type[TDomainFactory],
@@ -91,6 +96,30 @@ class BaseAdapter:
             data_class=return_cls,
             data=validated_response.model_dump(),
         )
+
+    async def _get_resource_count(
+        self,
+        url: str,
+        params: TParams | None = None,
+        params_model_cls: Type[TParamsModel] | None = None,
+        *,
+        error_prefix: str,
+    ) -> int:
+        """Helper for GET count of resources."""
+
+        count_entity = await self._get_resource(
+            url=url,
+            params=params,
+            params_model_cls=params_model_cls,
+            model_cls=CountModel,
+            faker_factory=CountFakerFactory,
+            default_factory=CountModelDefaultFactory,
+            return_cls=Count,
+            success_codes={200},
+            error_prefix=error_prefix,
+            empty_log_message="Count returned no data, defaulting to 0.",
+        )
+        return count_entity.count
 
     async def _get_resource_concurrently(
         self,

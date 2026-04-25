@@ -12,12 +12,14 @@ else:
     DataclassInstance = Any
 
 TDomain = TypeVar("TDomain", bound=DataclassInstance)
-TDomainFactory = TypeVar("TDomainFactory", bound=DataclassFactory[Any])
 TParams = TypeVar("TParams", bound=DataclassInstance)
-TParamsFactory = TypeVar("TParamsFactory", bound=DataclassFactory[Any])
 TPayload = TypeVar("TPayload", bound=DataclassInstance)
-TPayloadFactory = TypeVar("TPayloadFactory", bound=DataclassFactory[Any])
 TModel = TypeVar("TModel", bound=BaseModel)
-TModelFactory = TypeVar("TModelFactory", bound=ModelFactory[Any])
+TParamsModel = TypeVar("TParamsModel", bound=BaseModel)
 TBatchModel = TypeVar("TBatchModel", bound=BatchRequestBaseModel)
 TListModel = TypeVar("TListModel", bound=ListBaseModel[Any])
+
+TDomainFactory = TypeVar("TDomainFactory", bound=DataclassFactory[Any])
+TParamsFactory = TypeVar("TParamsFactory", bound=DataclassFactory[Any])
+TPayloadFactory = TypeVar("TPayloadFactory", bound=DataclassFactory[Any])
+TModelFactory = TypeVar("TModelFactory", bound=ModelFactory[Any])
