@@ -2,7 +2,7 @@ from typing import Any, cast
 
 import httpx
 
-from apaleoapi.apaleo.exceptions import (
+from apaleoapi.exceptions import (
     APIError,
     BadRequestError,
     ClientClosedRequestError,
