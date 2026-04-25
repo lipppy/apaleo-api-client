@@ -6,9 +6,9 @@ See: https://identity.apaleo.com/swagger/index.html?urls.primaryName=Identity+V1
 
 from typing import Protocol
 
-from apaleoapi.apaleo.identity.v1.contracts.identity.payloads import CreateInvitation
-from apaleoapi.apaleo.identity.v1.contracts.identity.queries import InvitationListParams
-from apaleoapi.apaleo.identity.v1.contracts.identity.responses import (
+from apaleoapi.apaleo.identity.v1.contracts.identity.payload import CreateInvitation
+from apaleoapi.apaleo.identity.v1.contracts.identity.query import InvitationListParams
+from apaleoapi.apaleo.identity.v1.contracts.identity.response import (
     InvitationList,
     InvitedUserToAccountResponse,
     RoleList,

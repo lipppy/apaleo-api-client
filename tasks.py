@@ -78,15 +78,26 @@ def clean(c: Context) -> None:
     c.run(f"echo '{BASH_SUCCESS}Python caches and temp files cleaned.'")
 
 
-@task
+@task()
 def test(c: Context) -> None:
-    """Run tests with coverage."""
-    c.run(f"echo '{BASH_INFO}Running tests with coverage...'")
+    """Run unit tests with coverage."""
+    c.run(f"echo '{BASH_INFO}Running unit tests with coverage...'")
     c.run(
-        "poetry run coverage run -m pytest -x && poetry run coverage report",
+        "poetry run coverage run -m pytest -x -m unit && poetry run coverage report",
         pty=True,
     )
-    c.run(f"echo '{BASH_SUCCESS}Tests completed successfully.'")
+    c.run(f"echo '{BASH_SUCCESS}Unit tests completed successfully.'")
+
+
+@task()
+def test_integration(c: Context) -> None:
+    """Run integration tests with coverage."""
+    c.run(f"echo '{BASH_INFO}Running integration tests with coverage...'")
+    c.run(
+        "poetry run coverage run -m pytest -x -m integration && poetry run coverage report",
+        pty=True,
+    )
+    c.run(f"echo '{BASH_SUCCESS}Integration tests completed successfully.'")
 
 
 @task
@@ -197,9 +208,14 @@ def increase_version(c: Context, part: str = "patch") -> None:
     c.run(f"poetry version {part}")
     c.run(f"echo '{BASH_INFO}New version: ' && poetry version --short")
     c.run("git add pyproject.toml")
-    version = c.run("poetry version --short", hide=True).stdout.strip()
-    c.run(f"git commit -m 'chore(release): {version}'")
-    c.run(f"echo '{BASH_SUCCESS}Package version increased successfully.'")
+    result = c.run("poetry version --short", hide=True)
+    if result is None:
+        c.run(f"echo '{BASH_ERROR}Failed to retrieve the new version.'")
+        return
+    version = result.stdout.strip()
+    if confirm(f"Do you want to commit the version increase to git? (New version: {version})"):
+        c.run(f"git commit -m 'chore(release): {version}'")
+        c.run(f"echo '{BASH_SUCCESS}Package version increased successfully.'")
 
 
 @task

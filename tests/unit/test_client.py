@@ -11,6 +11,8 @@ from apaleoapi.client import (
     IdentityV1Adapter,
 )
 
+pytestmark = [pytest.mark.unit]
+
 
 class TestApaleoAPIClient:
     """Test cases for ApaleoAPIClient."""

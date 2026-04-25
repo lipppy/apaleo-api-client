@@ -10,6 +10,7 @@ def tests(session: nox.Session) -> None:
         "coverage",
         "freezegun",
         "pytest-asyncio",
+        "pytest-dotenv",
     )
     session.run("python", "-c", "import sys; print(sys.executable); print(sys.version)")
-    session.run("pytest")
+    session.run("pytest", "-x", "-m", "unit")
