@@ -7,9 +7,9 @@ def tests(session: nox.Session) -> None:
     session.install(".")
     session.install(
         "pytest",
-        "pytest-asyncio",
-        "freezegun",
         "coverage",
+        "freezegun",
+        "pytest-asyncio",
     )
     session.run("python", "-c", "import sys; print(sys.executable); print(sys.version)")
     session.run("pytest")
