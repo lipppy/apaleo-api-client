@@ -94,7 +94,7 @@ def test_integration(c: Context) -> None:
     """Run integration tests with coverage."""
     c.run(f"echo '{BASH_INFO}Running integration tests with coverage...'")
     c.run(
-        "poetry run coverage run -m pytest -x -m integration && poetry run coverage report",
+        "poetry run coverage run -m pytest -x -vv -m integration && poetry run coverage report",
         pty=True,
     )
     c.run(f"echo '{BASH_SUCCESS}Integration tests completed successfully.'")

@@ -5,9 +5,11 @@ from typing import Any, Type, cast
 from dacite import from_dict
 
 from apaleoapi.apaleo.common.contracts.factory import CountFakerFactory
+from apaleoapi.apaleo.common.contracts.payload import Operation
 from apaleoapi.apaleo.common.contracts.response import Count
 from apaleoapi.apaleo.common.schemas.factory import CountModelDefaultFactory
 from apaleoapi.apaleo.common.schemas.response import CountModel
+from apaleoapi.exceptions import UpdateResourceError
 from apaleoapi.logging import get_logger
 from apaleoapi.ports.http.transport import AsyncTransportPort
 from apaleoapi.services.response_handler import ResponseHandler
@@ -23,6 +25,7 @@ from apaleoapi.typing import (
     TParams,
     TParamsModel,
     TPayload,
+    TPayloadModel,
 )
 
 log = get_logger(__name__)
@@ -316,6 +319,53 @@ class BaseAdapter:
         return from_dict(
             data_class=return_cls,
             data=validated_response.model_dump(),
+        )
+
+    async def _patch_resource(
+        self,
+        url: str,
+        payload: list[Operation],
+        payload_model_cls: Type[TPayloadModel],
+        *,
+        error_prefix: str,
+    ) -> None:
+        """
+        Helper for PATCH resources.
+
+        Handles dry run by logging and skipping the actual API call.
+        Raises exceptions for error responses and logs warnings for unexpected responses.
+        """
+        success_codes = {204}
+        # Validate URL path to prevent injection and ensure it conforms to expected patterns
+        validated_url = self._url_path_validator.validate(url)
+
+        # Validate and serialize payload
+        payload_requests: list[dict[str, Any]] = []
+        for operation in payload:
+            payload_dict: dict[str, Any] = asdict(operation) if is_dataclass(operation) else {}
+            payload_model = (
+                payload_model_cls.model_validate(payload_dict) if payload_model_cls else None
+            )
+            payload_request = (
+                payload_model.model_dump(by_alias=True, exclude_none=True) if payload_model else {}
+            )
+            payload_requests.append(payload_request)
+        # In dry run mode we do not skip the validation and serialization of the payload,
+        # to ensure that the payload is valid and can be serialized correctly.
+        if self._dry_run:
+            return None
+
+        response = await self._t.request("PATCH", validated_url, json=payload_requests)
+        response_data = self._response_handler.handle(response=response)
+
+        # No response data is expected for a successful PATCH
+        if response.status_code in success_codes and response_data is None:
+            return None
+
+        log.warning(f"PATCH request to {validated_url} returned unexpected data: {response_data}")
+        raise UpdateResourceError(
+            f"{error_prefix}: Unexpected response data for PATCH request.",
+            response,
         )
 
     async def _delete_resource(self, url: str) -> None:

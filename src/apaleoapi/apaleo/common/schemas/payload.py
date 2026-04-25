@@ -5,7 +5,7 @@ from pydantic import Field
 from apaleoapi.schemas import ExtendedBaseModel
 
 
-class Operation(ExtendedBaseModel):
+class OperationModel(ExtendedBaseModel):
     value: Any | None = None
     path: str | None = None
     op: str | None = None

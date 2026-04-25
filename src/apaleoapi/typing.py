@@ -16,6 +16,7 @@ TParams = TypeVar("TParams", bound=DataclassInstance)
 TPayload = TypeVar("TPayload", bound=DataclassInstance)
 TModel = TypeVar("TModel", bound=BaseModel)
 TParamsModel = TypeVar("TParamsModel", bound=BaseModel)
+TPayloadModel = TypeVar("TPayloadModel", bound=BaseModel)
 TBatchModel = TypeVar("TBatchModel", bound=BatchRequestBaseModel)
 TListModel = TypeVar("TListModel", bound=ListBaseModel[Any])
 

@@ -1,5 +1,6 @@
 import pytest
 
+from apaleoapi.apaleo.common.contracts.payload import Operation
 from apaleoapi.apaleo.identity.v1.apis.identity import IdentityV1IdentityAdapter
 from apaleoapi.apaleo.identity.v1.contracts.identity.payload import CreateInvitation
 from apaleoapi.apaleo.identity.v1.contracts.identity.response import (
@@ -81,7 +82,7 @@ class TestIdentityV1IdentityAdapter:
 
     @pytest.mark.asyncio
     async def test_users(self) -> None:
-        """Test the users flow: list users and get a user by ID."""
+        """Test the users flow: list, get by ID, update, get again, revert update, get again."""
 
         # 1. List users
         users = await self.adapter.list_users()
@@ -99,6 +100,44 @@ class TestIdentityV1IdentityAdapter:
             assert user is not None
             assert isinstance(user, User)
             assert user.subject_id == user_id
+
+            # 2.2. Update user
+            await self.adapter.update_user(
+                user_id=str(user_id),
+                payload=[
+                    Operation(
+                        op="replace",
+                        path="/enabled",
+                        value=True,
+                    )
+                ],
+            )
+
+            # 2.3. Get user again and check the enabled status is updated
+            user_after_update = await self.adapter.get_user(user_id=str(user_id))
+            assert user_after_update is not None
+            assert isinstance(user_after_update, User)
+            assert user_after_update.subject_id == user_id
+            assert user_after_update.enabled is True
+
+            # 2.4. Revert the enabled status change to keep the test idempotent
+            await self.adapter.update_user(
+                user_id=str(user_id),
+                payload=[
+                    Operation(
+                        op="replace",
+                        path="/enabled",
+                        value=True,
+                    )
+                ],
+            )
+
+            # 2.5. Get user again and check the enabled status is reverted back
+            user_after_revert = await self.adapter.get_user(user_id=str(user_id))
+            assert user_after_revert is not None
+            assert isinstance(user_after_revert, User)
+            assert user_after_revert.subject_id == user_id
+            assert user_after_revert.enabled is True
 
     @pytest.mark.asyncio
     async def test_get_user_invalid_id(self) -> None:
