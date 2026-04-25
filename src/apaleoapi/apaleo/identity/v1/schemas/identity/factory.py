@@ -1,6 +1,6 @@
 from polyfactory.factories.pydantic_factory import ModelFactory
 
-from apaleoapi.apaleo.identity.v1.schemas.identity.responses import (
+from apaleoapi.apaleo.identity.v1.schemas.identity.response import (
     InvitationListModel,
     InvitedUserToAccountResponseModel,
     RoleListModel,

@@ -8,38 +8,38 @@ See: https://identity.apaleo.com/swagger/index.html?urls.primaryName=Identity+V1
 """
 
 from apaleoapi.apaleo.common.base import BaseAdapter
-from apaleoapi.apaleo.identity.v1.contracts.identity.factories import (
+from apaleoapi.apaleo.identity.v1.contracts.identity.factory import (
     InvitationListFakerFactory,
     InvitedUserToAccountResponseFakerFactory,
     RoleListFakerFactory,
     UserFakerFactory,
     UsersListFakerFactory,
 )
-from apaleoapi.apaleo.identity.v1.contracts.identity.payloads import CreateInvitation
-from apaleoapi.apaleo.identity.v1.contracts.identity.queries import (
+from apaleoapi.apaleo.identity.v1.contracts.identity.payload import CreateInvitation
+from apaleoapi.apaleo.identity.v1.contracts.identity.query import (
     InvitationListParams,
     UserListParams,
 )
-from apaleoapi.apaleo.identity.v1.contracts.identity.responses import (
+from apaleoapi.apaleo.identity.v1.contracts.identity.response import (
     InvitationList,
     InvitedUserToAccountResponse,
     RoleList,
     User,
     UsersList,
 )
-from apaleoapi.apaleo.identity.v1.schemas.identity.factories import (
+from apaleoapi.apaleo.identity.v1.schemas.identity.factory import (
     InvitationListModelDefaultFactory,
     InvitedUserToAccountResponseModelDefaultFactory,
     RoleListModelDefaultFactory,
     UserModelDefaultFactory,
     UsersListModelDefaultFactory,
 )
-from apaleoapi.apaleo.identity.v1.schemas.identity.payloads import CreateInvitationModel
-from apaleoapi.apaleo.identity.v1.schemas.identity.queries import (
+from apaleoapi.apaleo.identity.v1.schemas.identity.payload import CreateInvitationModel
+from apaleoapi.apaleo.identity.v1.schemas.identity.query import (
     InvitationListParamsModel,
     UserListParamsModel,
 )
-from apaleoapi.apaleo.identity.v1.schemas.identity.responses import (
+from apaleoapi.apaleo.identity.v1.schemas.identity.response import (
     InvitationListModel,
     InvitedUserToAccountResponseModel,
     RoleListModel,
