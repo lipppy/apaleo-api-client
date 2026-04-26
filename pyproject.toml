@@ -102,8 +102,7 @@ exclude = [
     "build",
     "dist",
     "venv",
-    ".venv",
-    "miscs"
+    ".venv"
 ]
 
 max-line-length = 100
@@ -118,9 +117,6 @@ ignore = [
 
 
 [tool.mypy]
-exclude = [
-    "miscs/*"
-]
 strict = true
 follow_imports = "normal"
 files = ["src", "tests"]
@@ -156,8 +152,7 @@ markers = [
 ]
 norecursedirs = [
   "build",
-  "dist",
-  "miscs"
+  "dist"
 ]
 env_files = [".env.test"]
 
@@ -169,8 +164,7 @@ omit = [
     "tests/*",
     "*/tests/*",
     "*/conftest.py",
-    "*/tasks.py",
-    "*/miscs/*"
+    "*/tasks.py"
 ]
 
 [tool.coverage.report]
