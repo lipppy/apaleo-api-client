@@ -1,6 +1,6 @@
 # Why use Apaleo API Client?
 
-The Apaleo API Client provides a modern, developer-friendly way to integrate with Apaleo's hospitality platform. Here's why you should choose it over direct API calls or other integration methods.
+The Apaleo API Client is a type-safe, async Python SDK built on Pydantic v2 and httpx. It provides a modern, developer-friendly way to integrate with Apaleo's hospitality platform—fast, easy to use, and fully documented. Here's why it stands out:
 
 ## 🚀 **Performance & Efficiency**
 
@@ -9,7 +9,7 @@ The Apaleo API Client provides a modern, developer-friendly way to integrate wit
 - Native `async/await` support for non-blocking I/O
 - Concurrent request batching for pagination
 
-```python
+```python {test="skip" lint="skip" upgrade="skip"}
 # Fetch multiple pages concurrently
 properties = await client.core.v1.inventory.list_properties(
     PropertyListParams(is_concurrently=True, batch_size=100)
@@ -21,6 +21,11 @@ properties = await client.core.v1.inventory.list_properties(
 - Configurable batch sizes for optimal performance
 - Built-in memory management for large datasets
 
+!!! warning
+    The Apaleo API may have rate limits. Use the `is_concurrently` option with caution and consider implementing retry logic to handle potential rate limit responses.
+
+    Order of results is not guaranteed when using concurrent fetching.
+
 ## 🛡️ **Reliability & Robustness**
 
 ### **Comprehensive Error Handling**
@@ -28,7 +33,7 @@ properties = await client.core.v1.inventory.list_properties(
 - Detailed error messages with context
 - Graceful handling of API rate limits and transient failures
 
-```python
+```python {test="skip" lint="skip" upgrade="skip"}
 from apaleoapi.exceptions import ValidationError, NotFoundError
 
 try:
@@ -56,7 +61,7 @@ except ValidationError as e:
 - Pydantic models for request/response validation
 - IDE autocompletion and error detection
 
-```python
+```python {test="skip" lint="skip" upgrade="skip"}
 # Type-safe parameter construction
 params = PropertyListParams(
     page_number=1,          # int
@@ -74,7 +79,6 @@ for property: PropertyItem in properties.items:
     Apaleo's models may have field names that conflict with Python built-in function names, variable names, or keywords. Use caution when naming your variables or consider using aliases to avoid conflicts. For example, if a model has a field named `property`, you can use an alias like `from builtins import property as property_alias` in your code to prevent shadowing the built-in `@property` decorator.
 
 
-
 ### **Rich Data Models**
 - Structured dataclasses for all domain objects
 - Automatic serialization/deserialization
@@ -85,7 +89,7 @@ for property: PropertyItem in properties.items:
 ### **Dry-Run Mode**
 Perfect for development and testing:
 
-```python
+```python {test="skip" lint="skip" upgrade="skip"}
 # No actual API calls made
 client = ApaleoAPIClient(..., dry_run=True)
 properties = await client.core.v1.inventory.list_properties()
@@ -97,7 +101,7 @@ properties = await client.core.v1.inventory.list_properties()
 - Configurable log levels
 - Integration with Python's standard logging module
 
-```python
+```python {test="skip" lint="skip" upgrade="skip"}
 from apaleoapi.logging import setup_logging
 
 logger = setup_logging(level="DEBUG")
@@ -126,28 +130,6 @@ logger = setup_logging(level="DEBUG")
 - Efficient connection pooling
 - Horizontal scaling support
 
-## 🎓 **Compared to Alternatives**
-
-### **vs. Direct HTTP Calls**
-✔️ No manual token management
-✔️ Built-in error handling and retries
-✔️ Type safety and validation
-✔️ Pagination automation
-✔️ Consistent API interface
-
-### **vs. Generic API Clients**
-✔️ Domain-specific error types
-✔️ Apaleo-optimized request patterns
-✔️ Built-in knowledge of API quirks
-✔️ Specialized data models
-✔️ Hotel industry domain knowledge
-
-### **vs. Custom Wrappers**
-✔️ Production-tested reliability
-✔️ Comprehensive test coverage
-✔️ Active maintenance and updates
-✔️ Community support and documentation
-✔️ Performance optimizations
 
 ## 📊 **Use Cases**
 
@@ -178,4 +160,4 @@ logger = setup_logging(level="DEBUG")
 
 ---
 
-Ready to experience the benefits? **[Install Apaleo API Client →](install.md)**
+*Ready to integrate with Apaleo? [Get started with installation →](install.md)*

@@ -1,10 +1,10 @@
 # Welcome to Apaleo API Client
 
-A powerful, async-first Python client library for the **Apaleo API**, providing seamless integration with Apaleo's comprehensive hospitality and travel management platform.
+A **type-safe, async Python SDK** for the Apaleo API built on **Pydantic v2** and **httpx**. Provides seamless integration with Apaleo's hospitality platform. Fast, easy to use, and fully documented.
 
 ## What is Apaleo API Client?
 
-The Apaleo API Client is a production-ready Python library that wraps the Apaleo Swagger API, offering asynchronous access to Apaleo's features and functionalities. Built with modern Python best practices, it provides:
+The Apaleo API Client is a production-ready Python library that wraps the Apaleo Swagger API with a modern, developer-friendly interface. Built for high-performance async operations, it provides:
 
 - **🔐 OAuth2 Authentication** - Automatic token management with refresh capabilities, both client credentials and authorization code flow are supported
 - **⚡ Async/Await Support** - Built for high-performance concurrent operations
@@ -18,8 +18,8 @@ The Apaleo API Client is a production-ready Python library that wraps the Apaleo
 Get started with Apaleo API Client in just a few lines:
 
 ```python
-from apaleoapi import ApaleoAPIClient
-from apaleoapi.http.auth import OAuth2ClientCredentialsProvider
+from apaleoapi import ApaleoAPIClient, OAuth2ClientCredentialsProvider
+
 
 # Create a token provider with your API credentials
 token_provider = OAuth2ClientCredentialsProvider(
@@ -44,6 +44,8 @@ print(property_berlin.id)
 # Clean up
 await client.aclose()
 ```
+
+For more examples and detailed documentation, see the [API Reference](api/index.md) section.
 
 ## Key Features
 
@@ -78,17 +80,17 @@ The client provides access to these Apaleo API endpoints:
 |------------|----------|---------|--------|----------|
 | Core | `https://api.apaleo.com/` | V1 | 🔧 In Progress | <span style="color: cyan;">1%</span> |
 | Identity | `https://identity.apaleo.com/` | V1 | ✅ Implemented | <span style="color: lime;">100%</span> |
-| Payment | `https://payment.apaleo.com/` | V1 | 🔧 In Progress | <span style="color: tomato;">0%</span> |
-| Webhook | `https://webhook.apaleo.com/` | V1 | 🔧 In Progress | <span style="color: tomato;">0%</span> |
+| Payment | `https://payment.apaleo.com/` | V1 | 🔧 Planned | <span style="color: tomato;">0%</span> |
+| Webhook | `https://webhook.apaleo.com/` | V1 | 🔧 Planned | <span style="color: tomato;">0%</span> |
 | Integration | `https://integration.apaleo.com/` | V1 | 📋 Planned | <span style="color: tomato;">0%</span> |
 | Fiscalization | `https://fiscalization.apaleo.com/` | V1 | 📋 Planned | <span style="color: tomato;">0%</span> |
 | Profile | `https://profile.apaleo.com/` | V1 | 📋 Planned | <span style="color: tomato;">0%</span> |
 
 ## Next Steps
 
-- **[Installation](main/install.md)** - Install and set up the library
 - **[Why Apaleo API Client?](main/why.md)** - Learn about the benefits and use cases
-- **[API Documentation](api/core.md)** - Explore the complete API documentation
+- **[Installation](main/install.md)** - Install and set up the library
+- **[API Reference](api/index.md)** - Explore detailed documentation for all endpoints
 - **[Contributing](main/contributing.md)** - Help improve the library
 
 ## Community & Support
@@ -99,4 +101,4 @@ The client provides access to these Apaleo API endpoints:
 
 ---
 
-*Ready to integrate with Apaleo? [Get started with installation →](main/install.md)*
+Ready to experience the benefits? **[Why Apaleo API Client? →](main/why.md)**

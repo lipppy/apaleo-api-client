@@ -1,17 +1,17 @@
 import pytest
 
-from apaleoapi.apaleo.common.contracts.payload import Operation
+from apaleoapi import ApaleoAPIClient
+from apaleoapi.apaleo.common import Operation
 from apaleoapi.apaleo.identity.v1.apis.identity import IdentityV1IdentityAdapter
-from apaleoapi.apaleo.identity.v1.contracts.identity.payload import CreateInvitation
-from apaleoapi.apaleo.identity.v1.contracts.identity.response import (
+from apaleoapi.apaleo.identity.v1.identity import (
+    CreateInvitation,
     InvitationList,
     InvitedUserToAccountResponse,
+    RoleInvitedTo,
     RoleList,
     User,
     UsersList,
 )
-from apaleoapi.apaleo.identity.v1.enums.identity import RoleInvitedTo
-from apaleoapi.client import ApaleoAPIClient
 from apaleoapi.exceptions import ForbiddenError, NotFoundError
 
 pytestmark = [pytest.mark.integration, pytest.mark.live]
@@ -38,8 +38,8 @@ class TestIdentityV1IdentityAdapter:
         invitations = await self.adapter.list_invitations()
         assert invitations is not None
         assert isinstance(invitations, InvitationList)
-        assert isinstance(invitations.invitations, list)
-        invitations_count = len(invitations.invitations)
+        assert isinstance(invitations.items, list)
+        invitations_count = invitations.count
         assert invitations_count >= 0
 
         # 2 Create invitation - None account admin, role Housekeeping, property BER
@@ -58,8 +58,8 @@ class TestIdentityV1IdentityAdapter:
         invitations_after = await self.adapter.list_invitations()
         assert invitations_after is not None
         assert isinstance(invitations_after, InvitationList)
-        assert isinstance(invitations_after.invitations, list)
-        assert len(invitations_after.invitations) == invitations_count + 1
+        assert isinstance(invitations_after.items, list)
+        assert invitations_after.count == invitations_count + 1
 
         # 4. Cleanup, delete the created invitation
         await self.adapter.delete_invitation(email=MOCK_EMAIL)
@@ -68,8 +68,8 @@ class TestIdentityV1IdentityAdapter:
         invitations_final = await self.adapter.list_invitations()
         assert invitations_final is not None
         assert isinstance(invitations_final, InvitationList)
-        assert isinstance(invitations_final.invitations, list)
-        assert len(invitations_final.invitations) == invitations_count
+        assert isinstance(invitations_final.items, list)
+        assert invitations_final.count == invitations_count
 
     @pytest.mark.asyncio
     async def test_get_roles(self) -> None:
@@ -77,8 +77,8 @@ class TestIdentityV1IdentityAdapter:
         roles = await self.adapter.list_roles()
         assert roles is not None
         assert isinstance(roles, RoleList)
-        assert isinstance(roles.roles, list)
-        assert len(roles.roles) >= 0
+        assert isinstance(roles.items, list)
+        assert roles.count >= 0
 
     @pytest.mark.asyncio
     async def test_users(self) -> None:

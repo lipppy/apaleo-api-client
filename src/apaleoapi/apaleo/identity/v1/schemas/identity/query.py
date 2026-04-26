@@ -1,7 +1,7 @@
 from pydantic import EmailStr, Field
 
+from apaleoapi.apaleo.common.schemas.base import BatchRequestBaseModel, StrictBaseModel
 from apaleoapi.apaleo.identity.v1.enums.identity import UserSortBy
-from apaleoapi.schemas import BatchRequestBaseModel, StrictBaseModel
 
 
 class InvitationListParamsModel(StrictBaseModel):

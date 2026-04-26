@@ -1,6 +1,6 @@
 from pydantic import Field
 
-from apaleoapi.schemas import ExtendedBaseModel
+from apaleoapi.apaleo.common.schemas.base import ExtendedBaseModel
 
 
 class MessageItemCollection(ExtendedBaseModel):

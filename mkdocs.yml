@@ -35,6 +35,7 @@ theme:
     - content.code.copy
     - announce.dismiss
     - navigation.tabs
+    - navigation.indexes
     - navigation.instant
     - navigation.instant.prefetch
     - navigation.instant.progress
@@ -47,7 +48,35 @@ theme:
   logo: 'logo-white.svg'
   favicon: 'favicon.svg'
 
+extra:
+  version:
+    provider: mike
+  analytics:
+    feedback:
+      title: Was this page helpful?
+      ratings:
+        - icon: material/thumb-up-outline
+          name: This page was helpful
+          data: 1
+          note: >-
+            Thanks for your feedback!
+        - icon: material/thumb-down-outline
+          name: This page could be improved
+          data: 0
+          note: >-
+            Thanks for your feedback!
+
+extra_css:
+  - extra/custom.css
+
+extra_javascript:
+  - 'extra/feedback.js'
+
 plugins:
+  - mike:
+      alias_type: symlink
+      canonical_version: latest
+      # llmstxt must come after the mike plugin:
   - search
   - mkdocstrings:
       handlers:
@@ -81,7 +110,15 @@ nav:
       - Troubleshooting: main/troubleshooting.md
       - Contributing: main/contributing.md
       - Changelog: main/changelog.md
-  - API Documentation:
-      - Core API: api/core.md
+  - API Reference:
+      - api/index.md
+      - Core API:
+        - Inventory V1:
+          - list_properties: api/core_v1/inventory_list_properties.md
+      - Identity API:
+        - Identity V1:
+          - list_invitations: api/identity_v1/identity_list_invitations.md
   - Examples:
-      - Client Configuration: examples/client.md
+      - examples/index.md
+      - Client Credentials Flow: examples/client_credentials_flow.md
+      - Authorization Code Flow: examples/authorization_code_flow.md

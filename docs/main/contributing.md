@@ -4,12 +4,24 @@ We welcome contributions to the Apaleo API Client! Whether you're fixing bugs, a
 
 ## 🚀 **Quick Start for Contributors**
 
+### **Prerequisites**
+- Python 3.10 or higher
+    - Recommended: Python 3.12 for development
+    - Supported: Python 3.10, 3.11, 3.12, 3.13
+    - For `nox` testing: Python 3.10-3.13
+- Git
+- Poetry (for development)
+- Python `invoke` (for running tasks)
+
 ### **1. Set Up Development Environment**
 
 ```bash
 # Fork the repository on GitHub first, then clone
 git clone https://github.com/<your-username>/apaleo-api-client.git
 cd apaleo-api-client
+
+# Lock dependencies and create virtual environment
+poetry lock
 
 # Install with all development dependencies
 poetry install --with dev,test,lint,docs
@@ -33,15 +45,15 @@ inv lint
 # Format code
 inv format
 
-# Build documentation
-inv docs
+# Build and serve documentation
+inv serve-docs
 ```
 
 ### **3. Make Your Changes**
 
 ```bash
 # Create a feature branch
-git checkout -b feature/your-feature-name
+git checkout -b feature/AAC-<issue-number>-your-feature-name
 
 # Make your changes
 # ...
@@ -55,7 +67,7 @@ git add .
 git commit -m "feat: add your feature description"
 
 # Push to your fork
-git push origin feature/your-feature-name
+git push origin feature/AAC-<issue-number>-your-feature-name
 ```
 
 ### **4. Submit a Pull Request**
@@ -72,15 +84,14 @@ git push origin feature/your-feature-name
 
 ```
 src/apaleoapi/
-├── __init__.py                # Package exports
 ├── client.py                  # Main ApaleoAPIClient
 ├── constants.py               # API endpoints and constants
 ├── exceptions.py              # Custom exception classes
 ├── logging.py                 # Logging configuration
-├── schemas.py                 # Pydantic schema definitions
 ├── typing.py                  # Type definitions
 │
 ├── apaleo/                    # API domain modules
+│   ├── common/                # Common models and utilities
 │   ├── core/                  # Core API (properties, inventory)
 │   ├── identity/              # Identity & authentication
 │   ├── payment/               # Payment processing
@@ -93,10 +104,16 @@ src/apaleoapi/
 │   ├── auth.py                # OAuth2 authentication
 │   └── transport.py           # HTTP transport layer
 │
+├── ports/                     # Abstraction layer
+│   ├── apaleo/                # Apaleo API ports
+│   ├── http/                  # HTTP ports
+│   └── client.py              # Client ports
+│
 └── services/                  # Support services
     ├── list_fetcher.py        # Pagination handling
     ├── response_handler.py    # Response processing
-    └── response_validator.py  # Response validation
+    ├── response_validator.py  # Response validation
+    └── url_path_validator.py  # URL path validation
 ```
 
 ## 🗺️ **Development Workflow**
@@ -109,6 +126,7 @@ inv help                 # Show all available tasks
 # Development
 inv test                 # Run tests with pytest
 inv test-nox             # Test across Python 3.10-3.13
+inv test-integration     # Run integration tests against DEV instance
 
 # Code Quality
 inv lint                 # Run all linters (ruff, mypy, etc.)
@@ -116,13 +134,19 @@ inv format               # Format code (ruff format, isort)
 inv check                # Check code quality without fixing
 
 # Documentation
-inv docs                 # Build and serve documentation
-inv docs-build           # Build documentation only
-inv docs-clean           # Clean generated docs
+inv serve-docs           # Build and serve documentation
+inv publish-docs         # Build and publish documentation to GitHub Pages
 
 # Building
-inv build                # Build package
-inv clean                # Clean build artifacts
+inv build-checked        # Build package with checks (type checking, linting)
+
+# Releasing
+inv increase-version     # Bump version (major, minor, patch)
+
+# Cleaning
+inv clean                # Clean cache and temporary files
+inv clean-docs           # Clean documentation build artifacts
+inv clean-build          # Clean all build artifacts
 ```
 
 ### **Code Style**
@@ -137,9 +161,36 @@ We use these tools for code quality:
 #### **Code Style Rules**
 - Line length: 100 characters
 - Use type hints for all public APIs
-- Follow PEP 8 and Black formatting
+- Follow PEP 8 and PEP 257 for code style and docstrings
 - Docstrings for all public functions/classes
 - Use dataclasses for structured data
+- Use Pydantic models for API schemas and validation
+
+## 🏡 **Getting API Credentials**
+
+Before using the client, either for development or production, you'll need Apaleo API credentials:
+
+### **1. Register with Apaleo**
+1. Visit the [Apaleo Developer Portal](https://apaleo.dev)
+2. Create a developer account or sign in
+3. Navigate to "Apps" section
+
+### **2. Create an Application - Client Credentials Flow**
+1. Click "Connected apps" for client credentials flow
+2. Click "Add a new app" then select "Add custom app"
+3. Fill out the form
+
+### **3. Create an Application - Authorization Code Flow**
+1. Click "My store apps" for authorization code flow
+2. Click "Add a new store app"
+3. Fill out the form (name, description, redirect URI, secret, etc.)
+4. Configure the app's permissions (scopes) based on your needs
+
+### **4. Get Your Credentials**
+After creating the application, you'll receive:
+- **Client ID**: Public identifier for your application
+- **Client Secret**: Private secret (keep secure!)
+- **Redirect URI**: URL for authorization code flow (if applicable)
 
 ## 📅 **Release Process**
 
@@ -154,22 +205,14 @@ We use [semantic versioning](https://semver.org/):
 - **PATCH**: Bug fixes, backwards compatible
 
 ```bash
-# Update version in pyproject.toml
-poetry version patch|minor|major
-
-# Update CHANGELOG.md
-# Git commit and tag
-git add .
-git commit -m "chore: bump version to vX.Y.Z"
-git tag vX.Y.Z
-git push origin main --tags
+# Update version cia invoke task
+inv increase-version --part minor  # or major, patch
 ```
 
 ### **Release Checklist**
 
 - [ ] All tests pass across Python 3.10-3.13
 - [ ] Documentation is up to date
-- [ ] CHANGELOG.md is updated
 - [ ] Version is bumped in pyproject.toml
 - [ ] Git tag matches package version
 - [ ] GitHub release is created
@@ -190,15 +233,6 @@ git push origin main --tags
 - Use environment variables for test credentials
 - Follow OWASP guidelines for HTTP clients
 - Consider timing attacks in authentication
-
-### **API Design Principles**
-
-- Favor async methods for I/O operations
-- Use type hints for all public APIs
-- Make required parameters explicit
-- Provide sensible defaults for optional parameters
-- Use dataclasses for complex parameters
-- Handle errors gracefully with typed exceptions
 
 ## 📉 **Commit Message Format**
 

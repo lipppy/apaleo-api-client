@@ -1,8 +1,9 @@
-from typing import Generic, Optional, TypeVar
+from typing import Any, Generic, Optional, TypeVar
 
 from pydantic import BaseModel, Field
 
 TModel = TypeVar("TModel", bound=BaseModel)
+TEnum = TypeVar("TEnum", bound=Any)
 
 
 class ExtendedBaseModel(BaseModel):
@@ -48,4 +49,11 @@ class ListBaseModel(ExtendedBaseModel, Generic[TModel]):
     """Base model for list responses."""
 
     items: list[TModel] = Field(default_factory=list)  # Default to empty list for items
+    count: int = Field(default=0, description="Total number of items in the list.")
+
+
+class ListEnumBaseModel(ExtendedBaseModel, Generic[TEnum]):
+    """Base model for list responses."""
+
+    items: list[TEnum] = Field(default_factory=list)  # Default to empty list for items
     count: int = Field(default=0, description="Total number of items in the list.")

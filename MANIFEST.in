@@ -17,7 +17,6 @@ exclude tasks.py
 exclude mkdocs.yml
 prune tests/
 prune docs/
-prune miscs/
 
 # Exclude environment and config files
 global-exclude .env*

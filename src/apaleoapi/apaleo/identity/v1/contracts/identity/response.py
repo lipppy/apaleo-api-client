@@ -2,17 +2,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from uuid import UUID
 
+from apaleoapi.apaleo.common.contracts.response import Count
 from apaleoapi.apaleo.identity.v1.enums.identity import RoleAccessTo, RoleInvitedTo
-
-
-@dataclass(frozen=True)
-class InvitationAuditLog:
-    aggregate_type: str | None = None
-    account_code: str | None = None
-    email: str | None = None
-    properties: list[str] | None = None
-    roles: list[str] | None = None
-    is_account_admin: bool | None = None
 
 
 @dataclass(frozen=True)
@@ -32,12 +23,6 @@ class InvitedUserToAccountResponse:
 
 
 @dataclass(frozen=True)
-class PropertyRolesAuditLog:
-    id: str | None = None
-    roles: list[str] | None = None
-
-
-@dataclass(frozen=True)
 class PropertyRolesItem:
     id: str
     roles: list[RoleAccessTo]
@@ -45,18 +30,8 @@ class PropertyRolesItem:
 
 @dataclass(frozen=True)
 class RoleList:
-    roles: list[RoleAccessTo]
-
-
-@dataclass(frozen=True)
-class UserAuditLog:
-    first_name: str | None = None
-    last_name: str | None = None
-    email: str | None = None
-    enabled: bool | None = None
-    is_account_admin: bool | None = None
-    properties_roles: list[PropertyRolesAuditLog] | None = None
-    aggregate_type: str | None = None
+    items: list[RoleAccessTo]
+    count: int
 
 
 @dataclass(frozen=True)
@@ -92,5 +67,6 @@ class UsersList:
 
 
 @dataclass(frozen=True)
-class InvitationList:
-    invitations: list[Invitation]
+class InvitationList(Count):
+    items: list[Invitation]
+    count: int

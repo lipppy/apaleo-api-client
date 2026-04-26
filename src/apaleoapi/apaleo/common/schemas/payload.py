@@ -2,7 +2,7 @@ from typing import Any
 
 from pydantic import Field
 
-from apaleoapi.schemas import ExtendedBaseModel
+from apaleoapi.apaleo.common.schemas.base import ExtendedBaseModel
 
 
 class OperationModel(ExtendedBaseModel):

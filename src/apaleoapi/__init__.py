@@ -1,9 +1,6 @@
-"""Apaleo API Client - Python wrapper for Apaleo Swagger API."""
+"""Apaleo API Client - A Python SDK for Apaleo APIs."""
 
-__version__ = "0.1.0"
-__author__ = "Gábor Lipták"
-__email__ = "shearer83@gmail.com"
+from apaleoapi.client import ApaleoAPIClient
+from apaleoapi.http.auth import OAuth2AuthorizationCodeProvider, OAuth2ClientCredentialsProvider
 
-from .client import ApaleoAPIClient
-
-__all__ = ["ApaleoAPIClient", "__version__"]
+__all__ = ["ApaleoAPIClient", "OAuth2ClientCredentialsProvider", "OAuth2AuthorizationCodeProvider"]
