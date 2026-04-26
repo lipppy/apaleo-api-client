@@ -25,8 +25,8 @@ class PropertyRolesItemModel(ExtendedBaseModel):
     roles: list[RoleAccessTo] = Field(...)
 
 
-class RoleListModel(ExtendedBaseModel):
-    roles: list[RoleAccessTo] = Field(...)
+class RoleListModel(ListBaseModel[RoleAccessTo]):
+    items: list[RoleAccessTo] = Field(..., alias="roles")
 
 
 class UserItemModel(ExtendedBaseModel):
@@ -57,5 +57,5 @@ class UsersListModel(ListBaseModel[UserItemModel]):
     items: list[UserItemModel] = Field(default_factory=list, alias="users")
 
 
-class InvitationListModel(ExtendedBaseModel):
-    invitations: list[InvitationModel] = Field(default_factory=list)
+class InvitationListModel(ListBaseModel[InvitationModel]):
+    items: list[InvitationModel] = Field(default_factory=list, alias="invitations")

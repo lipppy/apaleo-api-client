@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from uuid import UUID
 
+from apaleoapi.apaleo.common.contracts.response import Count
 from apaleoapi.apaleo.identity.v1.enums.identity import RoleAccessTo, RoleInvitedTo
 
 
@@ -29,7 +30,8 @@ class PropertyRolesItem:
 
 @dataclass(frozen=True)
 class RoleList:
-    roles: list[RoleAccessTo]
+    items: list[RoleAccessTo]
+    count: int
 
 
 @dataclass(frozen=True)
@@ -65,5 +67,6 @@ class UsersList:
 
 
 @dataclass(frozen=True)
-class InvitationList:
-    invitations: list[Invitation]
+class InvitationList(Count):
+    items: list[Invitation]
+    count: int

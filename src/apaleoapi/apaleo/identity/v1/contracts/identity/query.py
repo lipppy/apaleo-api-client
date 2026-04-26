@@ -4,7 +4,7 @@ from apaleoapi.apaleo.common.contracts.base import BatchRequest
 from apaleoapi.apaleo.identity.v1.enums.identity import UserSortBy
 
 
-@dataclass
+@dataclass(frozen=True)
 class InvitationListParams:
     property_id: str | None = None
 
