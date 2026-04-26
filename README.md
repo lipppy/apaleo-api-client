@@ -22,6 +22,7 @@ Current status:
 - **Type-safe abstractions** - Full type hints and Pydantic models for implemented resources
 - **Async/await support** - Non-blocking I/O for high-performance applications
 - **Authentication handling** - Built-in support for OAuth 2.0 flows (Client Credentials, Authorization Code)
+- **Pagination** - Smart concurrent batch fetching for large datasets
 - **Integration-tested** - Implemented endpoints validated against a DEV instance
 - **Documentation-first** - Usage examples and docs evolving alongside feature coverage
 
@@ -39,8 +40,8 @@ see the [Installation](https://lipppy.github.io/apaleo-api-client/main/install/)
 ### Client Credentials
 
 ```python
-from apaleoapi import ApaleoAPIClient
-from apaleoapi.http.auth import OAuth2ClientCredentialsProvider
+from apaleoapi import ApaleoAPIClient, OAuth2ClientCredentialsProvider
+
 
 # Create a token provider with your API credentials
 token_provider = OAuth2ClientCredentialsProvider(
@@ -63,87 +64,9 @@ print(property_berlin.id)
 #> BER
 ```
 
-### Authorization Code (FastAPI)
-
-In production, you should use proper session/database storage for the `state` parameter and token management. This example is simplified for demonstration purposes.
-
-```python
-import secrets
-import urllib.parse
-from dataclasses import asdict
-from typing import Any
-
-from fastapi import FastAPI, Query
-from fastapi.responses import HTMLResponse
-
-from apaleoapi import ApaleoAPIClient
-from apaleoapi.constants import APALEO_API_AUTHORIZE_URL
-from apaleoapi.http.auth import OAuth2AuthorizationCodeProvider
-
-app = FastAPI("Apaleo OAuth2 Authorization Code Flow Demo")
-CLIENT_ID, CLIENT_SECRET = "your-client-id", "your-client-secret"
-REDIRECT_URI = "http://localhost:8000/callback"
-auth_states, api_client = {}, None
-
-
-@app.get("/")
-async def index() -> HTMLResponse:
-    state = secrets.token_urlsafe(16)
-    auth_states[state] = True
-    auth_url = f"{APALEO_API_AUTHORIZE_URL}?{
-        urllib.parse.urlencode(
-            {
-                'response_type': 'code',
-                'client_id': CLIENT_ID,
-                'redirect_uri': REDIRECT_URI,
-                'state': state,
-                'scope': 'openid profile offline_access identity:account-users.read',
-            }
-        )
-    }"
-    return HTMLResponse(f'<a href="{auth_url}">Start OAuth2 Authorization</a>')
-
-
-@app.get("/callback")
-async def callback(code: str = Query(), state: str = Query()) -> dict[str, Any]:
-    global api_client
-    if state not in auth_states:
-        return {"error": "Invalid state"}
-    del auth_states[state]
-
-    token_provider = OAuth2AuthorizationCodeProvider(
-        client_id=CLIENT_ID,
-        client_secret=CLIENT_SECRET,
-        service="Apaleo API Client - Authorization Code Flow",
-        redirect_uri=REDIRECT_URI,
-        extra={"authorization_code": code},
-    )
-    await token_provider.refresh_token()
-    api_client = ApaleoAPIClient(token_provider=token_provider)
-    return {"success": True, "message": "Authenticated! Visit http://localhost:8000/identity"}
-
-
-@app.get("/identity")
-async def get_identity() -> dict[str, Any]:
-    user = await api_client.identity.v1.identity.get_current_user()
-    return asdict(user)
-
-
-if __name__ == "__main__":
-    print("🚀 Apaleo OAuth2 Authorization Code Flow Demo")
-    print(f"📱 Client ID: {CLIENT_ID}")
-    print(f"🔗 Redirect URI: {REDIRECT_URI}")
-    print()
-    print(
-        "Run with: poetry run python -m uvicorn path_to_your_module:app --host 0.0.0.0 --port 8000 --reload"
-    )
-    print("Navigate to: http://localhost:8000")
-```
-
 ## Contributing
 
 For guidance on setting up a development environment and how to make a
-contribution to Apaleo API Client, see
 [Contributing to Apaleo API Client](https://docs.pydantic.dev/contributing/).
 
 ## Reporting a Security Vulnerability
@@ -152,6 +75,6 @@ See our [security policy](https://github.com/pydantic/pydantic/security/policy).
 
 ## About the Author
 
-This SDK was created to provide modern, type-safe Python bindings for the Apaleo API. The author has a background in meteorology and hydrology with 10+ years of full-stack web development and 5+ years specializing in Python. Currently working in the hospitality domain and actively integrating with Apaleo APIs, this project began as a way to eliminate repetitive API implementation work and provide Python developers with a robust, production-ready SDK.
+The author has a background in meteorology and hydrology with 10+ years of full-stack web development and 5+ years specializing in Python. Currently working in the hospitality domain and actively integrating with Apaleo APIs, this project began as a way to eliminate repetitive API implementation work and provide Python developers with modern, type-safe Python bindings for the Apaleo API.
 
 This is the author's first library published on PyPI. As a hobby project, support and development pace depend on availability beyond work commitments.

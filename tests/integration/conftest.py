@@ -2,8 +2,7 @@ import os
 
 import pytest
 
-from apaleoapi.client import ApaleoAPIClient
-from apaleoapi.http.auth import OAuth2ClientCredentialsProvider
+from apaleoapi import ApaleoAPIClient, OAuth2ClientCredentialsProvider
 
 
 @pytest.fixture

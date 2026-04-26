@@ -1,9 +1,13 @@
+# Authorization Code Flow Example
+
+This example demonstrates how to use the Apaleo API Client with the OAuth2 Authorization Code flow. This flow is ideal for applications that need to access resources on behalf of a user.
+
+```python {title="Minimal example using the Authorization Code flow"}
 import secrets
 import urllib.parse
 from dataclasses import asdict
 from typing import Any
 
-from dotenv import dotenv_values
 from fastapi import FastAPI, Query
 from fastapi.responses import HTMLResponse
 
@@ -11,11 +15,8 @@ from apaleoapi import ApaleoAPIClient, OAuth2AuthorizationCodeProvider
 from apaleoapi.constants import APALEO_API_AUTHORIZE_URL
 
 
-# Load environment variables from .env file
-config = dotenv_values(".env.authorization_code")
-
-CLIENT_ID, CLIENT_SECRET = config["APALEO_CLIENT_ID"], config["APALEO_CLIENT_SECRET"]
-app = FastAPI()
+app = FastAPI("Apaleo OAuth2 Authorization Code Flow Demo")
+CLIENT_ID, CLIENT_SECRET = "your-client-id", "your-client-secret"
 REDIRECT_URI = "http://localhost:8000/callback"
 auth_states, api_client = {}, None
 
@@ -64,7 +65,7 @@ async def get_identity() -> dict[str, Any]:
 
 
 if __name__ == "__main__":
-    print("🚀 Apaleo OAuth2 Slim Demo")
+    print("🚀 Apaleo OAuth2 Authorization Code Flow Demo")
     print(f"📱 Client ID: {CLIENT_ID}")
     print(f"🔗 Redirect URI: {REDIRECT_URI}")
     print()
@@ -72,3 +73,4 @@ if __name__ == "__main__":
         "Run with: poetry run python -m uvicorn path_to_your_module:app --host 0.0.0.0 --port 8000 --reload"
     )
     print("Navigate to: http://localhost:8000")
+```

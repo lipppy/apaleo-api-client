@@ -59,6 +59,7 @@ optional = true
 mkdocs = "^1.6.1"
 mkdocs-material = "^9.7.4"
 mkdocstrings = {extras = ["python"], version = "^1.0.3"}
+mike = "^2.2.0"
 
 
 [tool.isort]

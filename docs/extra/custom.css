@@ -1,0 +1,24 @@
+.md-nav__item--nested > .md-nav__link {
+  font-weight: 600;
+}
+
+.md-nav .md-nav .md-nav__link {
+  font-size: 0.7rem;
+}
+
+.md-nav .md-nav .md-nav .md-nav__link {
+  font-size: 0.6rem;
+  opacity: 0.85;
+}
+
+.md-nav {
+  border-left: 0 !important;
+}
+.md-nav .md-nav {
+  border-left: 0 !important;
+}
+.md-nav .md-nav .md-nav {
+  margin-left: 0rem;
+  padding-left: 0rem;
+  border-left: 1px solid rgba(128,128,128,.18) !important;
+}
