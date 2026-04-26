@@ -1,6 +1,6 @@
 import pytest
 
-from apaleoapi.apaleo.common.contracts.payload import Operation
+from apaleoapi.apaleo.common import Operation
 from apaleoapi.apaleo.identity.v1.apis.identity import IdentityV1IdentityAdapter
 from apaleoapi.apaleo.identity.v1.identity import (
     CreateInvitation,
