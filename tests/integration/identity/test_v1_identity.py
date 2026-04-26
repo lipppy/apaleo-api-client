@@ -2,15 +2,15 @@ import pytest
 
 from apaleoapi.apaleo.common.contracts.payload import Operation
 from apaleoapi.apaleo.identity.v1.apis.identity import IdentityV1IdentityAdapter
-from apaleoapi.apaleo.identity.v1.contracts.identity.payload import CreateInvitation
-from apaleoapi.apaleo.identity.v1.contracts.identity.response import (
+from apaleoapi.apaleo.identity.v1.identity import (
+    CreateInvitation,
     InvitationList,
     InvitedUserToAccountResponse,
+    RoleInvitedTo,
     RoleList,
     User,
     UsersList,
 )
-from apaleoapi.apaleo.identity.v1.enums.identity import RoleInvitedTo
 from apaleoapi.client import ApaleoAPIClient
 from apaleoapi.exceptions import ForbiddenError, NotFoundError
 
