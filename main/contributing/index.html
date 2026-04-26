@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../favicon.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -55,9 +55,13 @@
     
       <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
+      <link rel="stylesheet" href="../../extra/custom.css">
+    
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
+  
+
 
     
     
@@ -107,6 +111,10 @@
         </aside>
       
     </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
     
     
       
@@ -263,6 +271,8 @@
           
   
   
+    
+  
   Get Started
 
         </a>
@@ -279,11 +289,13 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../api/core/" class="md-tabs__link">
+        <a href="../../api/" class="md-tabs__link">
           
   
   
-  API Documentation
+    
+  
+  API Reference
 
         </a>
       </li>
@@ -299,9 +311,11 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../examples/client/" class="md-tabs__link">
+        <a href="../../examples/" class="md-tabs__link">
           
   
+  
+    
   
   Examples
 
@@ -365,6 +379,22 @@
   
     
     
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
     
     
       
@@ -383,8 +413,9 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
         
           
-          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
-            
+          <div class="md-nav__link md-nav__container">
+            <a href="../.." class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -398,8 +429,14 @@
   
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1">
@@ -412,32 +449,6 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Welcome to Apaleo API Client
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
               
             
               
@@ -605,6 +616,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#1-set-up-development-environment" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -721,6 +743,67 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#getting-api-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏡 Getting API Credentials
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏡 Getting API Credentials">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-register-with-apaleo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Register with Apaleo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-create-an-application-client-credentials-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Create an Application - Client Credentials Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-create-an-application-authorization-code-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Create an Application - Authorization Code Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-get-your-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Get Your Credentials
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#release-process" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -787,17 +870,6 @@
     <span class="md-ellipsis">
       
         Security Contributions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#api-design-principles" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        API Design Principles
       
     </span>
   </a>
@@ -883,6 +955,16 @@
   
     
     
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
     
     
       
@@ -898,14 +980,15 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
-            
+          <div class="md-nav__link md-nav__container">
+            <a href="../../api/" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
     
   
-    API Documentation
+    API Reference
   
 
     
@@ -913,19 +996,27 @@
   
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
   
-    API Documentation
+    API Reference
   
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
             
               
                 
@@ -933,9 +1024,29 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../api/core/" class="md-nav__link">
+    
+    
+      
         
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
   
   
   <span class="md-ellipsis">
@@ -949,7 +1060,271 @@
   
   
 
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_1" id="__nav_2_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory V1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Inventory V1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/core_v1/inventory_list_properties/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    list_properties
+  
+
+    
+  </span>
+  
+  
+
       </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Identity API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Identity API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3_1" id="__nav_2_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Identity V1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Identity V1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/identity_v1/identity_list_invitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    list_invitations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -970,6 +1345,16 @@
   
     
     
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
     
     
       
@@ -985,8 +1370,9 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-            
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -1000,8 +1386,14 @@
   
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
@@ -1015,20 +1407,50 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
+            
+              
                 
   
   
   
   
     <li class="md-nav__item">
-      <a href="../../examples/client/" class="md-nav__link">
+      <a href="../../examples/client_credentials_flow/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Client Configuration
+    Client Credentials Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/authorization_code_flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authorization Code Flow
   
 
     
@@ -1088,6 +1510,17 @@
   
     <nav class="md-nav" aria-label="🚀 Quick Start for Contributors">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#1-set-up-development-environment" class="md-nav__link">
@@ -1206,6 +1639,67 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#getting-api-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏡 Getting API Credentials
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏡 Getting API Credentials">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-register-with-apaleo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Register with Apaleo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-create-an-application-client-credentials-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Create an Application - Client Credentials Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-create-an-application-authorization-code-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Create an Application - Authorization Code Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-get-your-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Get Your Credentials
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#release-process" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1278,17 +1772,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#api-design-principles" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        API Design Principles
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -1346,10 +1829,25 @@
 <h1 id="contributing-to-apaleo-api-client">Contributing to Apaleo API Client<a class="headerlink" href="#contributing-to-apaleo-api-client" title="Permanent link">&para;</a></h1>
 <p>We welcome contributions to the Apaleo API Client! Whether you're fixing bugs, adding features, improving documentation, or helping with testing, your contributions are valued.</p>
 <h2 id="quick-start-for-contributors">🚀 <strong>Quick Start for Contributors</strong><a class="headerlink" href="#quick-start-for-contributors" title="Permanent link">&para;</a></h2>
+<h3 id="prerequisites"><strong>Prerequisites</strong><a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Python 3.10 or higher<ul>
+<li>Recommended: Python 3.12 for development</li>
+<li>Supported: Python 3.10, 3.11, 3.12, 3.13</li>
+<li>For <code>nox</code> testing: Python 3.10-3.13</li>
+</ul>
+</li>
+<li>Git</li>
+<li>Poetry (for development)</li>
+<li>Python <code>invoke</code> (for running tasks)</li>
+</ul>
 <h3 id="1-set-up-development-environment"><strong>1. Set Up Development Environment</strong><a class="headerlink" href="#1-set-up-development-environment" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Fork the repository on GitHub first, then clone</span>
 git<span class="w"> </span>clone<span class="w"> </span>https://github.com/&lt;your-username&gt;/apaleo-api-client.git
 <span class="nb">cd</span><span class="w"> </span>apaleo-api-client
+
+<span class="c1"># Lock dependencies and create virtual environment</span>
+poetry<span class="w"> </span>lock
 
 <span class="c1"># Install with all development dependencies</span>
 poetry<span class="w"> </span>install<span class="w"> </span>--with<span class="w"> </span>dev,test,lint,docs
@@ -1370,12 +1868,12 @@ inv<span class="w"> </span>lint
 <span class="c1"># Format code</span>
 inv<span class="w"> </span>format
 
-<span class="c1"># Build documentation</span>
-inv<span class="w"> </span>docs
+<span class="c1"># Build and serve documentation</span>
+inv<span class="w"> </span>serve-docs
 </code></pre></div>
 <h3 id="3-make-your-changes"><strong>3. Make Your Changes</strong><a class="headerlink" href="#3-make-your-changes" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span class="c1"># Create a feature branch</span>
-git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/your-feature-name
+git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/AAC-&lt;issue-number&gt;-your-feature-name
 
 <span class="c1"># Make your changes</span>
 <span class="c1"># ...</span>
@@ -1389,7 +1887,7 @@ git<span class="w"> </span>add<span class="w"> </span>.
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: add your feature description&quot;</span>
 
 <span class="c1"># Push to your fork</span>
-git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>feature/your-feature-name
+git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>feature/AAC-&lt;issue-number&gt;-your-feature-name
 </code></pre></div>
 <h3 id="4-submit-a-pull-request"><strong>4. Submit a Pull Request</strong><a class="headerlink" href="#4-submit-a-pull-request" title="Permanent link">&para;</a></h3>
 <ol>
@@ -1402,15 +1900,14 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <h2 id="project-structure">📄 <strong>Project Structure</strong><a class="headerlink" href="#project-structure" title="Permanent link">&para;</a></h2>
 <p>Understanding the codebase structure:</p>
 <div class="language-text highlight"><pre><span></span><code>src/apaleoapi/
-├── __init__.py                # Package exports
 ├── client.py                  # Main ApaleoAPIClient
 ├── constants.py               # API endpoints and constants
 ├── exceptions.py              # Custom exception classes
 ├── logging.py                 # Logging configuration
-├── schemas.py                 # Pydantic schema definitions
 ├── typing.py                  # Type definitions
 │
 ├── apaleo/                    # API domain modules
+│   ├── common/                # Common models and utilities
 │   ├── core/                  # Core API (properties, inventory)
 │   ├── identity/              # Identity &amp; authentication
 │   ├── payment/               # Payment processing
@@ -1423,10 +1920,16 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 │   ├── auth.py                # OAuth2 authentication
 │   └── transport.py           # HTTP transport layer
 │
+├── ports/                     # Abstraction layer
+│   ├── apaleo/                # Apaleo API ports
+│   ├── http/                  # HTTP ports
+│   └── client.py              # Client ports
+│
 └── services/                  # Support services
     ├── list_fetcher.py        # Pagination handling
     ├── response_handler.py    # Response processing
-    └── response_validator.py  # Response validation
+    ├── response_validator.py  # Response validation
+    └── url_path_validator.py  # URL path validation
 </code></pre></div>
 <h2 id="development-workflow">🗺️ <strong>Development Workflow</strong><a class="headerlink" href="#development-workflow" title="Permanent link">&para;</a></h2>
 <h3 id="available-tasks-via-invoke"><strong>Available Tasks (via invoke)</strong><a class="headerlink" href="#available-tasks-via-invoke" title="Permanent link">&para;</a></h3>
@@ -1435,20 +1938,27 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <span class="c1"># Development</span>
 inv<span class="w"> </span><span class="nb">test</span><span class="w">                 </span><span class="c1"># Run tests with pytest</span>
 inv<span class="w"> </span>test-nox<span class="w">             </span><span class="c1"># Test across Python 3.10-3.13</span>
+inv<span class="w"> </span>test-integration<span class="w">     </span><span class="c1"># Run integration tests against DEV instance</span>
 
 <span class="c1"># Code Quality</span>
 inv<span class="w"> </span>lint<span class="w">                 </span><span class="c1"># Run all linters (ruff, mypy, etc.)</span>
 inv<span class="w"> </span>format<span class="w">               </span><span class="c1"># Format code (ruff format, isort)</span>
 inv<span class="w"> </span>check<span class="w">                </span><span class="c1"># Check code quality without fixing</span>
 
-<span class="c1"># Documentation  </span>
-inv<span class="w"> </span>docs<span class="w">                 </span><span class="c1"># Build and serve documentation</span>
-inv<span class="w"> </span>docs-build<span class="w">           </span><span class="c1"># Build documentation only</span>
-inv<span class="w"> </span>docs-clean<span class="w">           </span><span class="c1"># Clean generated docs</span>
+<span class="c1"># Documentation</span>
+inv<span class="w"> </span>serve-docs<span class="w">           </span><span class="c1"># Build and serve documentation</span>
+inv<span class="w"> </span>publish-docs<span class="w">         </span><span class="c1"># Build and publish documentation to GitHub Pages</span>
 
 <span class="c1"># Building</span>
-inv<span class="w"> </span>build<span class="w">                </span><span class="c1"># Build package</span>
-inv<span class="w"> </span>clean<span class="w">                </span><span class="c1"># Clean build artifacts</span>
+inv<span class="w"> </span>build-checked<span class="w">        </span><span class="c1"># Build package with checks (type checking, linting)</span>
+
+<span class="c1"># Releasing</span>
+inv<span class="w"> </span>increase-version<span class="w">     </span><span class="c1"># Bump version (major, minor, patch)</span>
+
+<span class="c1"># Cleaning</span>
+inv<span class="w"> </span>clean<span class="w">                </span><span class="c1"># Clean cache and temporary files</span>
+inv<span class="w"> </span>clean-docs<span class="w">           </span><span class="c1"># Clean documentation build artifacts</span>
+inv<span class="w"> </span>clean-build<span class="w">          </span><span class="c1"># Clean all build artifacts</span>
 </code></pre></div>
 <h3 id="code-style"><strong>Code Style</strong><a class="headerlink" href="#code-style" title="Permanent link">&para;</a></h3>
 <p>We use these tools for code quality:</p>
@@ -1462,10 +1972,37 @@ inv<span class="w"> </span>clean<span class="w">                </span><span cla
 <ul>
 <li>Line length: 100 characters</li>
 <li>Use type hints for all public APIs</li>
-<li>Follow PEP 8 and Black formatting</li>
+<li>Follow PEP 8 and PEP 257 for code style and docstrings</li>
 <li>Docstrings for all public functions/classes</li>
 <li>Use dataclasses for structured data</li>
+<li>Use Pydantic models for API schemas and validation</li>
 </ul>
+<h2 id="getting-api-credentials">🏡 <strong>Getting API Credentials</strong><a class="headerlink" href="#getting-api-credentials" title="Permanent link">&para;</a></h2>
+<p>Before using the client, either for development or production, you'll need Apaleo API credentials:</p>
+<h3 id="1-register-with-apaleo"><strong>1. Register with Apaleo</strong><a class="headerlink" href="#1-register-with-apaleo" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Visit the <a href="https://apaleo.dev">Apaleo Developer Portal</a></li>
+<li>Create a developer account or sign in</li>
+<li>Navigate to "Apps" section</li>
+</ol>
+<h3 id="2-create-an-application-client-credentials-flow"><strong>2. Create an Application - Client Credentials Flow</strong><a class="headerlink" href="#2-create-an-application-client-credentials-flow" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Click "Connected apps" for client credentials flow</li>
+<li>Click "Add a new app" then select "Add custom app"</li>
+<li>Fill out the form</li>
+</ol>
+<h3 id="3-create-an-application-authorization-code-flow"><strong>3. Create an Application - Authorization Code Flow</strong><a class="headerlink" href="#3-create-an-application-authorization-code-flow" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Click "My store apps" for authorization code flow</li>
+<li>Click "Add a new store app"</li>
+<li>Fill out the form (name, description, redirect URI, secret, etc.)</li>
+<li>Configure the app's permissions (scopes) based on your needs</li>
+</ol>
+<h3 id="4-get-your-credentials"><strong>4. Get Your Credentials</strong><a class="headerlink" href="#4-get-your-credentials" title="Permanent link">&para;</a></h3>
+<p>After creating the application, you'll receive:
+- <strong>Client ID</strong>: Public identifier for your application
+- <strong>Client Secret</strong>: Private secret (keep secure!)
+- <strong>Redirect URI</strong>: URL for authorization code flow (if applicable)</p>
 <h2 id="release-process">📅 <strong>Release Process</strong><a class="headerlink" href="#release-process" title="Permanent link">&para;</a></h2>
 <p><em>(For maintainers)</em></p>
 <h3 id="version-bumping"><strong>Version Bumping</strong><a class="headerlink" href="#version-bumping" title="Permanent link">&para;</a></h3>
@@ -1475,21 +2012,13 @@ inv<span class="w"> </span>clean<span class="w">                </span><span cla
 <li><strong>MINOR</strong>: New features, backwards compatible</li>
 <li><strong>PATCH</strong>: Bug fixes, backwards compatible</li>
 </ul>
-<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Update version in pyproject.toml</span>
-poetry<span class="w"> </span>version<span class="w"> </span>patch<span class="p">|</span>minor<span class="p">|</span>major
-
-<span class="c1"># Update CHANGELOG.md</span>
-<span class="c1"># Git commit and tag</span>
-git<span class="w"> </span>add<span class="w"> </span>.
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;chore: bump version to vX.Y.Z&quot;</span>
-git<span class="w"> </span>tag<span class="w"> </span>vX.Y.Z
-git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main<span class="w"> </span>--tags
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Update version cia invoke task</span>
+inv<span class="w"> </span>increase-version<span class="w"> </span>--part<span class="w"> </span>minor<span class="w">  </span><span class="c1"># or major, patch</span>
 </code></pre></div>
 <h3 id="release-checklist"><strong>Release Checklist</strong><a class="headerlink" href="#release-checklist" title="Permanent link">&para;</a></h3>
 <ul class="task-list">
 <li class="task-list-item"><input type="checkbox" disabled/> All tests pass across Python 3.10-3.13</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Documentation is up to date</li>
-<li class="task-list-item"><input type="checkbox" disabled/> CHANGELOG.md is updated</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Version is bumped in pyproject.toml</li>
 <li class="task-list-item"><input type="checkbox" disabled/> Git tag matches package version</li>
 <li class="task-list-item"><input type="checkbox" disabled/> GitHub release is created</li>
@@ -1509,15 +2038,6 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <li>Use environment variables for test credentials</li>
 <li>Follow OWASP guidelines for HTTP clients</li>
 <li>Consider timing attacks in authentication</li>
-</ul>
-<h3 id="api-design-principles"><strong>API Design Principles</strong><a class="headerlink" href="#api-design-principles" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Favor async methods for I/O operations</li>
-<li>Use type hints for all public APIs</li>
-<li>Make required parameters explicit</li>
-<li>Provide sensible defaults for optional parameters</li>
-<li>Use dataclasses for complex parameters</li>
-<li>Handle errors gracefully with typed exceptions</li>
 </ul>
 <h2 id="commit-message-format">📉 <strong>Commit Message Format</strong><a class="headerlink" href="#commit-message-format" title="Permanent link">&para;</a></h2>
 <p>We follow <a href="https://www.conventionalcommits.org/">Conventional Commits</a>:</p>
@@ -1561,7 +2081,59 @@ test(integration): add tests for pagination edge cases
 
 
 
+  
 
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 9v12H1V9zm4 12a2 2 0 0 1-2-2V9c0-.55.22-1.05.59-1.41L14.17 1l1.06 1.06c.27.27.44.64.44 1.05l-.03.32L14.69 8H21a2 2 0 0 1 2 2v2c0 .26-.05.5-.14.73l-3.02 7.05C19.54 20.5 18.83 21 18 21zm0-2h9.03L21 12v-2h-8.79l1.13-5.32L9 9.03z"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 15V3h4v12zM15 3a2 2 0 0 1 2 2v10c0 .55-.22 1.05-.59 1.41L9.83 23l-1.06-1.06c-.27-.27-.44-.64-.44-1.06l.03-.31.95-4.57H3a2 2 0 0 1-2-2v-2c0-.26.05-.5.14-.73l3.02-7.05C4.46 3.5 5.17 3 6 3zm0 2H5.97L3 12v2h8.78l-1.13 5.32L15 14.97z"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
 
 
                 
@@ -1612,10 +2184,12 @@ test(integration): add tests for pagination edge cases
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.tabs.link", "content.code.annotate", "content.code.copy", "announce.dismiss", "navigation.tabs", "navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.path", "navigation.sections", "navigation.top", "navigation.tracking", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.tabs.link", "content.code.annotate", "content.code.copy", "announce.dismiss", "navigation.tabs", "navigation.indexes", "navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.path", "navigation.sections", "navigation.top", "navigation.tracking", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../extra/feedback.js"></script>
       
     
   </body>

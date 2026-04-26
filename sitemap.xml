@@ -2,34 +2,50 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://lipppy.github.io/apaleo-api-client/</loc>
-         <lastmod>2026-03-29</lastmod>
+         <lastmod>2026-04-26</lastmod>
     </url>
     <url>
-         <loc>https://lipppy.github.io/apaleo-api-client/api/core/</loc>
-         <lastmod>2026-03-29</lastmod>
+         <loc>https://lipppy.github.io/apaleo-api-client/api/</loc>
+         <lastmod>2026-04-26</lastmod>
     </url>
     <url>
-         <loc>https://lipppy.github.io/apaleo-api-client/examples/client/</loc>
-         <lastmod>2026-03-29</lastmod>
+         <loc>https://lipppy.github.io/apaleo-api-client/api/core_v1/inventory_list_properties/</loc>
+         <lastmod>2026-04-26</lastmod>
+    </url>
+    <url>
+         <loc>https://lipppy.github.io/apaleo-api-client/api/identity_v1/identity_list_invitations/</loc>
+         <lastmod>2026-04-26</lastmod>
+    </url>
+    <url>
+         <loc>https://lipppy.github.io/apaleo-api-client/examples/</loc>
+         <lastmod>2026-04-26</lastmod>
+    </url>
+    <url>
+         <loc>https://lipppy.github.io/apaleo-api-client/examples/authorization_code_flow/</loc>
+         <lastmod>2026-04-26</lastmod>
+    </url>
+    <url>
+         <loc>https://lipppy.github.io/apaleo-api-client/examples/client_credentials_flow/</loc>
+         <lastmod>2026-04-26</lastmod>
     </url>
     <url>
          <loc>https://lipppy.github.io/apaleo-api-client/main/changelog/</loc>
-         <lastmod>2026-03-29</lastmod>
+         <lastmod>2026-04-26</lastmod>
     </url>
     <url>
          <loc>https://lipppy.github.io/apaleo-api-client/main/contributing/</loc>
-         <lastmod>2026-03-29</lastmod>
+         <lastmod>2026-04-26</lastmod>
     </url>
     <url>
          <loc>https://lipppy.github.io/apaleo-api-client/main/install/</loc>
-         <lastmod>2026-03-29</lastmod>
+         <lastmod>2026-04-26</lastmod>
     </url>
     <url>
          <loc>https://lipppy.github.io/apaleo-api-client/main/troubleshooting/</loc>
-         <lastmod>2026-03-29</lastmod>
+         <lastmod>2026-04-26</lastmod>
     </url>
     <url>
          <loc>https://lipppy.github.io/apaleo-api-client/main/why/</loc>
-         <lastmod>2026-03-29</lastmod>
+         <lastmod>2026-04-26</lastmod>
     </url>
 </urlset>
