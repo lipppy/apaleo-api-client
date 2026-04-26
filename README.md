@@ -7,11 +7,23 @@
 [![versions](https://img.shields.io/pypi/pyversions/apaleo-api-client.svg)](https://github.com/lipppy/apaleo-api-client/blob/main/pyproject.toml#L15)
 [![license](https://img.shields.io/github/license/lipppy/apaleo-api-client.svg)](https://github.com/lipppy/apaleo-api-client/blob/main/LICENSE)
 
-Python async API wrapper for Apaleo Swagger API. Built on top of Pydantic v2 and httpx. Typesafe, fast, and easy to use.
+Python SDK for the Apaleo API. Provides a type-safe, async client for seamless integration with Apaleo's hospitality platform. Built on Pydantic v2 and httpx. Fast, easy to use, and fully documented.
 
 ## Help
 
 See [documentation](https://lipppy.github.io/apaleo-api-client/) for more details.
+
+## Features
+
+This SDK is actively under development with the goal of providing full coverage of the Apaleo API Swagger specifications focusing on `v1` but with the capability and intention to expand to other versions in the future.
+
+Current status:
+
+- **Type-safe abstractions** - Full type hints and Pydantic models for implemented resources
+- **Async/await support** - Non-blocking I/O for high-performance applications
+- **Authentication handling** - Built-in support for OAuth 2.0 flows (Client Credentials, Authorization Code)
+- **Integration-tested** - Implemented endpoints validated against a DEV instance
+- **Documentation-first** - Usage examples and docs evolving alongside feature coverage
 
 ## Installation
 
@@ -137,3 +149,9 @@ contribution to Apaleo API Client, see
 ## Reporting a Security Vulnerability
 
 See our [security policy](https://github.com/pydantic/pydantic/security/policy).
+
+## About the Author
+
+This SDK was created to provide modern, type-safe Python bindings for the Apaleo API. The author has a background in meteorology and hydrology with 10+ years of full-stack web development and 5+ years specializing in Python. Currently working in the hospitality domain and actively integrating with Apaleo APIs, this project began as a way to eliminate repetitive API implementation work and provide Python developers with a robust, production-ready SDK.
+
+This is the author's first library published on PyPI. As a hobby project, support and development pace depend on availability beyond work commitments.
