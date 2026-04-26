@@ -8,38 +8,40 @@ See: https://identity.apaleo.com/swagger/index.html?urls.primaryName=Identity+V1
 """
 
 from apaleoapi.apaleo.common.base import BaseAdapter
-from apaleoapi.apaleo.identity.v1.contracts.identity.factories import (
+from apaleoapi.apaleo.common.contracts.payload import Operation
+from apaleoapi.apaleo.common.schemas.payload import OperationModel
+from apaleoapi.apaleo.identity.v1.contracts.identity.factory import (
     InvitationListFakerFactory,
     InvitedUserToAccountResponseFakerFactory,
     RoleListFakerFactory,
     UserFakerFactory,
     UsersListFakerFactory,
 )
-from apaleoapi.apaleo.identity.v1.contracts.identity.payloads import CreateInvitation
-from apaleoapi.apaleo.identity.v1.contracts.identity.queries import (
+from apaleoapi.apaleo.identity.v1.contracts.identity.payload import CreateInvitation
+from apaleoapi.apaleo.identity.v1.contracts.identity.query import (
     InvitationListParams,
     UserListParams,
 )
-from apaleoapi.apaleo.identity.v1.contracts.identity.responses import (
+from apaleoapi.apaleo.identity.v1.contracts.identity.response import (
     InvitationList,
     InvitedUserToAccountResponse,
     RoleList,
     User,
     UsersList,
 )
-from apaleoapi.apaleo.identity.v1.schemas.identity.factories import (
+from apaleoapi.apaleo.identity.v1.schemas.identity.factory import (
     InvitationListModelDefaultFactory,
     InvitedUserToAccountResponseModelDefaultFactory,
     RoleListModelDefaultFactory,
     UserModelDefaultFactory,
     UsersListModelDefaultFactory,
 )
-from apaleoapi.apaleo.identity.v1.schemas.identity.payloads import CreateInvitationModel
-from apaleoapi.apaleo.identity.v1.schemas.identity.queries import (
+from apaleoapi.apaleo.identity.v1.schemas.identity.payload import CreateInvitationModel
+from apaleoapi.apaleo.identity.v1.schemas.identity.query import (
     InvitationListParamsModel,
     UserListParamsModel,
 )
-from apaleoapi.apaleo.identity.v1.schemas.identity.responses import (
+from apaleoapi.apaleo.identity.v1.schemas.identity.response import (
     InvitationListModel,
     InvitedUserToAccountResponseModel,
     RoleListModel,
@@ -147,9 +149,16 @@ class IdentityV1IdentityAdapter(BaseAdapter, IdentityV1IdentityPort):
             return_cls=User,
         )
 
-    async def update_user(self, user_id: str) -> None:
+    async def update_user(self, user_id: str, payload: list[Operation]) -> None:
         """Update a user by user ID (subject ID)."""
-        raise NotImplementedError("Update user is not implemented yet.")
+        url = f"{self._base_path}/users/{user_id}"
+
+        await self._patch_resource(
+            url=url,
+            payload=payload,
+            payload_model_cls=OperationModel,
+            error_prefix=f"Failed to update user with ID {user_id}",
+        )
 
     async def get_current_user(self) -> User:
         """Get the current user."""

@@ -1,6 +1,6 @@
 from polyfactory.factories import DataclassFactory
 
-from apaleoapi.apaleo.identity.v1.contracts.identity.responses import (
+from apaleoapi.apaleo.identity.v1.contracts.identity.response import (
     InvitationList,
     InvitedUserToAccountResponse,
     RoleList,

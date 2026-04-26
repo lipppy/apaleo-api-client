@@ -34,7 +34,7 @@ from apaleoapi.http.auth import OAuth2ClientCredentialsProvider
 token_provider = OAuth2ClientCredentialsProvider(
     client_id="your-client-id",
     client_secret="your-client-secret",
-    service="My Application"
+    service="Apaleo API Client - Client Credentials Flow"
 )
 
 # Create an instance of the client

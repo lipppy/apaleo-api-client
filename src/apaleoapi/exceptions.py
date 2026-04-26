@@ -48,3 +48,7 @@ class ServiceUnavailableError(APIError):
 
 class DeleteResourceError(APIError):
     pass
+
+
+class UpdateResourceError(APIError):
+    pass

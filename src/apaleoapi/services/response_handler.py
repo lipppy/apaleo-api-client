@@ -2,7 +2,7 @@ from typing import Any, cast
 
 import httpx
 
-from apaleoapi.apaleo.exceptions import (
+from apaleoapi.exceptions import (
     APIError,
     BadRequestError,
     ClientClosedRequestError,
@@ -43,9 +43,7 @@ class ResponseHandler:
         status = response.status_code
 
         match status:
-            case 200:
-                return self._handle_success(response)
-            case 201:
+            case 200 | 201 | 202 | 203:
                 return self._handle_success(response)
             case 204:
                 return None

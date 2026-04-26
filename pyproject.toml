@@ -50,6 +50,7 @@ pytest = "^8.4"
 coverage = "^7.8"
 freezegun = "^1.5.2"
 pytest-asyncio = "^1.0.0"
+pytest-dotenv = "^0.5.2"
 
 [tool.poetry.group.docs]
 optional = true
@@ -117,8 +118,6 @@ ignore = [
 
 [tool.mypy]
 exclude = [
-    "tasks.py",
-    "conftest.py",
     "miscs/*"
 ]
 strict = true
@@ -149,6 +148,7 @@ asyncio_mode = "auto"
 markers = [
     "unit: unit tests",
     "integration: integration tests",
+    "live: live tests against the actual API",
     "contract: port contract compliance tests",
     "e2e: end-to-end tests",
     "slow: slow tests"
@@ -158,6 +158,7 @@ norecursedirs = [
   "dist",
   "miscs"
 ]
+env_files = [".env.test"]
 
 
 [tool.coverage.run]

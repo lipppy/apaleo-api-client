@@ -4,6 +4,8 @@ import pytest
 
 from apaleoapi.services.url_path_validator import URLPathValidationError, URLPathValidator
 
+pytestmark = [pytest.mark.unit]
+
 
 class TestURLPathValidator:
     """Test cases for URLPathValidator."""

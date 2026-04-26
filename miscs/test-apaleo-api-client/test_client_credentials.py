@@ -7,8 +7,8 @@ from dataclasses import asdict
 from dotenv import dotenv_values
 
 from apaleoapi import ApaleoAPIClient
-from apaleoapi.apaleo.identity.v1.contracts.identity.payloads import CreateInvitation
-from apaleoapi.apaleo.identity.v1.contracts.identity.queries import UserListParams
+from apaleoapi.apaleo.identity.v1.contracts.identity.payload import CreateInvitation
+from apaleoapi.apaleo.identity.v1.contracts.identity.query import UserListParams
 from apaleoapi.http.auth import OAuth2ClientCredentialsProvider
 
 # Load environment variables from .env file
@@ -171,9 +171,8 @@ async def main() -> None:
     # properties = await client.core.v1.inventory.list_properties(params=params)
     # print(json.dumps(asdict(properties), indent=2, default=str))
 
-    # params = PropertyListParams(batch_size=1)
-    # properties = await client.core.v1.inventory.list_properties(params=params)
-    # print(json.dumps(asdict(properties), indent=2, default=str))
+    properties_count = await client.core.v1.inventory.count_properties()
+    print(json.dumps(asdict(properties_count), indent=2, default=str))
 
     # Clean up resources
     await client.aclose()

@@ -3,7 +3,7 @@ from typing import Any, Type
 import httpx
 from pydantic import ValidationError as PydanticValidationError
 
-from apaleoapi.apaleo.exceptions import ValidationError
+from apaleoapi.exceptions import ValidationError
 from apaleoapi.logging import get_logger
 from apaleoapi.typing import TModel
 
