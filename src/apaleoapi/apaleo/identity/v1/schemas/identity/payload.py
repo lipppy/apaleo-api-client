@@ -1,7 +1,7 @@
 from pydantic import EmailStr, Field
 
+from apaleoapi.apaleo.common.schemas.base import ExtendedBaseModel
 from apaleoapi.apaleo.identity.v1.enums.identity import RoleAccessTo, RoleInvitedTo
-from apaleoapi.schemas import ExtendedBaseModel
 
 
 class CreateInvitationModel(ExtendedBaseModel):

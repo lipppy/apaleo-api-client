@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from apaleoapi.dataclasses import BatchRequest
+from apaleoapi.apaleo.common.contracts.base import BatchRequest
 
 
 @dataclass

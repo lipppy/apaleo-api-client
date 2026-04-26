@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
+from apaleoapi.apaleo.common.contracts.base import BatchRequest
 from apaleoapi.apaleo.identity.v1.enums.identity import UserSortBy
-from apaleoapi.dataclasses import BatchRequest
 
 
 @dataclass

@@ -2,8 +2,8 @@ from uuid import UUID
 
 from pydantic import AwareDatetime, Field
 
+from apaleoapi.apaleo.common.schemas.base import ExtendedBaseModel, ListBaseModel
 from apaleoapi.apaleo.identity.v1.enums.identity import RoleAccessTo, RoleInvitedTo
-from apaleoapi.schemas import ExtendedBaseModel, ListBaseModel
 
 
 class InvitationModel(ExtendedBaseModel):

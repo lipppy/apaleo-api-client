@@ -8,8 +8,8 @@ API doc: https://api.apaleo.com/swagger/index.html?urls.primaryName=Inventory+V1
 from polyfactory.factories.pydantic_factory import ModelFactory
 from pydantic import AwareDatetime, Field
 
+from apaleoapi.apaleo.common.schemas.base import ExtendedBaseModel, ListBaseModel
 from apaleoapi.apaleo.core.v1.enums.inventory import Action, Code, PropertyStatus
-from apaleoapi.schemas import ExtendedBaseModel, ListBaseModel
 
 # Property
 

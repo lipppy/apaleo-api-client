@@ -1,6 +1,6 @@
 from pydantic import Field
 
-from apaleoapi.schemas import BatchRequestBaseModel, StrictBaseModel
+from apaleoapi.apaleo.common.schemas.base import BatchRequestBaseModel, StrictBaseModel
 
 
 class PropertyListParamsModel(BatchRequestBaseModel):
