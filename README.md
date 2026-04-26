@@ -67,11 +67,11 @@ print(property_berlin.id)
 ## Contributing
 
 For guidance on setting up a development environment and how to make a
-[Contributing to Apaleo API Client](https://docs.pydantic.dev/contributing/).
+[Contributing to Apaleo API Client](https://lipppy.github.io/apaleo-api-client/main/contributing/).
 
 ## Reporting a Security Vulnerability
 
-See our [security policy](https://github.com/pydantic/pydantic/security/policy).
+See our [security policy](https://github.com/lipppy/apaleo-api-client/security/policy).
 
 ## About the Author
 

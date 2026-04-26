@@ -2,7 +2,7 @@ from uuid import UUID
 
 from pydantic import AwareDatetime, Field
 
-from apaleoapi.apaleo.common.schemas.base import ExtendedBaseModel, ListBaseModel
+from apaleoapi.apaleo.common.schemas.base import ExtendedBaseModel, ListBaseModel, ListEnumBaseModel
 from apaleoapi.apaleo.identity.v1.enums.identity import RoleAccessTo, RoleInvitedTo
 
 
@@ -25,7 +25,7 @@ class PropertyRolesItemModel(ExtendedBaseModel):
     roles: list[RoleAccessTo] = Field(...)
 
 
-class RoleListModel(ListBaseModel[RoleAccessTo]):
+class RoleListModel(ListEnumBaseModel[RoleAccessTo]):
     items: list[RoleAccessTo] = Field(..., alias="roles")
 
 

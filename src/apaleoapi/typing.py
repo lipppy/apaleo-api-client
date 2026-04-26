@@ -11,6 +11,7 @@ if TYPE_CHECKING:
 else:
     DataclassInstance = Any
 
+
 TDomain = TypeVar("TDomain", bound=DataclassInstance)
 TParams = TypeVar("TParams", bound=DataclassInstance)
 TPayload = TypeVar("TPayload", bound=DataclassInstance)

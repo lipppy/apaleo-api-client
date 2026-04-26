@@ -95,10 +95,14 @@ class BaseAdapter:
             )
 
         data = validated_response.model_dump()
-        # Calculate count for list responses if not provided by the API, based on the number of items returned
+        # Calculate count for list responses if not provided by the API
+        # based on the number of items returned
         if "count" in data and "items" in data and isinstance(data["items"], list):
             data["count"] = len(data["items"])
-            log.debug(f"Calculated count based on items length for class {return_cls.__name__}: {data['count']}")
+            log.debug(
+                f"Calculated count based on items length for class {return_cls.__name__}: "
+                f"{data['count']}"
+            )
 
         # Convert the validated response model to the desired return type using from_dict
         return from_dict(
