@@ -6,16 +6,6 @@ from apaleoapi.apaleo.identity.v1.enums.identity import RoleAccessTo, RoleInvite
 
 
 @dataclass(frozen=True)
-class InvitationAuditLog:
-    aggregate_type: str | None = None
-    account_code: str | None = None
-    email: str | None = None
-    properties: list[str] | None = None
-    roles: list[str] | None = None
-    is_account_admin: bool | None = None
-
-
-@dataclass(frozen=True)
 class Invitation:
     email: str
     is_account_admin: bool
@@ -32,12 +22,6 @@ class InvitedUserToAccountResponse:
 
 
 @dataclass(frozen=True)
-class PropertyRolesAuditLog:
-    id: str | None = None
-    roles: list[str] | None = None
-
-
-@dataclass(frozen=True)
 class PropertyRolesItem:
     id: str
     roles: list[RoleAccessTo]
@@ -46,17 +30,6 @@ class PropertyRolesItem:
 @dataclass(frozen=True)
 class RoleList:
     roles: list[RoleAccessTo]
-
-
-@dataclass(frozen=True)
-class UserAuditLog:
-    first_name: str | None = None
-    last_name: str | None = None
-    email: str | None = None
-    enabled: bool | None = None
-    is_account_admin: bool | None = None
-    properties_roles: list[PropertyRolesAuditLog] | None = None
-    aggregate_type: str | None = None
 
 
 @dataclass(frozen=True)

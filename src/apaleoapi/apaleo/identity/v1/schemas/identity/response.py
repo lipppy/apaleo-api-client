@@ -6,15 +6,6 @@ from apaleoapi.apaleo.identity.v1.enums.identity import RoleAccessTo, RoleInvite
 from apaleoapi.schemas import ExtendedBaseModel, ListBaseModel
 
 
-class InvitationAuditLogModel(ExtendedBaseModel):
-    aggregate_type: str | None = Field(None, alias="aggregateType")
-    account_code: str | None = Field(None, alias="accountCode")
-    email: str | None = None
-    properties: list[str] | None = None
-    roles: list[str] | None = None
-    is_account_admin: bool | None = Field(None, alias="isAccountAdmin")
-
-
 class InvitationModel(ExtendedBaseModel):
     email: str = Field(..., min_length=1)
     properties: list[str] | None = Field(None)
@@ -29,11 +20,6 @@ class InvitedUserToAccountResponseModel(ExtendedBaseModel):
     email: str = Field(..., min_length=1)
 
 
-class PropertyRolesAuditLogModel(ExtendedBaseModel):
-    id: str | None = Field(None)
-    roles: list[str] | None = None
-
-
 class PropertyRolesItemModel(ExtendedBaseModel):
     id: str = Field(..., min_length=1)
     roles: list[RoleAccessTo] = Field(...)
@@ -41,16 +27,6 @@ class PropertyRolesItemModel(ExtendedBaseModel):
 
 class RoleListModel(ExtendedBaseModel):
     roles: list[RoleAccessTo] = Field(...)
-
-
-class UserAuditLogModel(ExtendedBaseModel):
-    first_name: str | None = Field(None, alias="firstName")
-    last_name: str | None = Field(None, alias="lastName")
-    email: str | None = None
-    enabled: bool | None = None
-    is_account_admin: bool | None = Field(None, alias="isAccountAdmin")
-    properties_roles: list[PropertyRolesAuditLogModel] | None = Field(None, alias="propertiesRoles")
-    aggregate_type: str | None = Field(None, alias="aggregateType")
 
 
 class UserItemModel(ExtendedBaseModel):
