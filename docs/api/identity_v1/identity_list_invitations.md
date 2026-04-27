@@ -4,12 +4,13 @@ Returns a list of all invitations to the current account.
 
 ## Endpoint Mapping
 
-- Swagger UI link: [https://identity.apaleo.com/swagger/index.html?urls.primaryName=Identity+V1](https://identity.apaleo.com/swagger/index.html?urls.primaryName=Identity+V1)
-- HTTP method: `GET`
-- Endpoint: `/api/v1/account/invitations`
-- Full URL: `https://identity.apaleo.com/api/v1/account/invitations`
-- Adapter: `client.identity.v1.identity: IdentityV1IdentityAdapter`
-- Adapter method: `list_invitations(params: InvitationListParams | None = None)`
+- **Swagger UI link:** [https://identity.apaleo.com/swagger/index.html?urls.primaryName=Identity+V1](https://identity.apaleo.com/swagger/index.html?urls.primaryName=Identity+V1)
+- **Section:** Invitation
+- **HTTP method:** `GET`
+- **Endpoint:** `/api/v1/account/invitations`
+- **Full URL:** `https://identity.apaleo.com/api/v1/account/invitations`
+- **Adapter:** `client.identity.v1.identity: IdentityV1IdentityAdapter`
+- **Adapter method:** `list_invitations(params: InvitationListParams | None = None)`
 
 ## Parameters
 

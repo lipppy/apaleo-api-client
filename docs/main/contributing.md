@@ -120,34 +120,25 @@ src/apaleoapi/
 
 ### **Available Tasks (via invoke)**
 
-```bash
-inv help                 # Show all available tasks
+| Task Name | Description |
+|-----------|-------------|
+| `inv help` | Show all available tasks |
+| `inv test` | Run tests with pytest |
+| `inv test-nox` | Test across Python 3.10-3.13 |
+| `inv test-integration` | Run integration tests against DEV instance |
+| `inv lint` | Run all linters (ruff, mypy, etc.) |
+| `inv format` | Format code (ruff format, isort) |
+| `inv check` | Check code quality without fixing |
+| `inv serve-docs` | Build and serve documentation |
+| `inv publish-docs` | Build and publish documentation to GitHub Pages |
+| `inv build-checked` | Build package with checks (type checking, linting) |
+| `inv increase-version` | Bump version (major, minor, patch) |
+| `inv clean` | Clean cache and temporary files |
+| `inv clean-docs` | Clean documentation build artifacts |
+| `inv clean-build` | Clean all build artifacts |
 
-# Development
-inv test                 # Run tests with pytest
-inv test-nox             # Test across Python 3.10-3.13
-inv test-integration     # Run integration tests against DEV instance
-
-# Code Quality
-inv lint                 # Run all linters (ruff, mypy, etc.)
-inv format               # Format code (ruff format, isort)
-inv check                # Check code quality without fixing
-
-# Documentation
-inv serve-docs           # Build and serve documentation
-inv publish-docs         # Build and publish documentation to GitHub Pages
-
-# Building
-inv build-checked        # Build package with checks (type checking, linting)
-
-# Releasing
-inv increase-version     # Bump version (major, minor, patch)
-
-# Cleaning
-inv clean                # Clean cache and temporary files
-inv clean-docs           # Clean documentation build artifacts
-inv clean-build          # Clean all build artifacts
-```
+!!! note
+    The **integration test** `inv test-integration` require valid Apaleo API credentials (only client credentials) and will make real API calls to the instance your credentials are associated with. Use with caution and never run integration tests against production credentials.
 
 ### **Code Style**
 
