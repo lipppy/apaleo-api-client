@@ -2,9 +2,23 @@
 
 We welcome contributions to the Apaleo API Client! Whether you're fixing bugs, adding features, improving documentation, or helping with testing, your contributions are valued.
 
-## 🚀 **Quick Start for Contributors**
+## Issues
 
-### **Prerequisites**
+Questions, feature requests, and bug reports are welcome through [GitHub Discussions or Issues](https://github.com/lipppy/apaleo-api-client/discussions).
+
+If you need to report a security vulnerability, please use the process described in our [Security Policy](https://github.com/lipppy/apaleo-api-client/SECURITY.md).
+
+To help us investigate issues efficiently, please include the output of the following command whenever relevant:
+
+```bash
+poetry run python -c "import src.apaleoapi.utils; print(src.apaleoapi.utils.version_info())"
+```
+
+Please include this information whenever possible, unless the package cannot be installed or the details are clearly unrelated to your request.
+
+## Quick Start for Contributors
+
+### Prerequisites
 - Python 3.10 or higher
     - Recommended: Python 3.12 for development
     - Supported: Python 3.10, 3.11, 3.12, 3.13
@@ -13,7 +27,7 @@ We welcome contributions to the Apaleo API Client! Whether you're fixing bugs, a
 - Poetry (for development)
 - Python `invoke` (for running tasks)
 
-### **1. Set Up Development Environment**
+### Development Environment
 
 ```bash
 # Fork the repository on GitHub first, then clone
@@ -33,7 +47,7 @@ poetry shell
 inv help
 ```
 
-### **2. Check Everything Works**
+### Check Everything Works
 
 ```bash
 # Run tests
@@ -49,7 +63,7 @@ inv format
 inv serve-docs
 ```
 
-### **3. Make Your Changes**
+### Make Your Changes
 
 ```bash
 # Create a feature branch
@@ -70,7 +84,7 @@ git commit -m "feat: add your feature description"
 git push origin feature/AAC-<issue-number>-your-feature-name
 ```
 
-### **4. Submit a Pull Request**
+### Submit a Pull Request
 
 1. Go to the GitHub repository
 2. Click "New Pull Request"
@@ -78,7 +92,7 @@ git push origin feature/AAC-<issue-number>-your-feature-name
 4. Fill out the PR template
 5. Wait for review feedback
 
-## 📄 **Project Structure**
+## Project Structure
 
  Understanding the codebase structure:
 
@@ -116,9 +130,9 @@ src/apaleoapi/
     └── url_path_validator.py  # URL path validation
 ```
 
-## 🗺️ **Development Workflow**
+## Development Workflow
 
-### **Available Tasks (via invoke)**
+### Available Tasks (via `invoke`)
 
 | Task Name | Description |
 |-----------|-------------|
@@ -140,7 +154,7 @@ src/apaleoapi/
 !!! note
     The **integration test** `inv test-integration` require valid Apaleo API credentials (only client credentials) and will make real API calls to the instance your credentials are associated with. Use with caution and never run integration tests against production credentials.
 
-### **Code Style**
+### Code Style 
 
 We use these tools for code quality:
 
@@ -149,7 +163,7 @@ We use these tools for code quality:
 - **isort**: Import sorting
 - **pytest**: Testing framework
 
-#### **Code Style Rules**
+#### Code Style Rules
 - Line length: 100 characters
 - Use type hints for all public APIs
 - Follow PEP 8 and PEP 257 for code style and docstrings
@@ -157,37 +171,37 @@ We use these tools for code quality:
 - Use dataclasses for structured data
 - Use Pydantic models for API schemas and validation
 
-## 🏡 **Getting API Credentials**
+## Getting API Credentials
 
 Before using the client, either for development or production, you'll need Apaleo API credentials:
 
-### **1. Register with Apaleo**
+### Register with Apaleo
 1. Visit the [Apaleo Developer Portal](https://apaleo.dev)
 2. Create a developer account or sign in
 3. Navigate to "Apps" section
 
-### **2. Create an Application - Client Credentials Flow**
+### Create an Application - Client Credentials Flow
 1. Click "Connected apps" for client credentials flow
 2. Click "Add a new app" then select "Add custom app"
 3. Fill out the form
 
-### **3. Create an Application - Authorization Code Flow**
+### Create an Application - Authorization Code Flow
 1. Click "My store apps" for authorization code flow
 2. Click "Add a new store app"
 3. Fill out the form (name, description, redirect URI, secret, etc.)
 4. Configure the app's permissions (scopes) based on your needs
 
-### **4. Get Your Credentials**
+### Get Your Credentials
 After creating the application, you'll receive:
 - **Client ID**: Public identifier for your application
 - **Client Secret**: Private secret (keep secure!)
 - **Redirect URI**: URL for authorization code flow (if applicable)
 
-## 📅 **Release Process**
+## Release Process
 
 *(For maintainers)*
 
-### **Version Bumping**
+### Version Bumping
 
 We use [semantic versioning](https://semver.org/):
 
@@ -196,11 +210,11 @@ We use [semantic versioning](https://semver.org/):
 - **PATCH**: Bug fixes, backwards compatible
 
 ```bash
-# Update version cia invoke task
+# Update version via invoke task
 inv increase-version --part minor  # or major, patch
 ```
 
-### **Release Checklist**
+### Release Checklist
 
 - [ ] All tests pass across Python 3.10-3.13
 - [ ] Documentation is up to date
@@ -209,23 +223,23 @@ inv increase-version --part minor  # or major, patch
 - [ ] GitHub release is created
 - [ ] Package is published to PyPI
 
-## 🚀 **Advanced Contributing**
+## Advanced Contributing
 
-### **Performance Contributions**
+### Performance Contributions
 
 - Use `asyncio` profiling for async code
 - Benchmark before/after changes
 - Consider memory usage for large datasets
 - Test with various network conditions
 
-### **Security Contributions**
+### Security Contributions
 
 - Never log sensitive information (credentials, tokens)
 - Use environment variables for test credentials
 - Follow OWASP guidelines for HTTP clients
 - Consider timing attacks in authentication
 
-## 📉 **Commit Message Format**
+## Commit Message Format
 
 We follow [Conventional Commits](https://www.conventionalcommits.org/):
 
@@ -259,7 +273,7 @@ test(integration): add tests for pagination edge cases
 
 ---
 
-## 💙 **Thank You!**
+## Thank You!
 
 Every contribution helps make Apaleo API Client better for everyone. Whether you're fixing a typo, adding a feature, or helping with documentation, your efforts are appreciated!
 
