@@ -5,7 +5,7 @@ If you believe you have found a security vulnerability in this project, please d
 Report it privately using GitHub’s security reporting feature:
 
 1. Open the repository on GitHub.
-2. Go to the **Security and quality** tab.
+2. Go to the [**Security and quality**](https://github.com/lipppy/apaleo-api-client/security) tab.
 3. Select **Report a vulnerability**.
 4. Include enough detail for us to reproduce and assess the issue.
 
