@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "apaleo-api-client"
-version = "0.1.1"
+version = "0.1.2"
 description = "Python async API wrapper for Apaleo Swagger"
 authors = ["Gábor Lipták <shearer83@gmail.com>"]
 license = "MIT"
