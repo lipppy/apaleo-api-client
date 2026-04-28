@@ -1,7 +1,7 @@
 """Apaleo API Client implementation."""
 
 from apaleoapi.apaleo.core.v1.apis.inventory import CoreV1InventoryAdapter
-from apaleoapi.apaleo.identity.v1.apis.identity import IdentityV1IdentityAdapter
+from apaleoapi.apaleo.identity.v1.apis.identity import IdentityV1IdentityResource
 from apaleoapi.constants import (
     APALEO_API_CORE_URL,
     APALEO_API_FISCALIZATION_URL,
@@ -96,12 +96,12 @@ class ApaleoAPIClient(ApaleoAPIClientPort):
         self.__transport_webhook_api = transport_webhook_api
 
         # Core API adapters
-        self.core = CoreAdapter(
+        self.core = CoreAPI(
             transport=transport_core_api, max_concurrent=self._max_concurrent, dry_run=self._dry_run
         )
         # Fiscalization API adapters
         # Identity API adapters
-        self.identity = IdentityAdapter(
+        self.identity = IdentityAPI(
             transport=transport_identity_api,
             max_concurrent=self._max_concurrent,
             dry_run=self._dry_run,
@@ -141,19 +141,19 @@ class ApaleoAPIClient(ApaleoAPIClientPort):
 # Core API adapters
 
 
-class CoreAdapter:
+class CoreAPI:
     """Adapter for Core API endpoints."""
 
     def __init__(
         self, transport: AuthenticatedTransport, max_concurrent: int, dry_run: bool
     ) -> None:
-        self.v1 = CoreV1Adapter(transport=transport, max_concurrent=max_concurrent, dry_run=dry_run)
-        self.nsfw = CoreNSFWAdapter(
+        self.v1 = CoreV1Version(transport=transport, max_concurrent=max_concurrent, dry_run=dry_run)
+        self.nsfw = CoreNSFWVersion(
             transport=transport, max_concurrent=max_concurrent, dry_run=dry_run
         )
 
 
-class CoreV1Adapter:
+class CoreV1Version:
     """Adapter for Core V1 API endpoints."""
 
     def __init__(
@@ -164,7 +164,7 @@ class CoreV1Adapter:
         )
 
 
-class CoreNSFWAdapter:
+class CoreNSFWVersion:
     """Adapter for Core NSFW API endpoints."""
 
     def __init__(
@@ -176,23 +176,23 @@ class CoreNSFWAdapter:
 # Identity API adapters
 
 
-class IdentityAdapter:
+class IdentityAPI:
     """Adapter for Identity API endpoints."""
 
     def __init__(
         self, transport: AuthenticatedTransport, max_concurrent: int, dry_run: bool
     ) -> None:
-        self.v1 = IdentityV1Adapter(
+        self.v1 = IdentityV1Version(
             transport=transport, max_concurrent=max_concurrent, dry_run=dry_run
         )
 
 
-class IdentityV1Adapter:
+class IdentityV1Version:
     """Adapter for Identity V1 API endpoints."""
 
     def __init__(
         self, transport: AuthenticatedTransport, max_concurrent: int, dry_run: bool
     ) -> None:
-        self.identity = IdentityV1IdentityAdapter(
+        self.identity = IdentityV1IdentityResource(
             transport=transport, max_concurrent=max_concurrent, dry_run=dry_run
         )

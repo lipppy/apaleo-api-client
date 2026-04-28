@@ -32,13 +32,13 @@ from apaleoapi.apaleo.core.v1.schemas.inventory.response import (
     PropertyModel,
 )
 from apaleoapi.logging import get_logger
-from apaleoapi.ports.apaleo.core.v1.apis.inventory import CoreV1InventoryPort
+from apaleoapi.ports.apaleo.core.v1.apis.inventory import CoreV1InventoryResourcePort
 from apaleoapi.ports.http.transport import AsyncTransportPort
 
 log = get_logger(__name__)
 
 
-class CoreV1InventoryAdapter(BaseAdapter, CoreV1InventoryPort):
+class CoreV1InventoryAdapter(BaseAdapter, CoreV1InventoryResourcePort):
     def __init__(self, transport: AsyncTransportPort, max_concurrent: int, dry_run: bool = False):
         super().__init__(transport=transport, max_concurrent=max_concurrent, dry_run=dry_run)
         self._version = "v1"

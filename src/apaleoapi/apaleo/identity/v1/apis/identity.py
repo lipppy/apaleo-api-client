@@ -49,13 +49,13 @@ from apaleoapi.apaleo.identity.v1.schemas.identity.response import (
     UsersListModel,
 )
 from apaleoapi.logging import get_logger
-from apaleoapi.ports.apaleo.identity.v1.apis.identity import IdentityV1IdentityPort
+from apaleoapi.ports.apaleo.identity.v1.apis.identity import IdentityV1IdentityResourcePort
 from apaleoapi.ports.http.transport import AsyncTransportPort
 
 log = get_logger(__name__)
 
 
-class IdentityV1IdentityAdapter(BaseAdapter, IdentityV1IdentityPort):
+class IdentityV1IdentityResource(BaseAdapter, IdentityV1IdentityResourcePort):
     def __init__(self, transport: AsyncTransportPort, max_concurrent: int, dry_run: bool = False):
         super().__init__(transport=transport, max_concurrent=max_concurrent, dry_run=dry_run)
         self._version = "v1"
