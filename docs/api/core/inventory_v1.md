@@ -52,4 +52,3 @@ Method-focused reference for Apaleo Core API's Inventory V1.
 ### Unit Group
 
 ## Models and Data Structures
-

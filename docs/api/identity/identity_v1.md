@@ -61,7 +61,7 @@ Returns a list of all invitations to the current account.
     params = InvitationListParams(property_id="BER")
     invitations = await client.identity.v1.identity.list_invitations(params)
     print(invitations)
-    
+
     ```
 
 #### `create_invitation`
@@ -75,7 +75,7 @@ Invites a person to the current account with the requested roles and properties.
 **SDK Method**
 
 !!! info "`create_invitation(payload: CreateInvitation) -> InvitedUserToAccountResponse`"
-    
+
     ```python
     payload = CreateInvitation(
         email="james.twelvetrees@invalid.com",
