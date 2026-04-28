@@ -17,7 +17,7 @@ from apaleoapi.apaleo.core.v1.dataclasses.inventory.response import (
 )
 
 
-class CoreV1InventoryPort(Protocol):
+class CoreV1InventoryResourcePort(Protocol):
     _path: str = "inventory"
     _version: str
 

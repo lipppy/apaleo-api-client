@@ -35,7 +35,7 @@ theme:
     - content.code.copy
     - announce.dismiss
     - navigation.tabs
-    - navigation.indexes
+    - navigation.footer
     - navigation.instant
     - navigation.instant.prefetch
     - navigation.instant.progress
@@ -55,16 +55,17 @@ extra:
     feedback:
       title: Was this page helpful?
       ratings:
-        - icon: material/thumb-up-outline
+        - icon: material/emoticon-happy-outline
           name: This page was helpful
           data: 1
           note: >-
             Thanks for your feedback!
-        - icon: material/thumb-down-outline
+        - icon: material/emoticon-sad-outline
           name: This page could be improved
           data: 0
           note: >-
-            Thanks for your feedback!
+            Thanks for your feedback! Help us improve this page by
+            using our <a href="..." target="_blank" rel="noopener">feedback form</a>.
 
 extra_css:
   - extra/custom.css
@@ -88,6 +89,7 @@ markdown_extensions:
   - toc:
       permalink: true
       title: Page contents
+
   - admonition
   - pymdownx.details
   - pymdownx.superfences
@@ -103,22 +105,20 @@ markdown_extensions:
   - pymdownx.tasklist
 
 nav:
-  - Get Started:
-      - Welcome to Apaleo API Client: index.md
+  - Getting Started:
+      - Overview: index.md
       - Why use Apaleo API Client: main/why.md
       - Installation: main/install.md
       - Troubleshooting: main/troubleshooting.md
       - Contributing: main/contributing.md
       - Changelog: main/changelog.md
   - API Reference:
-      - api/index.md
+      - Overview: api/index.md
       - Core API:
-        - Inventory V1:
-          - list_properties: api/core_v1/inventory_list_properties.md
+        - Inventory V1: api/core/inventory_v1.md
       - Identity API:
-        - Identity V1:
-          - list_invitations: api/identity_v1/identity_list_invitations.md
+        - Identity V1: api/identity/identity_v1.md
   - Examples:
-      - examples/index.md
+      - Overview: examples/index.md
       - Client Credentials Flow: examples/client_credentials_flow.md
       - Authorization Code Flow: examples/authorization_code_flow.md

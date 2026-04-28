@@ -4,11 +4,11 @@ import pytest
 
 from apaleoapi.client import (
     ApaleoAPIClient,
-    CoreAdapter,
-    CoreNSFWAdapter,
-    CoreV1Adapter,
-    IdentityAdapter,
-    IdentityV1Adapter,
+    CoreAPI,
+    CoreNSFWVersion,
+    CoreV1Version,
+    IdentityAPI,
+    IdentityV1Version,
 )
 
 pytestmark = [pytest.mark.unit]
@@ -85,44 +85,44 @@ class TestApaleoAPIClient:
         with patch("apaleoapi.client.AuthenticatedTransport"):
             client = ApaleoAPIClient(token_provider=mock_token_provider)
             assert hasattr(client, "core")
-            assert isinstance(client.core, CoreAdapter)
+            assert isinstance(client.core, CoreAPI)
 
     def test_client_has_identity_adapter(self, mock_token_provider: Mock) -> None:
         """Test that client has identity adapter properly initialized."""
         with patch("apaleoapi.client.AuthenticatedTransport"):
             client = ApaleoAPIClient(token_provider=mock_token_provider)
             assert hasattr(client, "identity")
-            assert isinstance(client.identity, IdentityAdapter)
+            assert isinstance(client.identity, IdentityAPI)
 
     def test_core_adapter_initialization(self) -> None:
         """Test core adapter initialization."""
         mock_transport = Mock()
-        adapter = CoreAdapter(transport=mock_transport, max_concurrent=5, dry_run=False)
+        adapter = CoreAPI(transport=mock_transport, max_concurrent=5, dry_run=False)
 
         assert hasattr(adapter, "v1")
         assert hasattr(adapter, "nsfw")
-        assert isinstance(adapter.v1, CoreV1Adapter)
-        assert isinstance(adapter.nsfw, CoreNSFWAdapter)
+        assert isinstance(adapter.v1, CoreV1Version)
+        assert isinstance(adapter.nsfw, CoreNSFWVersion)
 
     def test_core_v1_adapter_initialization(self) -> None:
         """Test core V1 adapter initialization."""
         mock_transport = Mock()
-        adapter = CoreV1Adapter(transport=mock_transport, max_concurrent=5, dry_run=False)
+        adapter = CoreV1Version(transport=mock_transport, max_concurrent=5, dry_run=False)
 
         assert hasattr(adapter, "inventory")
 
     def test_identity_adapter_initialization(self) -> None:
         """Test identity adapter initialization."""
         mock_transport = Mock()
-        adapter = IdentityAdapter(transport=mock_transport, max_concurrent=5, dry_run=False)
+        adapter = IdentityAPI(transport=mock_transport, max_concurrent=5, dry_run=False)
 
         assert hasattr(adapter, "v1")
-        assert isinstance(adapter.v1, IdentityV1Adapter)
+        assert isinstance(adapter.v1, IdentityV1Version)
 
     def test_identity_v1_adapter_initialization(self) -> None:
         """Test identity V1 adapter initialization."""
         mock_transport = Mock()
-        adapter = IdentityV1Adapter(transport=mock_transport, max_concurrent=5, dry_run=False)
+        adapter = IdentityV1Version(transport=mock_transport, max_concurrent=5, dry_run=False)
 
         assert hasattr(adapter, "identity")
 

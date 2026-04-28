@@ -8,7 +8,10 @@ from typing import Protocol
 
 from apaleoapi.apaleo.common.contracts.payload import Operation
 from apaleoapi.apaleo.identity.v1.contracts.identity.payload import CreateInvitation
-from apaleoapi.apaleo.identity.v1.contracts.identity.query import InvitationListParams
+from apaleoapi.apaleo.identity.v1.contracts.identity.query import (
+    InvitationListParams,
+    UserListParams,
+)
 from apaleoapi.apaleo.identity.v1.contracts.identity.response import (
     InvitationList,
     InvitedUserToAccountResponse,
@@ -18,7 +21,7 @@ from apaleoapi.apaleo.identity.v1.contracts.identity.response import (
 )
 
 
-class IdentityV1IdentityPort(Protocol):
+class IdentityV1IdentityResourcePort(Protocol):
     _path: str = "api"
     _version: str
 
@@ -44,8 +47,8 @@ class IdentityV1IdentityPort(Protocol):
 
     # Users methods
 
-    async def list_users(self) -> UsersList:
-        """List all users."""
+    async def list_users(self, params: UserListParams | None = None) -> UsersList:
+        """List all users for the current account."""
         pass
 
     async def get_user(self, user_id: str) -> User:

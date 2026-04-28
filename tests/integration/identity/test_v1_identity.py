@@ -2,7 +2,7 @@ import pytest
 
 from apaleoapi import ApaleoAPIClient
 from apaleoapi.apaleo.common import Operation
-from apaleoapi.apaleo.identity.v1.apis.identity import IdentityV1IdentityAdapter
+from apaleoapi.apaleo.identity.v1.apis.identity import IdentityV1IdentityResource
 from apaleoapi.apaleo.identity.v1.identity import (
     CreateInvitation,
     InvitationList,
@@ -20,15 +20,15 @@ pytestmark = [pytest.mark.integration, pytest.mark.live]
 MOCK_EMAIL = "invalid-email-address@invalid.com"
 
 
-class TestIdentityV1IdentityAdapter:
-    """Integration tests for IdentityV1IdentityAdapter."""
+class TestIdentityV1IdentityResource:
+    """Integration tests for IdentityV1IdentityResource."""
 
     @pytest.fixture(autouse=True)
     def setup(self, client_valid: ApaleoAPIClient, client_invalid: ApaleoAPIClient) -> None:
         """Setup for each test method."""
         # This will be set by the test framework when the client fixture is injected
-        self.adapter: IdentityV1IdentityAdapter = client_valid.identity.v1.identity
-        self.adapter_invalid: IdentityV1IdentityAdapter = client_invalid.identity.v1.identity
+        self.adapter: IdentityV1IdentityResource = client_valid.identity.v1.identity
+        self.adapter_invalid: IdentityV1IdentityResource = client_invalid.identity.v1.identity
 
     @pytest.mark.asyncio
     async def test_invitations(self) -> None:
