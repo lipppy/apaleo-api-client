@@ -1,4 +1,4 @@
-# Examples
+# Overview
 
 Use these examples to choose the OAuth flow that fits your app.
 

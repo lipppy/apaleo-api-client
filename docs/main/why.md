@@ -2,7 +2,7 @@
 
 The Apaleo API Client is a type-safe, async Python SDK built on Pydantic v2 and httpx. It provides a modern, developer-friendly way to integrate with Apaleo's hospitality platform—fast, easy to use, and fully documented. Here's why it stands out:
 
-## 🚀 **Performance & Efficiency**
+## Performance & Efficiency
 
 ### **Async-First Architecture**
 - Built on `httpx` for high-performance concurrent operations
@@ -16,7 +16,7 @@ properties = await client.core.v1.inventory.list_properties(
 )
 ```
 
-### **Smart Pagination**
+### Smart Pagination
 - Automatic pagination handling with concurrent fetching
 - Configurable batch sizes for optimal performance
 - Built-in memory management for large datasets
@@ -26,9 +26,9 @@ properties = await client.core.v1.inventory.list_properties(
 
     Order of results is not guaranteed when using concurrent fetching.
 
-## 🛡️ **Reliability & Robustness**
+## Reliability & Robustness
 
-### **Comprehensive Error Handling**
+### Comprehensive Error Handling
 - Typed exceptions for all HTTP status codes
 - Detailed error messages with context
 - Graceful handling of API rate limits and transient failures
@@ -44,19 +44,19 @@ except ValidationError as e:
     print(f"Invalid request: {e.message}")
 ```
 
-### **Automatic Token Management**
+### Automatic Token Management
 - OAuth2 Client Credentials flow with automatic refresh
 - Token caching and expiry tracking
 - Seamless handling of 401 responses
 
-### **Built-in Retries**
+### Built-in Retries
 - Configurable retry logic for transient failures
 - Exponential backoff with jitter
 - Respect for Retry-After headers
 
-## 📝 **Type Safety & Developer Experience**
+## Type Safety & Developer Experience
 
-### **Complete Type Coverage**
+### Complete Type Coverage
 - Full type hints for all methods and responses
 - Pydantic models for request/response validation
 - IDE autocompletion and error detection
@@ -79,14 +79,14 @@ for property: PropertyItem in properties.items:
     Apaleo's models may have field names that conflict with Python built-in function names, variable names, or keywords. Use caution when naming your variables or consider using aliases to avoid conflicts. For example, if a model has a field named `property`, you can use an alias like `from builtins import property as property_alias` in your code to prevent shadowing the built-in `@property` decorator.
 
 
-### **Rich Data Models**
+### Rich Data Models
 - Structured dataclasses for all domain objects
 - Automatic serialization/deserialization
 - Validation with detailed error messages
 
-## 🛠️ **Development & Testing**
+## Development & Testing
 
-### **Dry-Run Mode**
+### Dry-Run Mode
 Perfect for development and testing:
 
 ```python {test="skip" lint="skip" upgrade="skip"}
@@ -96,7 +96,7 @@ properties = await client.core.v1.inventory.list_properties()
 # Returns empty PropertyList for testing
 ```
 
-### **Comprehensive Logging**
+### Comprehensive Logging
 - Detailed request/response logging
 - Configurable log levels
 - Integration with Python's standard logging module
@@ -108,56 +108,52 @@ logger = setup_logging(level="DEBUG")
 # See all HTTP requests, responses, and timing information
 ```
 
-### **Testing Support**
+### Testing Support
 - Mock-friendly design with dependency injection
 - Async test patterns with pytest-asyncio
 - Factory classes for test data generation
 
-## 🏢 **Enterprise Ready**
+## Enterprise Ready
 
-### **Production Deployment**
+### Production Deployment
 - Configurable timeouts and connection limits
 - Memory-efficient streaming for large responses
 - Monitoring and observability hooks
 
-### **Security**
+### Security
 - Secure credential handling
 - TLS/SSL verification by default
 - No credential logging in production mode
 
-### **Scalability**
+### Scalability
 - Concurrent request limiting to respect API quotas
 - Efficient connection pooling
 - Horizontal scaling support
 
 
-## 📊 **Use Cases**
+## Use Cases
 
-### **Property Management Systems (PMS)**
+### Property Management Systems (PMS)
 - Sync property data and availability
 - Manage rates and inventory
 - Handle reservations and guest information
 
-### **Channel Managers**
+### Channel Managers
 - Distribute inventory across multiple channels
 - Real-time rate and availability updates
 - Central reservation management
 
-### **Revenue Management**
+### Revenue Management
 - Analyze booking patterns and performance
 - Dynamic pricing optimization
 - Competitive market analysis
 
-### **Business Intelligence**
+### Business Intelligence
 - Extract data for reporting and analytics
 - Monitor KPIs and performance metrics
 - Historical trend analysis
 
-### **Integration Platforms**
+### Integration Platforms
 - Connect Apaleo with other hospitality systems
 - Data synchronization between platforms
 - Workflow automation
-
----
-
-*Ready to integrate with Apaleo? [Get started with installation →](install.md)*

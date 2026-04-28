@@ -2,7 +2,7 @@
 
 Get started with Apaleo API Client quickly and easily. This type-safe, async SDK supports Python 3.10+ and can be installed using your preferred package manager.
 
-## 📦 **Package Installation**
+## Package Installation
 
 This library is published to PyPI. All installation methods below resolve the package from PyPI.
 
@@ -34,7 +34,7 @@ Core dependencies (automatically installed):
 
 If you've got Python 3.10+ and pip, uv, Poetry, or pipenv installed, you're good to go.
 
-## 🎆 **Next Steps**
+## Next Steps
 
 Now that you have the library installed:
 
@@ -42,7 +42,3 @@ Now that you have the library installed:
 2. **[Explore examples](../examples/index.md)** - See practical usage patterns
 3. **[Read the API docs](../api/index.md)** - Dive into the full API reference
 4. **[Join the community](contributing.md)** - Get help and contribute
-
----
-
-**Having issues with installation?** Check our [troubleshooting guide](troubleshooting.md) or [open an issue](https://github.com/lipppy/apaleo-api-client/issues).

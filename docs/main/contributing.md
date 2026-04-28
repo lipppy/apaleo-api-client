@@ -11,7 +11,8 @@ If you need to report a security vulnerability, please use the process described
 To help us investigate issues efficiently, please include the output of the following command whenever relevant:
 
 ```bash
-poetry run python -c "import src.apaleoapi.utils; print(src.apaleoapi.utils.version_info())"
+poetry run python -c \
+    "import src.apaleoapi.utils; print(src.apaleoapi.utils.version_info())"
 ```
 
 Please include this information whenever possible, unless the package cannot be installed or the details are clearly unrelated to your request.
@@ -154,7 +155,7 @@ src/apaleoapi/
 !!! note
     The **integration test** `inv test-integration` require valid Apaleo API credentials (only client credentials) and will make real API calls to the instance your credentials are associated with. Use with caution and never run integration tests against production credentials.
 
-### Code Style 
+### Code Style
 
 We use these tools for code quality:
 
