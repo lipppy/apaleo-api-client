@@ -56,6 +56,8 @@ log = get_logger(__name__)
 
 
 class IdentityV1IdentityResource(BaseAdapter, IdentityV1IdentityResourcePort):
+    """Adapter for Identity V1 Identity API endpoints."""
+
     def __init__(self, transport: AsyncTransportPort, max_concurrent: int, dry_run: bool = False):
         super().__init__(transport=transport, max_concurrent=max_concurrent, dry_run=dry_run)
         self._version = "v1"

@@ -1,7 +1,7 @@
 """Apaleo API Client implementation."""
 
-from apaleoapi.apaleo.core.v1.apis.inventory import CoreV1InventoryAdapter
-from apaleoapi.apaleo.identity.v1.apis.identity import IdentityV1IdentityResource
+from apaleoapi.apaleo.core.api import CoreAPI
+from apaleoapi.apaleo.identity.api import IdentityAPI
 from apaleoapi.constants import (
     APALEO_API_CORE_URL,
     APALEO_API_FISCALIZATION_URL,
@@ -136,63 +136,3 @@ class ApaleoAPIClient(ApaleoAPIClientPort):
         await self.__transport_payment_api.aclose()
         await self.__transport_profile_api.aclose()
         await self.__transport_webhook_api.aclose()
-
-
-# Core API adapters
-
-
-class CoreAPI:
-    """Adapter for Core API endpoints."""
-
-    def __init__(
-        self, transport: AuthenticatedTransport, max_concurrent: int, dry_run: bool
-    ) -> None:
-        self.v1 = CoreV1Version(transport=transport, max_concurrent=max_concurrent, dry_run=dry_run)
-        self.nsfw = CoreNSFWVersion(
-            transport=transport, max_concurrent=max_concurrent, dry_run=dry_run
-        )
-
-
-class CoreV1Version:
-    """Adapter for Core V1 API endpoints."""
-
-    def __init__(
-        self, transport: AuthenticatedTransport, max_concurrent: int, dry_run: bool
-    ) -> None:
-        self.inventory = CoreV1InventoryAdapter(
-            transport=transport, max_concurrent=max_concurrent, dry_run=dry_run
-        )
-
-
-class CoreNSFWVersion:
-    """Adapter for Core NSFW API endpoints."""
-
-    def __init__(
-        self, transport: AuthenticatedTransport, max_concurrent: int, dry_run: bool
-    ) -> None:
-        pass
-
-
-# Identity API adapters
-
-
-class IdentityAPI:
-    """Adapter for Identity API endpoints."""
-
-    def __init__(
-        self, transport: AuthenticatedTransport, max_concurrent: int, dry_run: bool
-    ) -> None:
-        self.v1 = IdentityV1Version(
-            transport=transport, max_concurrent=max_concurrent, dry_run=dry_run
-        )
-
-
-class IdentityV1Version:
-    """Adapter for Identity V1 API endpoints."""
-
-    def __init__(
-        self, transport: AuthenticatedTransport, max_concurrent: int, dry_run: bool
-    ) -> None:
-        self.identity = IdentityV1IdentityResource(
-            transport=transport, max_concurrent=max_concurrent, dry_run=dry_run
-        )

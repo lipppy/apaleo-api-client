@@ -2,14 +2,9 @@ from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 
-from apaleoapi.client import (
-    ApaleoAPIClient,
-    CoreAPI,
-    CoreNSFWVersion,
-    CoreV1Version,
-    IdentityAPI,
-    IdentityV1Version,
-)
+from apaleoapi.apaleo.core.api import CoreAPI, CoreNSFWVersion, CoreV1Version
+from apaleoapi.apaleo.identity.api import IdentityAPI, IdentityV1Version
+from apaleoapi.client import ApaleoAPIClient
 
 pytestmark = [pytest.mark.unit]
 
