@@ -274,8 +274,9 @@ class BaseAdapter:
         self,
         url: str,
         payload: TPayload,
-        payload_model_cls: Type[TModel],
+        idemtopency_key: str | None = None,
         *,
+        payload_model_cls: Type[TModel],
         model_cls: Type[TModel],
         faker_factory: Type[TDomainFactory],
         default_factory: Type[TModelFactory],
@@ -309,7 +310,15 @@ class BaseAdapter:
             fake_response = faker_factory().build()
             return cast(TDomain, fake_response)
 
-        response = await self._t.request("POST", validated_url, json=payload_request)
+        # Idempotency key handling for POST requests to prevent duplicate resource creation
+        headers = {}
+        if idemtopency_key:
+            headers["Idempotency-Key"] = idemtopency_key
+
+        # Make the API request and handle the response
+        response = await self._t.request(
+            "POST", validated_url, json=payload_request, headers=headers
+        )
         response_data = self._response_handler.handle(response=response)
 
         # Validate the response data, handling empty responses for success codes
