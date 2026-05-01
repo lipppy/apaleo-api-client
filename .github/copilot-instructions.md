@@ -1,11 +1,13 @@
 # Copilot Instructions
 
+This is a Python SDK for the Apaleo API. It provides a type-safe, async client for seamless integration with Apaleo's hospitality platform. Built on Pydantic v2 and httpx, it is fast, easy to use, and fully documented.
+
 ## Mandatory
 - Use Python 3.12
 - Use Poetry only
 - Use `poetry run <command>`
 - Use tests via `poetry run invoke test`
-- Use lint via `poetry run invoke lint`
+- Be mypy compliant via `poetry run invoke mypy`
 
 ## Forbidden
 - Do not use pip
