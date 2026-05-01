@@ -1,9 +1,12 @@
+import uuid
+
 import pytest
 
 from apaleoapi import ApaleoAPIClient
+from apaleoapi.apaleo.common.contracts.payload import Operation
+from apaleoapi.apaleo.common.enums import OperationOp
 from apaleoapi.apaleo.core.v1.apis.inventory import CoreV1InventoryResource
-from apaleoapi.apaleo.core.v1.contracts.inventory.payload import CreateAddress, CreateProperty
-from apaleoapi.apaleo.core.v1.contracts.inventory.response import Property, PropertyList
+from apaleoapi.apaleo.core.v1.inventory import CreateAddress, CreateProperty, Property, PropertyList
 
 pytestmark = [pytest.mark.integration, pytest.mark.live]
 
@@ -43,49 +46,92 @@ class TestCoreV1InventoryResource:
             assert property_details.id == first_property_id
 
         # 3. Create a new property with a unique ID and then delete it to clean up
-        property_id = "BUD"
-        payload = CreateProperty(
-            code=property_id,
-            name={
-                "en": "Test Property Budapest",
-                "de": "Test Immobilie Budapest",
-                "it": "Test Proprietà Budapest",
-            },
-            company_name="Test Company Budapest",
-            commercial_register_entry="Test Commercial Register Entry Budapest",
-            tax_id="Test Tax ID Budapest",
-            location=CreateAddress(
-                address_line1="Test Street 1",
-                postal_code="1015",
-                city="Budapest",
-                country_code="AT",
-            ),
-            time_zone="Europe/Budapest",
-            default_check_in_time="15:00:00",
-            default_check_out_time="11:00:00",
-            currency_code="HUF",
-            payment_terms={
-                "en": "Test Payment Terms Budapest",
-                "de": "Test Zahlungsbedingungen Budapest",
-            },
-        )
-        _ = await self.adapter.create_property(payload=payload, idempotency_key=property_id)
+        property_id = "INTTEST"  # Use a unique property ID for testing
+        # 3.1 Check if the property already exists to avoid conflicts
+        if not await self.adapter.check_property(property_id=property_id):
+            # 3.1.1 Create the property
+            payload = CreateProperty(
+                code=property_id,
+                name={
+                    "en": "Test Property Budapest",
+                    "de": "Test Immobilie Budapest",
+                    "it": "Test Proprietà Budapest",
+                },
+                description={
+                    "en": "Test Description Budapest",
+                    "de": "Test Beschreibung Budapest",
+                    "it": "Test Descrizione Budapest",
+                },
+                company_name="Test Company Budapest",
+                commercial_register_entry="Test Commercial Register Entry Budapest",
+                tax_id="Test Tax ID Budapest",
+                location=CreateAddress(
+                    address_line1="Test Street 1",
+                    postal_code="1015",
+                    city="Budapest",
+                    country_code="AT",
+                ),
+                time_zone="Europe/Budapest",
+                default_check_in_time="15:00:00",
+                default_check_out_time="11:00:00",
+                currency_code="HUF",
+                payment_terms={
+                    "en": "Test Payment Terms Budapest",
+                    "de": "Test Zahlungsbedingungen Budapest",
+                    "it": "Test Condizioni di Pagamento Budapest",
+                },
+            )
+            _ = await self.adapter.create_property(
+                payload=payload, idempotency_key=str(uuid.uuid4())
+            )
+            # 3.1.2 Check that the property was created successfully
+            property_created = await self.adapter.check_property(property_id=property_id)
+            assert property_created is True
+            # 3.1.3 List properties again to confirm the count has increased by 1
+            properties_after_creation = await self.adapter.list_properties()
+            assert properties_after_creation is not None
+            assert isinstance(properties_after_creation, PropertyList)
+            assert properties_after_creation.count == properties_count + 1
 
-        # property_created = await self.adapter.update_property(
-        #     property_id=first_property_id,
-        #     payload=[
-        #         Operation(
-        #             op="test",
-        #             path="/city",
-        #             value="Berlin-1",
-        #         ),
-        #         Operation(
-        #             op="test",
-        #             path="/postal_code",
-        #             value="10117-1",
-        #         ),
-        #     ],
-        # )
+        # 4. Retrieve the property details again to confirm it can be fetched successfully
+        property_details_after_creation = await self.adapter.get_property(property_id=property_id)
+        assert property_details_after_creation is not None
+        assert isinstance(property_details_after_creation, Property)
+        assert property_details_after_creation.id == property_id
+
+        # 5. Update the property details -multiple operations
+        description_before_update = property_details_after_creation.description
+        description_after_update = (
+            description_before_update.copy() if description_before_update else {}
+        )
+        description_after_update["en"] = "Updated Description"
+        _ = await self.adapter.update_property(
+            property_id=first_property_id,
+            payload=[
+                Operation(
+                    op=OperationOp.REPLACE,
+                    path="/description",
+                    value=description_after_update,
+                ),
+            ],
+        )
+
+        # 6. Retrieve the property details again to confirm the updates were applied successfully
+        property_details_after_update = await self.adapter.get_property(
+            property_id=first_property_id
+        )
+        assert property_details_after_update is not None
+        assert isinstance(property_details_after_update, Property)
+        assert property_details_after_update.id == first_property_id
+        assert property_details_after_update.description["en"] == "Updated Description"
+
+        # 7. Clean up by deleting the created property if it was created during the test
+        if await self.adapter.check_property(property_id=property_id):
+            await self.adapter.delete_property(property_id=property_id)
+
+        # 8. Confirm that the property was deleted successfully
+        property_deleted = await self.adapter.check_property(property_id=property_id)
+        assert property_deleted is False
 
     @pytest.mark.asyncio
     async def test_check_property(self) -> None:
