@@ -12,6 +12,13 @@ Usage:
     from apaleoapi.apaleo.identity.v1.contracts.identity.response import User
 """
 
+from apaleoapi.apaleo.identity.v1.contracts.identity.factory import (
+    InvitationListFakerFactory,
+    InvitedUserToAccountResponseFakerFactory,
+    RoleListFakerFactory,
+    UserFakerFactory,
+    UsersListFakerFactory,
+)
 from apaleoapi.apaleo.identity.v1.contracts.identity.payload import CreateInvitation
 from apaleoapi.apaleo.identity.v1.contracts.identity.query import (
     InvitationListParams,
@@ -44,6 +51,12 @@ __all__ = [
     # Dataclasses - Query Parameters
     "InvitationListParams",
     "UserListParams",
+    # Factories
+    "RoleListFakerFactory",
+    "UserFakerFactory",
+    "UsersListFakerFactory",
+    "InvitationListFakerFactory",
+    "InvitedUserToAccountResponseFakerFactory",
     # Enums
     "RoleAccessTo",
     "RoleInvitedTo",
