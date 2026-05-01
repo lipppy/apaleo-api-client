@@ -59,6 +59,7 @@ except ValidationError as e:
 ### Complete Type Coverage
 - Full type hints for all methods and responses
 - Pydantic models for request/response validation
+- Plain `dict` and `list[dict]` inputs are also accepted for request convenience and still validated
 - IDE autocompletion and error detection
 
 ```python {test="skip" lint="skip" upgrade="skip"}
@@ -73,6 +74,16 @@ params = PropertyListParams(
 properties: PropertyList = await client.core.v1.inventory.list_properties(params)
 for property: PropertyItem in properties.items:
     print(property.name)  # IDE knows this is a str
+
+# The same request validation also works with plain dictionaries
+properties = await client.core.v1.inventory.list_properties(
+    {"page_number": 1, "page_size": 50, "include_archived": True}
+)
+
+# Apaleo's input also supported as dicts
+properties = await client.core.v1.inventory.list_properties(
+    {"pageNumber": 1, "pageSize": 50, "includeArchived": True}
+)
 ```
 
 !!! note

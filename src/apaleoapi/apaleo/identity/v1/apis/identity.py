@@ -7,9 +7,10 @@ to interact with the Apaleo Identity API.
 See: https://identity.apaleo.com/swagger/index.html?urls.primaryName=Identity+V1
 """
 
+from typing import Any
+
 from apaleoapi.apaleo.common.base import BaseAdapter
 from apaleoapi.apaleo.common.contracts.payload import Operation
-from apaleoapi.apaleo.common.schemas.payload import OperationModel
 from apaleoapi.apaleo.identity.v1.contracts.identity.factory import (
     InvitationListFakerFactory,
     InvitedUserToAccountResponseFakerFactory,
@@ -65,7 +66,9 @@ class IdentityV1IdentityResource(BaseAdapter, IdentityV1IdentityResourcePort):
 
     # Invitation methods
 
-    async def list_invitations(self, params: InvitationListParams | None = None) -> InvitationList:
+    async def list_invitations(
+        self, params: InvitationListParams | dict[str, Any] | None = None
+    ) -> InvitationList:
         """List invitations for the current account."""
         url = f"{self._base_path}/account/invitations"
 
@@ -121,7 +124,7 @@ class IdentityV1IdentityResource(BaseAdapter, IdentityV1IdentityResourcePort):
 
     # Users methods
 
-    async def list_users(self, params: UserListParams | None = None) -> UsersList:
+    async def list_users(self, params: UserListParams | dict[str, Any] | None = None) -> UsersList:
         """List all users for the current account."""
         url = f"{self._base_path}/users"
 
@@ -158,7 +161,6 @@ class IdentityV1IdentityResource(BaseAdapter, IdentityV1IdentityResourcePort):
         await self._patch_resource(
             url=url,
             payload=payload,
-            payload_model_cls=OperationModel,
             error_prefix=f"Failed to update user with ID {user_id}",
         )
 

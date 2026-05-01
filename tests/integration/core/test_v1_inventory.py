@@ -1,7 +1,6 @@
 import uuid
 
 import pytest
-from dacite import from_dict
 
 from apaleoapi import ApaleoAPIClient
 from apaleoapi.apaleo.common.contracts.payload import Operation
@@ -161,7 +160,7 @@ class TestCoreV1InventoryResource:
         property_id = "INTTEST2"  # Use a unique property ID for testing
         # Check if the property already exists to avoid conflicts
         if not await self.adapter.check_property(property_id=property_id):
-            payload_dict = {
+            payload_as_dict = {
                 "code": property_id,
                 "name": {
                     "en": "Test Property Dict",
@@ -173,11 +172,12 @@ class TestCoreV1InventoryResource:
                     "de": "Test Beschreibung Dict",
                     "it": "Test Descrizione Dict",
                 },
-                "company_name": "Test Company Dict",
+                # Use camelCase for the dictionary key to test aliasing
+                "companyName": "Test Company Dict",
                 "commercial_register_entry": "Test Commercial Register Entry Dict",
                 "tax_id": "Test Tax ID Dict",
                 "location": {
-                    "address_line1": "Test Street 1",
+                    "addressLine1": "Test Street 1",
                     "postal_code": "1015",
                     "city": "Vienna",
                     "country_code": "AT",
@@ -192,10 +192,18 @@ class TestCoreV1InventoryResource:
                     "it": "Test Condizioni di Pagamento Dict",
                 },
             }
-            payload = from_dict(CreateProperty, payload_dict)
             _ = await self.adapter.create_property(
-                payload=payload, idempotency_key=str(uuid.uuid4())
+                payload=payload_as_dict, idempotency_key=str(uuid.uuid4())
             )
+            # Retrieve the property details again to confirm it was created successfully
+            property_details = await self.adapter.get_property(property_id=property_id)
+            assert property_details is not None
+            assert isinstance(property_details, Property)
+            assert property_details.id == property_id
+            # Assert aliased field was correctly processed
+            assert property_details.company_name == "Test Company Dict"
+            assert property_details.location is not None
+            assert property_details.location.address_line1 == "Test Street 1"
             # Clean up by deleting the created property
             if await self.adapter.check_property(property_id=property_id):
                 await self.adapter.delete_property(property_id=property_id)

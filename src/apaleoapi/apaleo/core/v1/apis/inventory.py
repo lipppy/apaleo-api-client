@@ -4,11 +4,12 @@ Apaleo Core V1 Inventory API Adapter
 See: https://api.apaleo.com/swagger/index.html?urls.primaryName=Inventory+V1
 """
 
+from typing import Any
+
 from dacite import from_dict
 
 from apaleoapi.apaleo.common.base import BaseAdapter
 from apaleoapi.apaleo.common.contracts.payload import Operation
-from apaleoapi.apaleo.common.schemas.payload import OperationModel
 from apaleoapi.apaleo.core.v1.contracts.inventory.factory import (
     PropertyCreatedFakerFactory,
     PropertyFakerFactory,
@@ -75,7 +76,7 @@ class CoreV1InventoryResource(BaseAdapter, CoreV1InventoryResourcePort):
         )
 
     async def create_property(
-        self, payload: CreateProperty, idempotency_key: str
+        self, payload: CreateProperty | dict[str, Any], idempotency_key: str
     ) -> PropertyCreated:
         """Create a new property."""
         url = f"{self._base_path}/properties"
@@ -136,7 +137,6 @@ class CoreV1InventoryResource(BaseAdapter, CoreV1InventoryResourcePort):
         return await self._patch_resource(
             url=url,
             payload=payload,
-            payload_model_cls=OperationModel,
             error_prefix=f"Failed to update property with ID {property_id}",
         )
 
