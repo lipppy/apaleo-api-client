@@ -4,6 +4,8 @@ Apaleo Core V1 Inventory API Adapter
 See: https://api.apaleo.com/swagger/index.html?urls.primaryName=Inventory+V1
 """
 
+from typing import Any
+
 from dacite import from_dict
 
 from apaleoapi.apaleo.common.base import BaseAdapter
@@ -75,7 +77,7 @@ class CoreV1InventoryResource(BaseAdapter, CoreV1InventoryResourcePort):
         )
 
     async def create_property(
-        self, payload: CreateProperty, idempotency_key: str
+        self, payload: CreateProperty | dict[str, Any], idempotency_key: str
     ) -> PropertyCreated:
         """Create a new property."""
         url = f"{self._base_path}/properties"
