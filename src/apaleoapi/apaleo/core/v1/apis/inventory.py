@@ -76,7 +76,7 @@ class CoreV1InventoryResource(BaseAdapter, CoreV1InventoryResourcePort):
         )
 
     async def create_property(
-        self, payload: CreateProperty | dict[str, Any], idempotency_key: str
+        self, payload: CreateProperty | dict[str, Any], idempotency_key: str | None = None
     ) -> PropertyCreated:
         """Create a new property."""
         url = f"{self._base_path}/properties"
