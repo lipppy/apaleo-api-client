@@ -281,8 +281,8 @@ class BaseAdapter:
         self,
         url: str,
         params: TParams | dict[str, Any] | None = None,
-        params_model_cls: Type[TBatchModel] | None = None,
         *,
+        params_model_cls: Type[TBatchModel] | None = None,
         model_cls: Type[TListModel],
         faker_factory: Type[TDomainFactory],
         default_factory: Type[TModelFactory],
@@ -354,7 +354,7 @@ class BaseAdapter:
             total_count = 0
             page_number = 1
             page_size = params_model.batch_size
-            pages = (object_count // page_size) + 1
+            pages = (object_count + page_size - 1) // page_size
             # Create tasks for all pages
             tasks: list[asyncio.Task[TListModel]] = []
             for page_number in range(1, pages + 1):
@@ -387,10 +387,10 @@ class BaseAdapter:
                 paginated_params = params_model.model_copy()
                 paginated_params.page_number = page_number
                 paginated_params.page_size = page_size
-                log.info(f"Fetching page {page_number} with size {page_size}...")
+                log.info(f"Fetching page {page_number} with batch size {page_size}...")
                 result = await _fetch_data(params=paginated_params)
                 all_models.append(result)
-                total_count += page_size
+                total_count += len(result.items)
                 log.info(f"Total fetched: {total_count}/{result.count}")
                 if total_count >= result.count or result.items == []:
                     break
