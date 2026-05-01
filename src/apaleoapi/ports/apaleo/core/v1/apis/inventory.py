@@ -4,17 +4,20 @@ Apaleo Core V1 Inventory API Port
 See: https://api.apaleo.com/swagger/index.html?urls.primaryName=Inventory+V1
 """
 
-from typing import Any, Protocol
+from typing import Protocol
 
-from apaleoapi.apaleo.core.v1.dataclasses.inventory.query import (
+from apaleoapi.apaleo.common.contracts.payload import Operation
+from apaleoapi.apaleo.core.v1.contracts.inventory.payload import CreateProperty
+from apaleoapi.apaleo.core.v1.contracts.inventory.query import (
     PropertyGetParams,
     PropertyListParams,
 )
-from apaleoapi.apaleo.core.v1.dataclasses.inventory.response import (
+from apaleoapi.apaleo.core.v1.contracts.inventory.response import (
     CountryList,
     Property,
     PropertyList,
 )
+from apaleoapi.apaleo.identity.v1.contracts.identity.response import PropertyCreated
 
 
 class CoreV1InventoryResourcePort(Protocol):
@@ -27,7 +30,9 @@ class CoreV1InventoryResourcePort(Protocol):
         """List properties with optional filters."""
         pass
 
-    async def create_property(self, idempotency_key: str) -> Any:
+    async def create_property(
+        self, payload: CreateProperty, idempotency_key: str
+    ) -> PropertyCreated:
         """Create a new property."""
         pass
 
@@ -39,6 +44,14 @@ class CoreV1InventoryResourcePort(Protocol):
         self, property_id: str, params: PropertyGetParams | None = None
     ) -> Property:
         """Get property details by ID."""
+        pass
+
+    async def update_property(self, property_id: str, payload: list[Operation]) -> None:
+        """Update property details by ID."""
+        pass
+
+    async def delete_property(self, property_id: str) -> None:
+        """Delete property by ID."""
         pass
 
     # Types methods

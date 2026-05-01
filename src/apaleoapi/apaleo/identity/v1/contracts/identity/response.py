@@ -23,6 +23,11 @@ class InvitedUserToAccountResponse:
 
 
 @dataclass(frozen=True)
+class PropertyCreated:
+    id: str
+
+
+@dataclass(frozen=True)
 class PropertyRolesItem:
     id: str
     roles: list[RoleAccessTo]

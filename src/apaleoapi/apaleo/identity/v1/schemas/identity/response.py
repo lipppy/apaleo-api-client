@@ -20,6 +20,10 @@ class InvitedUserToAccountResponseModel(ExtendedBaseModel):
     email: str = Field(..., min_length=1)
 
 
+class PropertyCreatedModel(ExtendedBaseModel):
+    id: str = Field(...)
+
+
 class PropertyRolesItemModel(ExtendedBaseModel):
     id: str = Field(..., min_length=1)
     roles: list[RoleAccessTo] = Field(...)

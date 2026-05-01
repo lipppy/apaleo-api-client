@@ -312,7 +312,7 @@ class BaseAdapter:
         self,
         url: str,
         payload: TPayload,
-        idemtopency_key: str | None = None,
+        idempotency_key: str | None = None,
         *,
         payload_model_cls: Type[TModel],
         model_cls: Type[TModel],
@@ -350,8 +350,8 @@ class BaseAdapter:
 
         # Idempotency key handling for POST requests to prevent duplicate resource creation
         headers = {}
-        if idemtopency_key:
-            headers["Idempotency-Key"] = idemtopency_key
+        if idempotency_key:
+            headers["Idempotency-Key"] = idempotency_key
 
         # Make the API request and handle the response
         response = await self._t.request(
