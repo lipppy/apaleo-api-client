@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, cast
 from unittest.mock import Mock
 
 import pytest
@@ -7,6 +7,9 @@ from pydantic import BaseModel, Field, field_serializer
 from pydantic_core import PydanticSerializationError
 
 from apaleoapi.apaleo.common.base import BaseAdapter
+from apaleoapi.apaleo.common.contracts.payload import Operation
+from apaleoapi.apaleo.common.enums import OperationOp
+from apaleoapi.apaleo.common.schemas.payload import OperationModel
 from apaleoapi.exceptions import ParameterSerializationError, PayloadSerializationError
 
 pytestmark = [pytest.mark.unit]
@@ -28,7 +31,7 @@ class SampleParamsModel(BaseModel):
 class AliasedParamsModel(BaseModel):
     """Model with aliased fields for params serialization tests."""
 
-    property_id: str = Field(None, alias="propertyId")
+    property_id: str = Field(..., alias="propertyId")
     page_number: int | None = Field(None, alias="pageNumber")
 
     model_config = {"populate_by_name": True}
@@ -72,6 +75,14 @@ class PayloadWithFailingSerializerModel(BaseModel):
         raise PydanticSerializationError("payload serialization failed")
 
 
+class PatchPayloadWithFailingSerializerModel(BaseModel):
+    operation: Any
+
+    @field_serializer("operation")
+    def serialize_operation(self, value: Any) -> Any:
+        raise PydanticSerializationError("patch payload serialization failed")
+
+
 class TestBaseAdapterSerializeParams:
     """Test cases for BaseAdapter._serialize_params."""
 
@@ -113,6 +124,16 @@ class TestBaseAdapterSerializeParams:
         assert result == expected
 
     @pytest.mark.asyncio
+    async def test_serialize_params_raises_parameter_serialization_error_for_invalid_type(
+        self,
+    ) -> None:
+        """Test validation errors are wrapped for params serialization."""
+        with pytest.raises(ParameterSerializationError) as exc_info:
+            await self.adapter._serialize_params(cast(Any, "invalid"), SampleParamsModel)
+
+        assert "Failed to validate query parameters" in str(exc_info.value)
+
+    @pytest.mark.asyncio
     async def test_serialize_params_raises_parameter_serialization_error_on_validation(
         self,
     ) -> None:
@@ -127,8 +148,7 @@ class TestBaseAdapterSerializeParams:
         """Test serialization errors are wrapped for params serialization."""
         with pytest.raises(ParameterSerializationError) as exc_info:
             await self.adapter._serialize_params(
-                {"params": object()},
-                ParamsWithFailingSerializerModel,
+                {"params": object()}, ParamsWithFailingSerializerModel
             )
 
         assert "Failed to serialize query parameters" in str(exc_info.value)
@@ -179,7 +199,7 @@ class TestBaseAdapterSerializePayload:
     ) -> None:
         """Test invalid payload types are rejected."""
         with pytest.raises(PayloadSerializationError) as exc_info:
-            await self.adapter._serialize_payload("invalid", SamplePayloadModel)
+            await self.adapter._serialize_payload(cast(Any, "invalid"), SamplePayloadModel)
 
         assert "Payload must be a dataclass instance or a dictionary" in str(exc_info.value)
 
@@ -198,8 +218,99 @@ class TestBaseAdapterSerializePayload:
         """Test serialization errors are wrapped for payload serialization."""
         with pytest.raises(PayloadSerializationError) as exc_info:
             await self.adapter._serialize_payload(
-                {"payload": object()},
-                PayloadWithFailingSerializerModel,
+                {"payload": object()}, PayloadWithFailingSerializerModel
             )
 
         assert "Failed to serialize payload" in str(exc_info.value)
+
+
+class TestBaseAdapterSerializePatchPayload:
+    """Test cases for BaseAdapter._serialize_patch_payload."""
+
+    def setup_method(self) -> None:
+        """Setup test instance."""
+        self.adapter = BaseAdapter(transport=Mock(), max_concurrent=2)
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize(
+        ("payload", "expected"),
+        [
+            (
+                [
+                    Operation(
+                        op=OperationOp.REPLACE,
+                        path="/name",
+                        value="Updated Hotel",
+                    )
+                ],
+                [{"op": "replace", "path": "/name", "value": "Updated Hotel"}],
+            ),
+            (
+                [
+                    {
+                        "op": OperationOp.MOVE,
+                        "path": "/destination",
+                        "from_": "/source",
+                    }
+                ],
+                [{"op": "move", "path": "/destination", "from": "/source"}],
+            ),
+            (
+                [
+                    {
+                        "op": "copy",
+                        "path": "/destination",
+                        "from": "/source",
+                    }
+                ],
+                [{"op": "copy", "path": "/destination", "from": "/source"}],
+            ),
+        ],
+    )
+    async def test_serialize_patch_payload_success_cases(
+        self,
+        payload: list[Operation] | list[dict[str, Any]],
+        expected: list[dict[str, Any]],
+    ) -> None:
+        """Test successful patch payload serialization for supported input shapes."""
+        result = await self.adapter._serialize_patch_payload(
+            payload, payload_model_cls=OperationModel
+        )
+
+        assert result == expected
+
+    @pytest.mark.asyncio
+    async def test_serialize_patch_payload_raises_payload_serialization_error_for_invalid_item_type(
+        self,
+    ) -> None:
+        """Test invalid patch payload item types are rejected."""
+        with pytest.raises(PayloadSerializationError) as exc_info:
+            await self.adapter._serialize_patch_payload(
+                cast(Any, ["invalid"]), payload_model_cls=OperationModel
+            )
+
+        assert "Each item in the payload list must be a dataclass instance or a dictionary" in str(
+            exc_info.value
+        )
+
+    @pytest.mark.asyncio
+    async def test_serialize_patch_payload_raises_payload_serialization_error_on_validation(
+        self,
+    ) -> None:
+        """Test validation errors are wrapped for patch payload serialization."""
+        with pytest.raises(PayloadSerializationError) as exc_info:
+            await self.adapter._serialize_patch_payload(
+                [{"path": 123, "op": OperationOp.REPLACE}], payload_model_cls=OperationModel
+            )
+
+        assert "Failed to validate payload item" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_serialize_patch_payload_raises_payload_serialization_error_on_dump(self) -> None:
+        """Test serialization errors are wrapped for patch payload serialization."""
+        with pytest.raises(PayloadSerializationError) as exc_info:
+            await self.adapter._serialize_patch_payload(
+                [{"operation": object()}], payload_model_cls=PatchPayloadWithFailingSerializerModel
+            )
+
+        assert "Failed to serialize payload item" in str(exc_info.value)

@@ -10,6 +10,7 @@ from apaleoapi.apaleo.common.contracts.factory import CountFakerFactory
 from apaleoapi.apaleo.common.contracts.payload import Operation
 from apaleoapi.apaleo.common.contracts.response import Count
 from apaleoapi.apaleo.common.schemas.factory import CountModelDefaultFactory
+from apaleoapi.apaleo.common.schemas.payload import OperationModel
 from apaleoapi.apaleo.common.schemas.response import CountModel
 from apaleoapi.exceptions import (
     APIError,
@@ -106,6 +107,43 @@ class BaseAdapter:
                 f"Failed to serialize payload: {e}",
             ) from e
         return serialized_payload
+
+    async def _serialize_patch_payload(
+        self,
+        payload: list[Operation] | list[dict[str, Any]],
+        payload_model_cls: Type[TPayloadModel],
+    ) -> list[dict[str, Any]]:
+        """Helper to validate and serialize patch payload data."""
+        serialized_payloads: list[dict[str, Any]] = []
+        for operation in payload:
+            if is_dataclass(operation):
+                payload_dict = asdict(operation)
+            elif isinstance(operation, dict):
+                payload_dict = operation
+            else:
+                raise PayloadSerializationError(
+                    "Each item in the payload list must be a dataclass instance or a dictionary."
+                )
+            try:
+                payload_model = payload_model_cls.model_validate(payload_dict)
+            except ValidationError as e:
+                log.error(f"Failed to validate payload item: {e}")
+                raise PayloadSerializationError(
+                    f"Failed to validate payload item: {e}",
+                ) from e
+            try:
+                payload_request = (
+                    payload_model.model_dump(by_alias=True, exclude_none=True)
+                    if payload_model
+                    else {}
+                )
+            except PydanticSerializationError as e:
+                log.error(f"Failed to serialize payload item: {e}")
+                raise PayloadSerializationError(
+                    f"Failed to serialize payload item: {e}",
+                ) from e
+            serialized_payloads.append(payload_request)
+        return serialized_payloads
 
     async def _head_resource(
         self,
@@ -442,8 +480,8 @@ class BaseAdapter:
     async def _patch_resource(
         self,
         url: str,
-        payload: list[Operation],
-        payload_model_cls: Type[TPayloadModel],
+        payload: list[Operation] | list[dict[str, Any]],
+        payload_model_cls: Type[OperationModel] = OperationModel,
         *,
         error_prefix: str,
     ) -> None:
@@ -454,26 +492,19 @@ class BaseAdapter:
         Raises exceptions for error responses and logs warnings for unexpected responses.
         """
         success_codes = {204}
+
         # Validate URL path to prevent injection and ensure it conforms to expected patterns
         validated_url = self._url_path_validator.validate(url)
 
-        # Validate and serialize payload
-        payload_requests: list[dict[str, Any]] = []
-        for operation in payload:
-            payload_dict: dict[str, Any] = asdict(operation) if is_dataclass(operation) else {}
-            payload_model = (
-                payload_model_cls.model_validate(payload_dict) if payload_model_cls else None
-            )
-            payload_request = (
-                payload_model.model_dump(by_alias=True, exclude_none=True) if payload_model else {}
-            )
-            payload_requests.append(payload_request)
+        # Validate and serialize patch payload
+        serialized_payload = await self._serialize_patch_payload(payload, payload_model_cls)
+
         # In dry run mode we do not skip the validation and serialization of the payload,
         # to ensure that the payload is valid and can be serialized correctly.
         if self._dry_run:
             return None
 
-        response = await self._t.request("PATCH", validated_url, json=payload_requests)
+        response = await self._t.request("PATCH", validated_url, json=serialized_payload)
         response_data = self._response_handler.handle(response=response)
 
         # No response data is expected for a successful PATCH

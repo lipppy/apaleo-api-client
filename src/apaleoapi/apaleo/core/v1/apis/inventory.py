@@ -10,7 +10,6 @@ from dacite import from_dict
 
 from apaleoapi.apaleo.common.base import BaseAdapter
 from apaleoapi.apaleo.common.contracts.payload import Operation
-from apaleoapi.apaleo.common.schemas.payload import OperationModel
 from apaleoapi.apaleo.core.v1.contracts.inventory.factory import (
     PropertyCreatedFakerFactory,
     PropertyFakerFactory,
@@ -138,7 +137,6 @@ class CoreV1InventoryResource(BaseAdapter, CoreV1InventoryResourcePort):
         return await self._patch_resource(
             url=url,
             payload=payload,
-            payload_model_cls=OperationModel,
             error_prefix=f"Failed to update property with ID {property_id}",
         )
 

@@ -11,7 +11,6 @@ from typing import Any
 
 from apaleoapi.apaleo.common.base import BaseAdapter
 from apaleoapi.apaleo.common.contracts.payload import Operation
-from apaleoapi.apaleo.common.schemas.payload import OperationModel
 from apaleoapi.apaleo.identity.v1.contracts.identity.factory import (
     InvitationListFakerFactory,
     InvitedUserToAccountResponseFakerFactory,
@@ -162,7 +161,6 @@ class IdentityV1IdentityResource(BaseAdapter, IdentityV1IdentityResourcePort):
         await self._patch_resource(
             url=url,
             payload=payload,
-            payload_model_cls=OperationModel,
             error_prefix=f"Failed to update user with ID {user_id}",
         )
 
