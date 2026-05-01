@@ -33,7 +33,7 @@ class ApaleoAPIClient(ApaleoAPIClientPort):
             token_provider: Token provider for OAuth2 authentication
             timeout: Request timeout in seconds (default: 10)
             retries: Number of retries for API requests (default: 1)
-            max_concurrent: Maximum number of concurrent API requests (default: 10)
+            max_concurrent: Maximum number of concurrent API requests (default: 2)
             dry_run: If True, do not make actual API calls (default: False)
         """
         self.__token_provider = token_provider
