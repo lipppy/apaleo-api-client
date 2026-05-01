@@ -102,7 +102,7 @@ class CoreV1InventoryResource(BaseAdapter, CoreV1InventoryResourcePort):
             error_prefix="Failed to count properties",
         )
 
-    async def is_property(self, property_id: str) -> bool:
+    async def check_property(self, property_id: str) -> bool:
         """Check if a property exists by ID."""
         url = f"{self._base_path}/properties/{property_id}"
 

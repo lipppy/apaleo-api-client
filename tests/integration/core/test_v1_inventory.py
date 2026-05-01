@@ -88,15 +88,15 @@ class TestCoreV1InventoryResource:
         # )
 
     @pytest.mark.asyncio
-    async def test_is_property(self) -> None:
+    async def test_check_property(self) -> None:
         """Test checking if a property exists."""
-        is_property_true = await self.adapter.is_property(property_id="BER")
-        assert is_property_true is not None
-        assert isinstance(is_property_true, bool)
-        assert is_property_true is True
+        check_property_true = await self.adapter.check_property(property_id="BER")
+        assert check_property_true is not None
+        assert isinstance(check_property_true, bool)
+        assert check_property_true is True
 
         # Test with an invalid property ID to check the False case
-        is_property_false = await self.adapter.is_property(property_id="INVALID_PROPERTY_ID")
-        assert is_property_false is not None
-        assert isinstance(is_property_false, bool)
-        assert is_property_false is False
+        check_property_false = await self.adapter.check_property(property_id="INVALID_PROPERTY_ID")
+        assert check_property_false is not None
+        assert isinstance(check_property_false, bool)
+        assert check_property_false is False

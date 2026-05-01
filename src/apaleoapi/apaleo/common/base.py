@@ -48,7 +48,11 @@ class BaseAdapter:
         *,
         error_prefix: str,
     ) -> bool:
-        """Helper for GET item or list resources without batching or concurrency."""
+        """
+        Helper for HEAD requests to check resource existence.
+        Returns True if resource exists, False if not found.
+        Raises APIError for unexpected response status codes.
+        """
 
         success_codes = {200}
 
