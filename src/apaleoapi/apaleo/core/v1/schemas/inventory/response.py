@@ -5,28 +5,13 @@ Generated from Apaleo Inventory API Swagger documentation.
 API doc: https://api.apaleo.com/swagger/index.html?urls.primaryName=Inventory+V1
 """
 
-from polyfactory.factories.pydantic_factory import ModelFactory
 from pydantic import AwareDatetime, Field
 
 from apaleoapi.apaleo.common.schemas.base import ExtendedBaseModel, ListBaseModel
 from apaleoapi.apaleo.core.v1.enums.inventory import Action, Code, PropertyStatus
+from apaleoapi.apaleo.core.v1.schemas.inventory.common import AddressModel, BankAccountModel
 
 # Property
-
-
-class AddressModel(ExtendedBaseModel):
-    address_line1: str = Field(..., alias="addressLine1", min_length=1)
-    address_line2: str | None = Field(None, alias="addressLine2")
-    postal_code: str = Field(..., alias="postalCode", min_length=1)
-    city: str = Field(..., min_length=1)
-    region_code: str | None = Field(None, alias="regionCode")
-    country_code: str = Field(..., alias="countryCode")
-
-
-class BankAccountModel(ExtendedBaseModel):
-    iban: str | None = None
-    bic: str | None = None
-    bank: str | None = None
 
 
 class ActionReasonModel(ExtendedBaseModel):
@@ -38,6 +23,10 @@ class ActionModel(ExtendedBaseModel):
     action: Action
     is_allowed: bool = Field(..., alias="isAllowed")
     reasons: list[ActionReasonModel] | None = None
+
+
+class PropertyCreatedModel(ExtendedBaseModel):
+    id: str = Field(...)
 
 
 class PropertyItemModel(ExtendedBaseModel):
@@ -96,11 +85,3 @@ class CountryListModel(ExtendedBaseModel):
         default_factory=list,
         alias="countryCodes",
     )
-
-
-# Default Factories
-
-
-class PropertyListModelDefaultFactory(ModelFactory[PropertyListModel]):
-    __model__ = PropertyListModel
-    __use_defaults__ = True

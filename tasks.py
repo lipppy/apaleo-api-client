@@ -1,21 +1,9 @@
 """Invoke tasks for development workflow."""
 
-import os
-from pathlib import Path
-
 from invoke.context import Context
 from invoke.tasks import task
 
-uid = os.getuid()
-gid = os.getgid()
-
 # Variables
-project_root = Path(__file__).resolve().parents[0]
-PROJECT_NAME = project_root.name
-ALEMBIC_INI_PATH = "src/app/alembic.ini"
-DOCKER_APP_NAME = f"{PROJECT_NAME}-app-1"
-DOCKER_DB_INT_NAME = f"{PROJECT_NAME}-db-internal-1"
-DOCKER_DB_EXT_NAME = f"{PROJECT_NAME}-db-external-1"
 
 BASH_COLOR_YELLOW = "\033[93m"
 BASH_COLOR_RED = "\033[91m"
@@ -94,7 +82,7 @@ def test_integration(c: Context) -> None:
     """Run integration tests with coverage."""
     c.run(f"echo '{BASH_INFO}Running integration tests with coverage...'")
     c.run(
-        "poetry run coverage run -m pytest -x -vv -m integration && poetry run coverage report",
+        "poetry run coverage run -m pytest -x -vv -s -m integration && poetry run coverage report",
         pty=True,
     )
     c.run(f"echo '{BASH_SUCCESS}Integration tests completed successfully.'")

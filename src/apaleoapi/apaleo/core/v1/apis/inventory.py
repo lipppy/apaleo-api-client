@@ -4,33 +4,43 @@ Apaleo Core V1 Inventory API Adapter
 See: https://api.apaleo.com/swagger/index.html?urls.primaryName=Inventory+V1
 """
 
-from dataclasses import asdict, is_dataclass
-from typing import Any
-
 from dacite import from_dict
 
 from apaleoapi.apaleo.common.base import BaseAdapter
-from apaleoapi.apaleo.core.v1.dataclasses.inventory.query import (
+from apaleoapi.apaleo.common.contracts.payload import Operation
+from apaleoapi.apaleo.common.schemas.payload import OperationModel
+from apaleoapi.apaleo.core.v1.contracts.inventory.factory import (
+    PropertyCreatedFakerFactory,
+    PropertyFakerFactory,
+    PropertyListFakerFactory,
+)
+from apaleoapi.apaleo.core.v1.contracts.inventory.payload import CreateProperty
+from apaleoapi.apaleo.core.v1.contracts.inventory.query import (
     PropertyGetParams,
     PropertyListParams,
 )
-from apaleoapi.apaleo.core.v1.dataclasses.inventory.response import (
+from apaleoapi.apaleo.core.v1.contracts.inventory.response import (
     CountryList,
     Property,
-    PropertyFactory,
     PropertyList,
-    PropertyListFakerFactory,
 )
+from apaleoapi.apaleo.core.v1.schemas.inventory.factory import (
+    PropertyCreatedModelDefaultFactory,
+    PropertyListModelDefaultFactory,
+    PropertyModelDefaultFactory,
+)
+from apaleoapi.apaleo.core.v1.schemas.inventory.payload import CreatePropertyModel
 from apaleoapi.apaleo.core.v1.schemas.inventory.query import (
     PropertyGetParamsModel,
     PropertyListParamsModel,
 )
 from apaleoapi.apaleo.core.v1.schemas.inventory.response import (
     CountryListModel,
+    PropertyCreatedModel,
     PropertyListModel,
-    PropertyListModelDefaultFactory,
     PropertyModel,
 )
+from apaleoapi.apaleo.identity.v1.contracts.identity.response import PropertyCreated
 from apaleoapi.logging import get_logger
 from apaleoapi.ports.apaleo.core.v1.apis.inventory import CoreV1InventoryResourcePort
 from apaleoapi.ports.http.transport import AsyncTransportPort
@@ -49,47 +59,7 @@ class CoreV1InventoryResource(BaseAdapter, CoreV1InventoryResourcePort):
     # Property methods
 
     async def list_properties(self, params: PropertyListParams | None = None) -> PropertyList:
-        """
-        List properties with optional filters.
-
-        Args:
-            params (PropertyListParams, optional):
-                Filters and pagination options for listing properties.
-
-                Supported fields:
-                    - status (str):
-                        Filter properties by status. Allowed values: "Test", "Live".
-
-                    - include_archived (bool):
-                        Whether to include archived properties in the results.
-                        If omitted or False, only non-archived properties are returned.
-
-                    - country_code (str):
-                        Filter properties by ISO country code (e.g., "US", "DE").
-
-                    - expand (list[str]):
-                        List of embedded resources to expand in the response.
-                        Supported values: "actions". All other values are ignored.
-
-                    - page_number (int):
-                        Page number to retrieve. Default: 1.
-                        If the requested page contains no items, the API returns
-                        HTTP 204 (No Content).
-
-                    - page_size (int):
-                        Number of items per page. Default: 500. Maximum: 500.
-
-                    - batch_size (int):
-                        Number of items fetched per request when retrieving pages
-                        concurrently.
-
-                    - is_concurrently (bool):
-                        Whether pages should be fetched concurrently. Default: False.
-
-        Returns:
-            PropertyList:
-                A list of properties matching the provided filters.
-        """
+        """List properties with optional filters."""
         url = f"{self._base_path}/properties"
 
         return await self._get_resource_concurrently(
@@ -104,8 +74,24 @@ class CoreV1InventoryResource(BaseAdapter, CoreV1InventoryResourcePort):
             return_cls=PropertyList,
         )
 
-    async def create_property(self, idempotency_key: str) -> Any:
-        raise NotImplementedError("Create property method is not implemented yet.")
+    async def create_property(
+        self, payload: CreateProperty, idempotency_key: str
+    ) -> PropertyCreated:
+        """Create a new property."""
+        url = f"{self._base_path}/properties"
+
+        return await self._post_resource(
+            url=url,
+            payload=payload,
+            idempotency_key=idempotency_key,
+            payload_model_cls=CreatePropertyModel,
+            model_cls=PropertyCreatedModel,
+            faker_factory=PropertyCreatedFakerFactory,
+            default_factory=PropertyCreatedModelDefaultFactory,
+            success_codes={200},
+            error_prefix="Failed to create a new property",
+            return_cls=PropertyCreated,
+        )
 
     async def count_properties(self) -> int:
         """Get total count of properties."""
@@ -116,32 +102,49 @@ class CoreV1InventoryResource(BaseAdapter, CoreV1InventoryResourcePort):
             error_prefix="Failed to count properties",
         )
 
-    async def _get_property(
-        self, property_id: str, params: PropertyGetParamsModel
-    ) -> PropertyModel:
-        """Helper method to get property details by ID, returning validated response model."""
+    async def check_property(self, property_id: str) -> bool:
+        """Check if a property exists by ID."""
         url = f"{self._base_path}/properties/{property_id}"
-        params_dict = params.model_dump(by_alias=True, exclude_none=True)
-        response = await self._t.request("GET", url, params=params_dict)
-        response_data = self._response_handler.handle(response)
-        return self._response_validator.validate(
-            response_data=response_data,
-            response=response,
-            model_cls=PropertyModel,
-            error_prefix="Invalid property item payload from Apaleo inventory",
+
+        return await self._head_resource(
+            url=url,
+            error_prefix=f"Failed to check existence of property {property_id}",
         )
 
     async def get_property(
         self, property_id: str, params: PropertyGetParams | None = None
     ) -> Property:
         """Get property details by ID."""
-        params_dict: dict[str, Any] = asdict(params) if is_dataclass(params) else {}
-        params_model = PropertyGetParamsModel.model_validate(params_dict)
-        if self._dry_run:
-            fake_response = PropertyFactory().build()
-            return fake_response
-        validated_response = await self._get_property(property_id=property_id, params=params_model)
-        return from_dict(data_class=Property, data=validated_response.model_dump())
+        url = f"{self._base_path}/properties/{property_id}"
+
+        return await self._get_resource(
+            url=url,
+            params=params,
+            params_model_cls=PropertyGetParamsModel,
+            model_cls=PropertyModel,
+            faker_factory=PropertyFakerFactory,
+            default_factory=PropertyModelDefaultFactory,
+            success_codes={200, 204},
+            error_prefix=f"Failed to get property with ID {property_id}",
+            return_cls=Property,
+        )
+
+    async def update_property(self, property_id: str, payload: list[Operation]) -> None:
+        """Update property details by ID."""
+        url = f"{self._base_path}/properties/{property_id}"
+
+        return await self._patch_resource(
+            url=url,
+            payload=payload,
+            payload_model_cls=OperationModel,
+            error_prefix=f"Failed to update property with ID {property_id}",
+        )
+
+    async def delete_property(self, property_id: str) -> None:
+        """Delete property by ID if it exists."""
+        url = f"{self._base_path}/properties/{property_id}"
+
+        await self._delete_resource(url=url)
 
     # Types methods
 

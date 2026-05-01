@@ -1,25 +1,7 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 
-from polyfactory.factories import DataclassFactory
-
-
-@dataclass
-class Address:
-    address_line1: str
-    postal_code: str
-    city: str
-    country_code: str
-
-    address_line2: str | None = None
-    region_code: str | None = None
-
-
-@dataclass
-class BankAccount:
-    iban: str | None = None
-    bic: str | None = None
-    bank: str | None = None
+from apaleoapi.apaleo.core.v1.contracts.inventory.common import Address, BankAccount
 
 
 @dataclass
@@ -92,14 +74,3 @@ class Property:
 @dataclass
 class CountryList:
     country_codes: list[str]
-
-
-# Faker Factories
-
-
-class PropertyListFakerFactory(DataclassFactory[PropertyList]):
-    __model__ = PropertyList
-
-
-class PropertyFactory(DataclassFactory[Property]):
-    __model__ = Property

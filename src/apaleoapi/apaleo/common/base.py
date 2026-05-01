@@ -9,7 +9,7 @@ from apaleoapi.apaleo.common.contracts.payload import Operation
 from apaleoapi.apaleo.common.contracts.response import Count
 from apaleoapi.apaleo.common.schemas.factory import CountModelDefaultFactory
 from apaleoapi.apaleo.common.schemas.response import CountModel
-from apaleoapi.exceptions import UpdateResourceError
+from apaleoapi.exceptions import APIError, UpdateResourceError
 from apaleoapi.logging import get_logger
 from apaleoapi.ports.http.transport import AsyncTransportPort
 from apaleoapi.services.response_handler import ResponseHandler
@@ -41,6 +41,48 @@ class BaseAdapter:
         self._response_handler = ResponseHandler()
         self._response_validator = ResponseValidator()
         self._url_path_validator = URLPathValidator()
+
+    async def _head_resource(
+        self,
+        url: str,
+        *,
+        error_prefix: str,
+    ) -> bool:
+        """
+        Helper for HEAD requests to check resource existence.
+        Returns True if resource exists, False if not found.
+        Raises APIError for unexpected response status codes.
+        """
+
+        success_codes = {200}
+
+        # Validate URL path to prevent injection and ensure it conforms to expected patterns
+        validated_url = self._url_path_validator.validate(url)
+
+        # Handle dry run by returning fake data without making an actual API call
+        if self._dry_run:
+            return True
+
+        # Make the API request and handle the response
+        response = await self._t.request(
+            "HEAD",
+            validated_url,
+        )
+
+        # Validate the response data, handling empty responses for success codes
+        if response.status_code in success_codes:
+            return True
+        elif response.status_code == 404:
+            return False
+        else:
+            # Normally no response data is expected for a HEAD request
+            _ = self._response_handler.handle(response=response)
+            # If no error was raised until this point, a generic APIError is raised to indicate
+            # an unexpected response status code.
+            raise APIError(
+                f"{error_prefix}: Unexpected response for HEAD request to {validated_url}.",
+                response=response,
+            )
 
     async def _get_resource(
         self,
@@ -274,8 +316,9 @@ class BaseAdapter:
         self,
         url: str,
         payload: TPayload,
-        payload_model_cls: Type[TModel],
+        idempotency_key: str | None = None,
         *,
+        payload_model_cls: Type[TModel],
         model_cls: Type[TModel],
         faker_factory: Type[TDomainFactory],
         default_factory: Type[TModelFactory],
@@ -309,7 +352,15 @@ class BaseAdapter:
             fake_response = faker_factory().build()
             return cast(TDomain, fake_response)
 
-        response = await self._t.request("POST", validated_url, json=payload_request)
+        # Idempotency key handling for POST requests to prevent duplicate resource creation
+        headers = {}
+        if idempotency_key:
+            headers["Idempotency-Key"] = idempotency_key
+
+        # Make the API request and handle the response
+        response = await self._t.request(
+            "POST", validated_url, json=payload_request, headers=headers
+        )
         response_data = self._response_handler.handle(response=response)
 
         # Validate the response data, handling empty responses for success codes
