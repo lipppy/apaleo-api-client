@@ -3,13 +3,20 @@ from dataclasses import asdict, is_dataclass
 from typing import Any, Type, cast
 
 from dacite import from_dict
+from pydantic import ValidationError
+from pydantic_core import PydanticSerializationError
 
 from apaleoapi.apaleo.common.contracts.factory import CountFakerFactory
 from apaleoapi.apaleo.common.contracts.payload import Operation
 from apaleoapi.apaleo.common.contracts.response import Count
 from apaleoapi.apaleo.common.schemas.factory import CountModelDefaultFactory
 from apaleoapi.apaleo.common.schemas.response import CountModel
-from apaleoapi.exceptions import APIError, UpdateResourceError
+from apaleoapi.exceptions import (
+    APIError,
+    ParameterSerializationError,
+    PayloadSerializationError,
+    UpdateResourceError,
+)
 from apaleoapi.logging import get_logger
 from apaleoapi.ports.http.transport import AsyncTransportPort
 from apaleoapi.services.response_handler import ResponseHandler
@@ -41,6 +48,64 @@ class BaseAdapter:
         self._response_handler = ResponseHandler()
         self._response_validator = ResponseValidator()
         self._url_path_validator = URLPathValidator()
+
+    async def _serialize_params(
+        self, params: TParams | dict[str, Any] | None, params_model_cls: Type[TParamsModel] | None
+    ) -> dict[str, Any]:
+        """Helper to validate and serialize query parameters."""
+        if is_dataclass(params):
+            params_dict = asdict(params)
+        elif isinstance(params, dict):
+            params_dict = params
+        else:
+            params_dict = {}
+        try:
+            params_model = (
+                params_model_cls.model_validate(params_dict) if params_model_cls else None
+            )
+        except ValidationError as e:
+            log.error(f"Failed to validate params: {e}")
+            raise ParameterSerializationError(
+                f"Failed to validate query parameters: {e}",
+            ) from e
+        try:
+            serialized_params = (
+                params_model.model_dump(by_alias=True, exclude_none=True) if params_model else {}
+            )
+        except PydanticSerializationError as e:
+            log.error(f"Failed to serialize params: {e}")
+            raise ParameterSerializationError(
+                f"Failed to serialize query parameters: {e}",
+            ) from e
+        return serialized_params
+
+    async def _serialize_payload(
+        self,
+        payload: TPayload | dict[str, Any],
+        payload_model_cls: Type[TPayloadModel],
+    ) -> dict[str, Any]:
+        """Helper to validate and serialize payload data."""
+        if is_dataclass(payload):
+            payload_dict = asdict(payload)
+        elif isinstance(payload, dict):
+            payload_dict = payload
+        else:
+            raise PayloadSerializationError("Payload must be a dataclass instance or a dictionary.")
+        try:
+            payload_model = payload_model_cls.model_validate(payload_dict)
+        except ValidationError as e:
+            log.error(f"Failed to validate payload: {e}")
+            raise PayloadSerializationError(
+                f"Failed to validate payload: {e}",
+            ) from e
+        try:
+            serialized_payload = payload_model.model_dump(by_alias=True) if payload_model else {}
+        except PydanticSerializationError as e:
+            log.error(f"Failed to serialize payload: {e}")
+            raise PayloadSerializationError(
+                f"Failed to serialize payload: {e}",
+            ) from e
+        return serialized_payload
 
     async def _head_resource(
         self,
@@ -87,9 +152,9 @@ class BaseAdapter:
     async def _get_resource(
         self,
         url: str,
-        params: TParams | None = None,
-        params_model_cls: Type[TParamsModel] | None = None,
+        params: TParams | dict[str, Any] | None = None,
         *,
+        params_model_cls: Type[TParamsModel] | None = None,
         model_cls: Type[TModel],
         faker_factory: Type[TDomainFactory],
         default_factory: Type[TModelFactory],
@@ -104,10 +169,8 @@ class BaseAdapter:
         validated_url = self._url_path_validator.validate(url)
 
         # Validate and serialize params if provided, otherwise use empty dict
-        params_dict: dict[str, Any] = asdict(params) if is_dataclass(params) else {}
-        params_model = params_model_cls.model_validate(params_dict) if params_model_cls else None
-        params_request = (
-            params_model.model_dump(by_alias=True, exclude_none=True) if params_model else {}
+        params_request = await self._serialize_params(
+            params=params, params_model_cls=params_model_cls
         )
 
         # Handle dry run by returning fake data without making an actual API call
@@ -155,7 +218,7 @@ class BaseAdapter:
     async def _get_resource_count(
         self,
         url: str,
-        params: TParams | None = None,
+        params: TParams | dict[str, Any] | None = None,
         params_model_cls: Type[TParamsModel] | None = None,
         *,
         error_prefix: str,
@@ -179,7 +242,7 @@ class BaseAdapter:
     async def _get_resource_concurrently(
         self,
         url: str,
-        params: TParams | None = None,
+        params: TParams | dict[str, Any] | None = None,
         params_model_cls: Type[TBatchModel] | None = None,
         *,
         model_cls: Type[TListModel],
@@ -315,10 +378,10 @@ class BaseAdapter:
     async def _post_resource(
         self,
         url: str,
-        payload: TPayload,
+        payload: TPayload | dict[str, Any],
         idempotency_key: str | None = None,
         *,
-        payload_model_cls: Type[TModel],
+        payload_model_cls: Type[TPayloadModel],
         model_cls: Type[TModel],
         faker_factory: Type[TDomainFactory],
         default_factory: Type[TModelFactory],
@@ -338,13 +401,7 @@ class BaseAdapter:
         validated_url = self._url_path_validator.validate(url)
 
         # Validate and serialize payload
-        payload_dict: dict[str, Any] = asdict(payload) if is_dataclass(payload) else {}
-        payload_model = (
-            payload_model_cls.model_validate(payload_dict) if payload_model_cls else None
-        )
-        payload_request = (
-            payload_model.model_dump(by_alias=True, exclude_none=True) if payload_model else {}
-        )
+        payload_request = await self._serialize_payload(payload, payload_model_cls)
 
         # In dry run mode we do not skip the validation and serialization of the payload,
         # to ensure that the payload is valid and can be serialized correctly.

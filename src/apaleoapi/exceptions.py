@@ -52,3 +52,11 @@ class DeleteResourceError(APIError):
 
 class UpdateResourceError(APIError):
     pass
+
+
+class ParameterSerializationError(Exception):
+    pass
+
+
+class PayloadSerializationError(Exception):
+    pass
