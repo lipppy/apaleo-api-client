@@ -1,14 +1,16 @@
 from dataclasses import dataclass
 from typing import Any, cast
-from unittest.mock import Mock
+from unittest.mock import AsyncMock, Mock
 
 import pytest
 from pydantic import BaseModel, Field, field_serializer
 from pydantic_core import PydanticSerializationError
 
 from apaleoapi.apaleo.common.base import BaseAdapter
+from apaleoapi.apaleo.common.contracts.base import BatchRequest
 from apaleoapi.apaleo.common.contracts.payload import Operation
 from apaleoapi.apaleo.common.enums import OperationOp
+from apaleoapi.apaleo.common.schemas.base import BatchRequestBaseModel, ListBaseModel
 from apaleoapi.apaleo.common.schemas.payload import OperationModel
 from apaleoapi.exceptions import ParameterSerializationError, PayloadSerializationError
 
@@ -81,6 +83,45 @@ class PatchPayloadWithFailingSerializerModel(BaseModel):
     @field_serializer("operation")
     def serialize_operation(self, value: Any) -> Any:
         raise PydanticSerializationError("patch payload serialization failed")
+
+
+@dataclass
+class SampleBatchParams(BatchRequest):
+    some_param: str | None = None
+
+
+class SampleBatchParamsModel(BatchRequestBaseModel):
+    some_param: str | None = Field(None, alias="someParam")
+
+
+@dataclass
+class SampleListItem:
+    id: str
+
+
+@dataclass
+class SampleListResponse:
+    items: list[SampleListItem]
+    count: int
+
+
+class SampleListItemModel(BaseModel):
+    id: str
+
+
+class SampleListModel(ListBaseModel[SampleListItemModel]):
+    pass
+
+
+class SampleListDefaultFactory:
+    @staticmethod
+    def build() -> SampleListModel:
+        return SampleListModel(items=[], count=0)
+
+
+class SampleListFakerFactory:
+    def build(self) -> SampleListResponse:
+        return SampleListResponse(items=[], count=0)
 
 
 class TestBaseAdapterSerializeParams:
@@ -314,3 +355,147 @@ class TestBaseAdapterSerializePatchPayload:
             )
 
         assert "Failed to serialize payload item" in str(exc_info.value)
+
+
+class TestBaseAdapterGetResourceConcurrently:
+    """Test cases for BaseAdapter._get_resource_concurrently."""
+
+    def setup_method(self) -> None:
+        """Setup test instance."""
+        self.transport = Mock()
+        self.transport.request = AsyncMock()
+        self.adapter = BaseAdapter(transport=self.transport, max_concurrent=2)
+        cast(Any, self.adapter._response_handler).handle = Mock(
+            side_effect=lambda response: response.payload
+        )
+        cast(Any, self.adapter._response_validator).validate = Mock(
+            side_effect=lambda response_data, response, model_cls, error_prefix: (
+                model_cls.model_validate(response_data)
+            )
+        )
+        cast(Any, self.adapter._url_path_validator).validate = Mock(side_effect=lambda url: url)
+
+    @pytest.mark.asyncio
+    async def test_get_resource_concurrently_fetches_only_expected_pages_for_exact_division(
+        self,
+    ) -> None:
+        """Test the concurrent branch does not request an extra page when count divides evenly."""
+
+        async def request_side_effect(
+            method: str, url: str, params: dict[str, Any] | None = None
+        ) -> Mock:
+            assert method == "GET"
+            assert url == "api/v1/test"
+            page_number = cast(int, params.get("pageNumber") if params else None)
+            page_size = cast(int, params.get("pageSize") if params else None)
+            payloads = {
+                (1, 1): {"items": [{"id": "1"}], "count": 4},
+                (1, 2): {"items": [{"id": "1"}, {"id": "2"}], "count": 4},
+                (2, 2): {"items": [{"id": "3"}, {"id": "4"}], "count": 4},
+            }
+            if (page_number, page_size) not in payloads:
+                raise AssertionError(f"Unexpected page request: {(page_number, page_size)}")
+
+            return Mock(status_code=200, payload=payloads[(page_number, page_size)])
+
+        self.transport.request.side_effect = request_side_effect
+
+        result = await self.adapter._get_resource_concurrently(
+            url="api/v1/test",
+            params=SampleBatchParams(batch_size=2, is_concurrently=True),
+            params_model_cls=cast(Any, SampleBatchParamsModel),
+            model_cls=cast(Any, SampleListModel),
+            faker_factory=cast(Any, SampleListFakerFactory),
+            default_factory=cast(Any, SampleListDefaultFactory),
+            return_cls=SampleListResponse,
+            success_codes={200},
+            error_prefix="Failed to fetch test resources",
+        )
+
+        assert self.transport.request.await_count == 1 + 2  # 1 for count, 2 for pages
+        assert result.count == 4
+        assert [item.id for item in result.items] == ["1", "2", "3", "4"]
+
+    @pytest.mark.asyncio
+    async def test_get_resource_concurrently_fetches_only_expected_pages_for_short_pages(
+        self,
+    ) -> None:
+        """
+        Test the concurrent branch continues fetching pages until all
+        items are retrieved, even if some pages are short.
+        """
+
+        async def request_side_effect(
+            method: str, url: str, params: dict[str, Any] | None = None
+        ) -> Mock:
+            assert method == "GET"
+            assert url == "api/v1/test"
+            page_number = cast(int, params.get("pageNumber") if params else None)
+            page_size = cast(int, params.get("pageSize") if params else None)
+            payloads = {
+                (1, 1): {"items": [{"id": "1"}], "count": 5},
+                (1, 2): {"items": [{"id": "1"}, {"id": "2"}], "count": 5},
+                (2, 2): {"items": [{"id": "3"}, {"id": "4"}], "count": 5},
+                (3, 2): {"items": [{"id": "5"}], "count": 5},
+            }
+            if (page_number, page_size) not in payloads:
+                raise AssertionError(f"Unexpected page request: {(page_number, page_size)}")
+
+            return Mock(status_code=200, payload=payloads[(page_number, page_size)])
+
+        self.transport.request.side_effect = request_side_effect
+
+        result = await self.adapter._get_resource_concurrently(
+            url="api/v1/test",
+            params=SampleBatchParams(batch_size=2, is_concurrently=True),
+            params_model_cls=cast(Any, SampleBatchParamsModel),
+            model_cls=cast(Any, SampleListModel),
+            faker_factory=cast(Any, SampleListFakerFactory),
+            default_factory=cast(Any, SampleListDefaultFactory),
+            return_cls=SampleListResponse,
+            success_codes={200},
+            error_prefix="Failed to fetch test resources",
+        )
+
+        assert self.transport.request.await_count == 1 + 3  # 1 for count, 3 for pages
+        assert result.count == 5
+        assert [item.id for item in result.items] == ["1", "2", "3", "4", "5"]
+
+    @pytest.mark.asyncio
+    async def test_get_resource_concurrently_no_results(
+        self,
+    ) -> None:
+        """Test the concurrent branch handles no results correctly."""
+
+        async def request_side_effect(
+            method: str, url: str, params: dict[str, Any] | None = None
+        ) -> Mock:
+            assert method == "GET"
+            assert url == "api/v1/test"
+            page_number = cast(int, params.get("pageNumber") if params else None)
+            page_size = cast(int, params.get("pageSize") if params else None)
+            payloads = {
+                (1, 1): {"items": [], "count": 0},
+            }
+            if (page_number, page_size) not in payloads:
+                raise AssertionError(f"Unexpected page request: {(page_number, page_size)}")
+
+            return Mock(status_code=200, payload=payloads[(page_number, page_size)])
+
+        self.transport.request.side_effect = request_side_effect
+
+        result = await self.adapter._get_resource_concurrently(
+            url="api/v1/test",
+            params=SampleBatchParams(batch_size=10, is_concurrently=True),
+            params_model_cls=cast(Any, SampleBatchParamsModel),
+            model_cls=cast(Any, SampleListModel),
+            faker_factory=cast(Any, SampleListFakerFactory),
+            default_factory=cast(Any, SampleListDefaultFactory),
+            return_cls=SampleListResponse,
+            success_codes={200},
+            error_prefix="Failed to fetch test resources",
+        )
+
+        assert self.transport.request.await_count == 1  # 1 for count, no pages since no results
+        assert result.count == 0
+        assert [item.id for item in result.items] == []
