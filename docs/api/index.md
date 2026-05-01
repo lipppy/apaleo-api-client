@@ -197,6 +197,35 @@ params = InvitationListParams(batch_size=50, is_concurrently=True)
 invitations = await client.identity.v1.identity.list_invitations(params)
 ```
 
+### Flexible Request Inputs
+
+Request parameters and payloads can be passed either as the SDK's typed dataclasses or as plain dictionaries. Patch operations also accept a `list[dict[str, Any]]` when that is more convenient.
+
+```python
+# Typed dataclass parameters
+params = InvitationListParams(property_id="BER")
+invitations = await client.identity.v1.identity.list_invitations(params)
+
+# Equivalent dict parameters
+invitations = await client.identity.v1.identity.list_invitations({"property_id": "BER"})
+
+# Regular payloads can also be dictionaries
+invited_user = await client.identity.v1.identity.create_invitation(
+    {
+        "email": "james.twelvetrees@invalid.com",
+        "properties": ["BER"],
+        "is_account_admin": False,
+        "role": "Housekeeping",
+    }
+)
+
+# JSON Patch operations can be supplied as list items of dicts
+await client.identity.v1.identity.update_user(
+    user_id="some_subject_id",
+    payload=[{"op": "replace", "path": "/enabled", "value": True}],
+)
+```
+
 ### Error Handling
 The SDK provides structured exceptions for different error scenarios:
 

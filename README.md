@@ -20,6 +20,7 @@ This SDK is actively under development with the goal of providing full coverage 
 Current status:
 
 - **Type-safe abstractions** - Full type hints and Pydantic models for implemented resources
+- **Flexible request inputs** - Pass params and payloads as typed dataclasses or plain dictionaries
 - **Async/await support** - Non-blocking I/O for high-performance applications
 - **Authentication handling** - Built-in support for OAuth 2.0 flows (Client Credentials, Authorization Code)
 - **Pagination** - Smart concurrent batch fetching for large datasets
@@ -62,6 +63,56 @@ print(type(property_berlin))
 
 print(property_berlin.id)
 #> BER
+```
+
+### Flexible Request Inputs
+
+Request params and payloads can be passed either as the SDK's typed dataclasses or as plain dictionaries. JSON Patch operations also accept `list[dict[str, Any]]` for convenience, while still going through the same validation layer.
+
+```python
+from apaleoapi.apaleo.common.contracts.payload import Operation
+from apaleoapi.apaleo.identity.v1.contracts.identity.payload import CreateInvitation
+from apaleoapi.apaleo.identity.v1.contracts.identity.query import InvitationListParams
+
+
+# Typed params
+params = InvitationListParams(property_id="BER")
+invitations = await client.identity.v1.identity.list_invitations(params)
+
+# Equivalent dict params
+invitations = await client.identity.v1.identity.list_invitations({"property_id": "BER"})
+
+# Typed payload
+payload = CreateInvitation(
+    email="james.twelvetrees@invalid.com",
+    properties=["BER"],
+    is_account_admin=False,
+    role="Housekeeping",
+)
+invited_user = await client.identity.v1.identity.create_invitation(payload)
+
+# Equivalent dict payload
+invited_user = await client.identity.v1.identity.create_invitation(
+    {
+        "email": "james.twelvetrees@invalid.com",
+        "properties": ["BER"],
+        "is_account_admin": False,
+        "role": "Housekeeping",
+    }
+)
+
+# JSON Patch payload as dataclasses
+patch_payload = [Operation(op="replace", path="/enabled", value=True)]
+await client.identity.v1.identity.update_user(
+    user_id="some_subject_id",
+    payload=patch_payload,
+)
+
+# Equivalent JSON Patch payload as list of dicts
+await client.identity.v1.identity.update_user(
+    user_id="some_subject_id",
+    payload=[{"op": "replace", "path": "/enabled", "value": True}],
+)
 ```
 
 ## Contributing

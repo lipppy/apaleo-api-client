@@ -48,7 +48,7 @@ Returns a list of all invitations to the current account.
 
 **SDK Method**
 
-!!! info "`list_invitations(params: InvitationListParams | None = None) -> InvitationList`"
+!!! info "`list_invitations(params: InvitationListParams | dict[str, Any] | None = None) -> InvitationList`"
 
     ```python {title="Without parameters"}
     # Without parameters
@@ -64,6 +64,12 @@ Returns a list of all invitations to the current account.
 
     ```
 
+    ```python {title="With parameters as a dict"}
+    params = {"property_id": "BER"} # or {"propertyId": "BER"}
+    invitations = await client.identity.v1.identity.list_invitations(params)
+    print(invitations)
+    ```
+
 #### `create_invitation`
 
 Invites a person to the current account with the requested roles and properties.
@@ -74,7 +80,7 @@ Invites a person to the current account with the requested roles and properties.
 
 **SDK Method**
 
-!!! info "`create_invitation(payload: CreateInvitation) -> InvitedUserToAccountResponse`"
+!!! info "`create_invitation(payload: CreateInvitation | dict[str, Any]) -> InvitedUserToAccountResponse`"
 
     ```python
     payload = CreateInvitation(
@@ -83,7 +89,18 @@ Invites a person to the current account with the requested roles and properties.
         is_account_admin=False,
         role=RoleInvitedTo.HOUSEKEEPING,
     )
-    invited_user = await self.adapter.create_invitation(payload=payload)
+    invited_user = await client.identity.v1.identity.create_invitation(payload=payload)
+    print(invited_user)
+    ```
+
+    ```python {title="With payload as a dict"}
+    payload = {
+      "email": "james.twelvetrees@invalid.com",
+      "properties": ["BER"],
+      "is_account_admin": False,
+      "role": "Housekeeping",
+    }
+    invited_user = await client.identity.v1.identity.create_invitation(payload=payload)
     print(invited_user)
     ```
 
@@ -134,7 +151,7 @@ Returns a list of all users that have access to the current account.
 
 **SDK Method**
 
-!!! note "`list_users(self, params: UserListParams | None = None) -> UsersList`"
+!!! note "`list_users(self, params: UserListParams | dict[str, Any] | None = None) -> UsersList`"
 
     ```python {title="Without parameters"}
     users = await client.identity.v1.identity.list_users()
@@ -143,6 +160,12 @@ Returns a list of all users that have access to the current account.
 
     ```python {title="With parameters, paginated"}
     params = UserListParams(property_ids=["BER", "VIE"], page_size=50, page_number=1)
+    users = await client.identity.v1.identity.list_users(params)
+    print(users)
+    ```
+
+    ```python {title="With parameters as a dict"}
+    params = {"property_ids": ["BER", "VIE"], "page_size": 50, "page_number": 1}
     users = await client.identity.v1.identity.list_users(params)
     print(users)
     ```
@@ -184,7 +207,7 @@ Modify user in an account.
 
 **SDK Method**
 
-!!! info "`update_user(self, user_id: str, payload: list[Operation]) -> None`"
+!!! info "`update_user(self, user_id: str, payload: list[Operation] | list[dict[str, Any]]) -> None`"
 
     ```python
     payload = [
@@ -198,6 +221,25 @@ Modify user in an account.
             path="/properties",
             value=["BER", "VIE"],
         ),
+    ]
+    await client.identity.v1.identity.update_user(
+        user_id="some_subject_id",
+        payload=payload,
+    )
+    ```
+
+    ```python {title="With patch payload as a list of dicts"}
+    payload = [
+        {
+            "op": "replace",
+            "path": "/enabled",
+            "value": True,
+        },
+        {
+            "op": "add",
+            "path": "/properties",
+            "value": ["BER", "VIE"],
+        },
     ]
     await client.identity.v1.identity.update_user(
         user_id="some_subject_id",
