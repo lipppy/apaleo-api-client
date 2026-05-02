@@ -6,11 +6,10 @@ See: https://api.apaleo.com/swagger/index.html?urls.primaryName=Inventory+V1
 
 from typing import Any
 
-from dacite import from_dict
-
 from apaleoapi.apaleo.common.base import BaseAdapter
 from apaleoapi.apaleo.common.contracts.payload import Operation
 from apaleoapi.apaleo.core.v1.contracts.inventory.factory import (
+    CountryListFakerFactory,
     PropertyCreatedFakerFactory,
     PropertyFakerFactory,
     PropertyListFakerFactory,
@@ -26,6 +25,7 @@ from apaleoapi.apaleo.core.v1.contracts.inventory.response import (
     PropertyList,
 )
 from apaleoapi.apaleo.core.v1.schemas.inventory.factory import (
+    CountryListModelDefaultFactory,
     PropertyCreatedModelDefaultFactory,
     PropertyListModelDefaultFactory,
     PropertyModelDefaultFactory,
@@ -59,7 +59,9 @@ class CoreV1InventoryResource(BaseAdapter, CoreV1InventoryResourcePort):
 
     # Property methods
 
-    async def list_properties(self, params: PropertyListParams | None = None) -> PropertyList:
+    async def list_properties(
+        self, params: PropertyListParams | dict[str, Any] | None = None
+    ) -> PropertyList:
         """List properties with optional filters."""
         url = f"{self._base_path}/properties"
 
@@ -113,7 +115,7 @@ class CoreV1InventoryResource(BaseAdapter, CoreV1InventoryResourcePort):
         )
 
     async def get_property(
-        self, property_id: str, params: PropertyGetParams | None = None
+        self, property_id: str, params: PropertyGetParams | dict[str, Any] | None = None
     ) -> Property:
         """Get property details by ID."""
         url = f"{self._base_path}/properties/{property_id}"
@@ -130,7 +132,9 @@ class CoreV1InventoryResource(BaseAdapter, CoreV1InventoryResourcePort):
             return_cls=Property,
         )
 
-    async def update_property(self, property_id: str, payload: list[Operation]) -> None:
+    async def update_property(
+        self, property_id: str, payload: list[Operation] | list[dict[str, Any]]
+    ) -> None:
         """Update property details by ID."""
         url = f"{self._base_path}/properties/{property_id}"
 
@@ -148,23 +152,18 @@ class CoreV1InventoryResource(BaseAdapter, CoreV1InventoryResourcePort):
 
     # Types methods
 
-    async def _list_countries(self) -> CountryListModel:
-        """
-        Helper method to list available countries, returning validated response model.
-        """
-        url = f"{self._base_path}/types/countries"
-        response = await self._t.request("GET", url)
-        response_data = self._response_handler.handle(response)
-        return self._response_validator.validate(
-            response_data=response_data,
-            response=response,
-            model_cls=CountryListModel,
-            error_prefix="Invalid country list payload from Apaleo inventory",
-        )
-
     async def list_countries(self) -> CountryList:
         """
         List available countries.
         """
-        validated_response = await self._list_countries()
-        return from_dict(data_class=CountryList, data=validated_response.model_dump())
+        url = f"{self._base_path}/types/countries"
+
+        return await self._get_resource(
+            url=url,
+            model_cls=CountryListModel,
+            faker_factory=CountryListFakerFactory,
+            default_factory=CountryListModelDefaultFactory,
+            success_codes={200, 204},
+            error_prefix="Failed to list countries",
+            return_cls=CountryList,
+        )

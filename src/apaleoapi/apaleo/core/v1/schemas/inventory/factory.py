@@ -1,7 +1,16 @@
 from polyfactory.factories.pydantic_factory import ModelFactory
 
-from apaleoapi.apaleo.core.v1.schemas.inventory.response import PropertyListModel, PropertyModel
+from apaleoapi.apaleo.core.v1.schemas.inventory.response import (
+    CountryListModel,
+    PropertyListModel,
+    PropertyModel,
+)
 from apaleoapi.apaleo.identity.v1.schemas.identity.response import PropertyCreatedModel
+
+
+class CountryListModelDefaultFactory(ModelFactory[CountryListModel]):
+    __model__ = CountryListModel
+    __use_defaults__ = True
 
 
 class PropertyCreatedModelDefaultFactory(ModelFactory[PropertyCreatedModel]):

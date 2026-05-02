@@ -9,32 +9,44 @@
     </tr>
   </thead>
   <tbody>
-  <tr>
-    <td><b>Swagger UI</b></td>
-    <td><a href="https://identity.apaleo.com/swagger/index.html?urls.primaryName=Identity+V1">https://identity.apaleo.com/swagger/index.html?urls.primaryName=Identity+V1</a></td>
-  </tr>
-  <tr>
-    <td><b>Client</b></td>
-    <td><code>ApaleoAPIClient</code></td>
-  </tr>
-  <tr>
-    <td><b>API</b></td>
-    <td><code>ApaleoAPIClient.identity</code></td>
-  </tr>
-  <tr>
-    <td><b>Version</b></td>
-    <td><code>ApaleoAPIClient.identity.v1</code></td>
-  </tr>
-  <tr>
-    <td><b>Resource</b></td>
-    <td><code>ApaleoAPIClient.identity.v1.identity</code></td>
-  </tr>
+    <tr>
+      <td><b>Swagger UI</b></td>
+      <td><a href="https://identity.apaleo.com/swagger/index.html?urls.primaryName=Identity+V1">https://identity.apaleo.com/swagger/index.html?urls.primaryName=Identity+V1</a></td>
+    </tr>
+    <tr>
+      <td><b>Client</b></td>
+      <td><code>ApaleoAPIClient</code></td>
+    </tr>
+    <tr>
+      <td><b>API</b></td>
+      <td><code>ApaleoAPIClient.identity</code></td>
+    </tr>
+    <tr>
+      <td><b>Version</b></td>
+      <td><code>ApaleoAPIClient.identity.v1</code></td>
+    </tr>
+    <tr>
+      <td><b>Resource</b></td>
+      <td><code>ApaleoAPIClient.identity.v1.identity</code></td>
+    </tr>
+    <tr>
+      <td><b>Centralized Type Imports</b></td>
+      <td><code>from apaleoapi.apaleo.identity.v1.identity import ...</code></td>
+    </tr>
   </tbody>
 </table>
 
 ## Methods
 
 Method-focused reference for Apaleo Identity API's Identity V1.
+
+!!! warning
+
+    **Params** and **payloads** are fully typed for maximum developer experience, but you can also use **plain dictionaries** if you prefer a more dynamic approach. The SDK will handle _validation and serialization_ for you.
+
+    The documentation examples show both approaches, but always just one of them which does not mean that the other one is not supported. Use whatever works best for you!
+
+    **Responses** are always fully typed. If you want to work with plain dictionaries, you can always convert the response objects using `asdict()` function from the `dataclasses` module.
 
 ### Invitation
 

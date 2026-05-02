@@ -10,32 +10,44 @@ Units such as rooms, parking lots, beds, meeting rooms, etc. Units can be combin
     </tr>
   </thead>
   <tbody>
-  <tr>
-    <td><b>Swagger UI</b></td>
-    <td><a href="https://api.apaleo.com/swagger/index.html?urls.primaryName=Inventory+V1">https://api.apaleo.com/swagger/index.html?urls.primaryName=Inventory+V1</a></td>
-  </tr>
-  <tr>
-    <td><b>Client</b></td>
-    <td><code>ApaleoAPIClient</code></td>
-  </tr>
-  <tr>
-    <td><b>API</b></td>
-    <td><code>ApaleoAPIClient.core</code></td>
-  </tr>
-  <tr>
-    <td><b>Version</b></td>
-    <td><code>ApaleoAPIClient.core.v1</code></td>
-  </tr>
-  <tr>
-    <td><b>Resource</b></td>
-    <td><code>ApaleoAPIClient.core.v1.inventory</code></td>
-  </tr>
+    <tr>
+      <td><b>Swagger UI</b></td>
+      <td><a href="https://api.apaleo.com/swagger/index.html?urls.primaryName=Inventory+V1">https://api.apaleo.com/swagger/index.html?urls.primaryName=Inventory+V1</a></td>
+    </tr>
+    <tr>
+      <td><b>Client</b></td>
+      <td><code>ApaleoAPIClient</code></td>
+    </tr>
+    <tr>
+      <td><b>API</b></td>
+      <td><code>ApaleoAPIClient.core</code></td>
+    </tr>
+    <tr>
+      <td><b>Version</b></td>
+      <td><code>ApaleoAPIClient.core.v1</code></td>
+    </tr>
+    <tr>
+      <td><b>Resource</b></td>
+      <td><code>ApaleoAPIClient.core.v1.inventory</code></td>
+    </tr>
+    <tr>
+      <td><b>Centralized Type Imports</b></td>
+      <td><code>from apaleoapi.apaleo.core.v1.inventory import ...</code></td>
+    </tr>
   </tbody>
 </table>
 
 ## Methods
 
 Method-focused reference for Apaleo Core API's Inventory V1.
+
+!!! warning
+
+    **Params** and **payloads** are fully typed for maximum developer experience, but you can also use **plain dictionaries** if you prefer a more dynamic approach. The SDK will handle _validation and serialization_ for you.
+
+    The documentation examples show both approaches, but always just one of them which does not mean that the other one is not supported. Use whatever works best for you!
+
+    **Responses** are always fully typed. If you want to work with plain dictionaries, you can always convert the response objects using `asdict()` function from the `dataclasses` module.
 
 ### Property
 
@@ -49,9 +61,9 @@ Returns a list of properties with optional filters.
 
 **SDK Method**
 
-!!! info "`list_properties(self, params: PropertyListParams | None = None) -> PropertyList`"
+!!! info "`list_properties(self, params: PropertyListParams | dict[str, Any] | None = None) -> PropertyList`"
 
-    ```python title="Basic usage"
+    ```python title="Basic usage with typed params"
     params = PropertyListParams(page_size=50, page_number=1)
     properties = await client.core.v1.inventory.list_properties(params)
 
@@ -82,7 +94,7 @@ Creates a new property.
 
 !!! info "`create_property(self, payload: CreateProperty | dict[str, Any], idempotency_key: str | None = None) -> PropertyCreated`"
 
-    ```python title="Basic usage"
+    ```python title="Basic usage with dict payload"
     payload = {
       "code": "BER",
       "name": {"en": "Berlin Hotel"},
@@ -139,7 +151,7 @@ Returns the details for a specific property by ID.
 
 **SDK Method**
 
-!!! info "`get_property(self, property_id: str, params: PropertyGetParams | None = None) -> Property`"
+!!! info "`get_property(self, property_id: str, params: PropertyGetParams | dict[str, Any] | None = None) -> Property`"
 
     ```python title="Basic usage"
     params = PropertyGetParams(languages=["en"], expand=["unitGroups"])
@@ -161,7 +173,7 @@ Updates property details by ID.
 
 **SDK Method**
 
-!!! info "`update_property(self, property_id: str, payload: list[Operation]) -> None`"
+!!! info "`update_property(self, property_id: str, payload: list[Operation] | list[dict[str, Any]]) -> None`"
 
     ```python title="Basic usage"
     payload = [
@@ -202,6 +214,24 @@ Deletes a property by ID.
 ### Property Actions
 
 ### Types
+
+#### `list_countries`
+
+Returns a list of supported countries.
+
+**Endpoint Mapping**
+
+<code style="color: mediumseagreen;">GET</code> <code>/inventory/v1/types/countries</code>
+
+**SDK Method**
+
+!!! info "`list_countries(self) -> CountryList`"
+
+    ```python title="Basic usage"
+    countries = await client.core.v1.inventory.list_countries()
+    print(countries.count)
+    print(countries.items[:5])
+    ```
 
 ### Unit
 

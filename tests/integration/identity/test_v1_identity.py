@@ -1,8 +1,7 @@
 import pytest
 
 from apaleoapi import ApaleoAPIClient
-from apaleoapi.apaleo.common import Operation
-from apaleoapi.apaleo.common.enums import OperationOp
+from apaleoapi.apaleo.common import Operation, OperationOp
 from apaleoapi.apaleo.identity.v1.apis.identity import IdentityV1IdentityResource
 from apaleoapi.apaleo.identity.v1.identity import (
     CreateInvitation,

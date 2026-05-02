@@ -18,31 +18,47 @@ The Apaleo API Client is a production-ready Python library that wraps the Apaleo
 Get started with Apaleo API Client in just a few lines:
 
 ```python
+import asyncio
+import os
+
+from dotenv import load_dotenv
+
 from apaleoapi import ApaleoAPIClient, OAuth2ClientCredentialsProvider
 
+# Load from specific .env* file for this test
+load_dotenv(".env.client_credentials")
 
-# Create a token provider with your API credentials
-token_provider = OAuth2ClientCredentialsProvider(
-    client_id="your-client-id",
-    client_secret="your-client-secret",
-    service="My Application"
-)
 
-# Create an instance of the client
-client = ApaleoAPIClient(token_provider=token_provider)
+async def main() -> None:
+    # Create a token provider with your API credentials
+    token_provider = OAuth2ClientCredentialsProvider(
+        client_id=os.getenv("APALEO_API_CLIENT_ID"),
+        client_secret=os.getenv("APALEO_API_CLIENT_SECRET"),
+        service="Basic Example Client Credentials - README.md",
+    )
 
-# Fetch a property by its ID
-property_berlin = await client.core.v1.inventory.get_property(property_id="BER")
-print(property_berlin)
-#> Property id=BER name='Berlin Hotel' address='123 Berlin St.'
-print(type(property_berlin))
-#> <class 'apaleo_api_client.core.v1.inventory.Property'>
+    # Create an instance of the client
+    client = ApaleoAPIClient(token_provider=token_provider)
 
-print(property_berlin.id)
-#> BER
+    # Fetch a property by its ID
+    property_berlin = await client.core.v1.inventory.get_property(
+        property_id="BER"
+    )
+    print(property_berlin)
+    # > Property(id='BER', code='BER', name={'en': 'Hotel Berlin'}, ...)
 
-# Clean up
-await client.aclose()
+    print(type(property_berlin))
+    # > <class 'apaleoapi.apaleo.core.v1.contracts.inventory.response.Property'>
+
+    print(property_berlin.id)
+    # > BER
+
+    # Close the client when done to clean up resources
+    await client.aclose()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
 For more examples and detailed documentation, see the [API Reference](api/index.md) section.

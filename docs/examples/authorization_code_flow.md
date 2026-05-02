@@ -8,15 +8,22 @@ import urllib.parse
 from dataclasses import asdict
 from typing import Any
 
+from dotenv import dotenv_values
 from fastapi import FastAPI, Query
 from fastapi.responses import HTMLResponse
 
-from apaleoapi import ApaleoAPIClient, OAuth2AuthorizationCodeProvider
+from apaleoapi import ApaleoAPIClient
 from apaleoapi.constants import APALEO_API_AUTHORIZE_URL
+from apaleoapi.http.auth import OAuth2AuthorizationCodeProvider
 
+# Load environment variables from .env file
+config = dotenv_values(".env.authorization_code")
 
-app = FastAPI("Apaleo OAuth2 Authorization Code Flow Demo")
-CLIENT_ID, CLIENT_SECRET = "your-client-id", "your-client-secret"
+CLIENT_ID, CLIENT_SECRET = (
+    config["APALEO_CLIENT_ID"],
+    config["APALEO_CLIENT_SECRET"],
+)
+app = FastAPI()
 REDIRECT_URI = "http://localhost:8000/callback"
 auth_states, api_client = {}, None
 
@@ -55,7 +62,10 @@ async def callback(code: str = Query(), state: str = Query()) -> dict[str, Any]:
     )
     await token_provider.refresh_token()
     api_client = ApaleoAPIClient(token_provider=token_provider)
-    return {"success": True, "message": "Authenticated! Visit http://localhost:8000/identity"}
+    return {
+        "success": True,
+        "message": "Authenticated! Visit http://localhost:8000/identity",
+    }
 
 
 @app.get("/identity")
@@ -65,12 +75,13 @@ async def get_identity() -> dict[str, Any]:
 
 
 if __name__ == "__main__":
-    print("🚀 Apaleo OAuth2 Authorization Code Flow Demo")
+    print("🚀 Apaleo OAuth2 Authorization Code Flow Slim Demo")
     print(f"📱 Client ID: {CLIENT_ID}")
     print(f"🔗 Redirect URI: {REDIRECT_URI}")
     print()
     print(
-        "Run with: poetry run python -m uvicorn path_to_your_module:app --host 0.0.0.0 --port 8000 --reload"
+        "Run with: poetry run python -m uvicorn path_to_your_module:app "
+        "--host 0.0.0.0 --port 8000 --reload"
     )
     print("Navigate to: http://localhost:8000")
 ```
