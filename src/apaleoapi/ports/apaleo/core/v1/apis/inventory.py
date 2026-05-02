@@ -4,7 +4,7 @@ Apaleo Core V1 Inventory API Port
 See: https://api.apaleo.com/swagger/index.html?urls.primaryName=Inventory+V1
 """
 
-from typing import Protocol
+from typing import Any, Protocol
 
 from apaleoapi.apaleo.common.contracts.payload import Operation
 from apaleoapi.apaleo.core.v1.contracts.inventory.payload import CreateProperty
@@ -26,12 +26,14 @@ class CoreV1InventoryResourcePort(Protocol):
 
     # Property methods
 
-    async def list_properties(self, params: PropertyListParams | None = None) -> PropertyList:
+    async def list_properties(
+        self, params: PropertyListParams | dict[str, Any] | None = None
+    ) -> PropertyList:
         """List properties with optional filters."""
         pass
 
     async def create_property(
-        self, payload: CreateProperty, idempotency_key: str
+        self, payload: CreateProperty | dict[str, Any], idempotency_key: str | None = None
     ) -> PropertyCreated:
         """Create a new property."""
         pass
@@ -41,12 +43,14 @@ class CoreV1InventoryResourcePort(Protocol):
         pass
 
     async def get_property(
-        self, property_id: str, params: PropertyGetParams | None = None
+        self, property_id: str, params: PropertyGetParams | dict[str, Any] | None = None
     ) -> Property:
         """Get property details by ID."""
         pass
 
-    async def update_property(self, property_id: str, payload: list[Operation]) -> None:
+    async def update_property(
+        self, property_id: str, payload: list[Operation] | list[dict[str, Any]]
+    ) -> None:
         """Update property details by ID."""
         pass
 

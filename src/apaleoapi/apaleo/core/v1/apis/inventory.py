@@ -59,7 +59,9 @@ class CoreV1InventoryResource(BaseAdapter, CoreV1InventoryResourcePort):
 
     # Property methods
 
-    async def list_properties(self, params: PropertyListParams | None = None) -> PropertyList:
+    async def list_properties(
+        self, params: PropertyListParams | dict[str, Any] | None = None
+    ) -> PropertyList:
         """List properties with optional filters."""
         url = f"{self._base_path}/properties"
 
@@ -113,7 +115,7 @@ class CoreV1InventoryResource(BaseAdapter, CoreV1InventoryResourcePort):
         )
 
     async def get_property(
-        self, property_id: str, params: PropertyGetParams | None = None
+        self, property_id: str, params: PropertyGetParams | dict[str, Any] | None = None
     ) -> Property:
         """Get property details by ID."""
         url = f"{self._base_path}/properties/{property_id}"
@@ -130,7 +132,9 @@ class CoreV1InventoryResource(BaseAdapter, CoreV1InventoryResourcePort):
             return_cls=Property,
         )
 
-    async def update_property(self, property_id: str, payload: list[Operation]) -> None:
+    async def update_property(
+        self, property_id: str, payload: list[Operation] | list[dict[str, Any]]
+    ) -> None:
         """Update property details by ID."""
         url = f"{self._base_path}/properties/{property_id}"
 

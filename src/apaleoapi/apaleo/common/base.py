@@ -330,10 +330,18 @@ class BaseAdapter:
         async def _fetch_with_semaphore(params: TBatchModel) -> TListModel:
             """Fetch a page with semaphore to limit concurrency."""
             async with semaphore:
-                return await _fetch_data(params)
+                log.info(f"Acquired semaphore for page {params.page_number}.")
+                result = await _fetch_data(params)
+                log.info(f"Released semaphore for page {params.page_number}.")
+                return result
 
         # Validate and serialize params if provided, otherwise use empty dict
-        params_dict: dict[str, Any] = asdict(params) if is_dataclass(params) else {}
+        if is_dataclass(params):
+            params_dict = asdict(params)
+        elif isinstance(params, dict):
+            params_dict = params
+        else:
+            params_dict = {}
         params_model = params_model_cls.model_validate(params_dict) if params_model_cls else None
 
         # Handle dry run by returning fake data without making an actual API call
