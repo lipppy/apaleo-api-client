@@ -14,6 +14,7 @@ Usage:
 
 from apaleoapi.apaleo.core.v1.contracts.inventory.common import Address, BankAccount
 from apaleoapi.apaleo.core.v1.contracts.inventory.factory import (
+    CountryListFakerFactory,
     PropertyCreatedFakerFactory,
     PropertyFakerFactory,
     PropertyListFakerFactory,
@@ -60,6 +61,7 @@ __all__ = [
     "PropertyGetParams",
     "PropertyListParams",
     # Factories
+    "CountryListFakerFactory",
     "PropertyCreatedFakerFactory",
     "PropertyListFakerFactory",
     "PropertyFakerFactory",

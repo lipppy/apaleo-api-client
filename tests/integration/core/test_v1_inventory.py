@@ -6,6 +6,7 @@ from apaleoapi import ApaleoAPIClient
 from apaleoapi.apaleo.common.contracts.payload import Operation
 from apaleoapi.apaleo.common.enums import OperationOp
 from apaleoapi.apaleo.core.v1.apis.inventory import CoreV1InventoryResource
+from apaleoapi.apaleo.core.v1.contracts.inventory.response import CountryList
 from apaleoapi.apaleo.core.v1.inventory import CreateAddress, CreateProperty, Property, PropertyList
 
 pytestmark = [pytest.mark.integration, pytest.mark.live]
@@ -207,3 +208,14 @@ class TestCoreV1InventoryResource:
             # Clean up by deleting the created property
             if await self.adapter.check_property(property_id=property_id):
                 await self.adapter.delete_property(property_id=property_id)
+
+    @pytest.mark.asyncio
+    async def test_list_countries(self) -> None:
+        """Test listing available countries."""
+        countries = await self.adapter.list_countries()
+        assert countries is not None
+        assert isinstance(countries, CountryList)
+        assert len(countries.items) > 0
+        assert isinstance(countries.items, list)
+        assert all(isinstance(country, str) for country in countries.items)
+        assert countries.count == len(countries.items)

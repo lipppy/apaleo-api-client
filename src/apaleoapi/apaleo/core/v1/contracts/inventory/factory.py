@@ -1,7 +1,15 @@
 from polyfactory.factories import DataclassFactory
 
-from apaleoapi.apaleo.core.v1.contracts.inventory.response import Property, PropertyList
+from apaleoapi.apaleo.core.v1.contracts.inventory.response import (
+    CountryList,
+    Property,
+    PropertyList,
+)
 from apaleoapi.apaleo.identity.v1.contracts.identity.response import PropertyCreated
+
+
+class CountryListFakerFactory(DataclassFactory[CountryList]):
+    __model__ = CountryList
 
 
 class PropertyCreatedFakerFactory(DataclassFactory[PropertyCreated]):

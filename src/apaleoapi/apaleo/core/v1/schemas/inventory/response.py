@@ -11,8 +11,6 @@ from apaleoapi.apaleo.common.schemas.base import ExtendedBaseModel, ListBaseMode
 from apaleoapi.apaleo.core.v1.enums.inventory import Action, Code, PropertyStatus
 from apaleoapi.apaleo.core.v1.schemas.inventory.common import AddressModel, BankAccountModel
 
-# Property
-
 
 class ActionReasonModel(ExtendedBaseModel):
     code: Code
@@ -23,6 +21,13 @@ class ActionModel(ExtendedBaseModel):
     action: Action
     is_allowed: bool = Field(..., alias="isAllowed")
     reasons: list[ActionReasonModel] | None = None
+
+
+class CountryListModel(ListBaseModel[str]):
+    items: list[str] = Field(
+        default_factory=list,
+        alias="countryCodes",
+    )
 
 
 class PropertyCreatedModel(ExtendedBaseModel):
@@ -75,13 +80,3 @@ class PropertyModel(ExtendedBaseModel):
     status: PropertyStatus = Field(...)
     is_archived: bool = Field(..., alias="isArchived")
     actions: list[ActionModel] | None = Field(None)
-
-
-# Types
-
-
-class CountryListModel(ExtendedBaseModel):
-    country_codes: list[str] = Field(
-        default_factory=list,
-        alias="countryCodes",
-    )

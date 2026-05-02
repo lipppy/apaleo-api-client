@@ -18,6 +18,12 @@ class Action:
 
 
 @dataclass
+class CountryList:
+    items: list[str]
+    count: int
+
+
+@dataclass
 class PropertyItem:
     id: str
     code: str
@@ -69,8 +75,3 @@ class Property:
     bank_account: BankAccount | None = None
     payment_terms: dict[str, str | None] = field(default_factory=dict)
     actions: list[Action] | None = None
-
-
-@dataclass
-class CountryList:
-    country_codes: list[str]
