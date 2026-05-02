@@ -40,6 +40,14 @@
 
 Method-focused reference for Apaleo Identity API's Identity V1.
 
+!!! warning
+
+    **Params** and **payloads** are fully typed for maximum developer experience, but you can also use **plain dictionaries** if you prefer a more dynamic approach. The SDK will handle _validation and serialization_ for you.
+
+    The documentation examples show both approaches, but always just one of them which does not mean that the other one is not supported. Use whatever works best for you!
+
+    **Responses** are always fully typed. If you want to work with plain dictionaries, you can always convert the response objects using `asdict()` function from the `dataclasses` module.
+
 ### Invitation
 
 #### `list_invitations`
