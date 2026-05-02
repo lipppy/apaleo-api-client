@@ -44,8 +44,9 @@ see the [Installation](https://lipppy.github.io/apaleo-api-client/main/install/)
 import asyncio
 import os
 
-from apaleoapi import ApaleoAPIClient, OAuth2ClientCredentialsProvider
 from dotenv import load_dotenv
+
+from apaleoapi import ApaleoAPIClient, OAuth2ClientCredentialsProvider
 
 # Load from specific .env* file for this test
 load_dotenv(".env.client_credentials")
@@ -63,9 +64,11 @@ async def main() -> None:
     client = ApaleoAPIClient(token_provider=token_provider)
 
     # Fetch a property by its ID
-    property_berlin = await client.core.v1.inventory.get_property(property_id="BER")
+    property_berlin = await client.core.v1.inventory.get_property(
+        property_id="BER"
+    )
     print(property_berlin)
-    # > Property(id='BER', code='BER', name={'en': 'Hotel Berlin'}, company_name='Hotel Berlin GmbH', ...)
+    # > Property(id='BER', code='BER', name={'en': 'Hotel Berlin'}, ...)
 
     print(type(property_berlin))
     # > <class 'apaleoapi.apaleo.core.v1.contracts.inventory.response.Property'>
@@ -89,9 +92,10 @@ Request params and payloads can be passed either as the SDK's typed dataclasses 
 import asyncio
 import os
 
+from dotenv import load_dotenv
+
 from apaleoapi import ApaleoAPIClient, OAuth2ClientCredentialsProvider
 from apaleoapi.apaleo.core.v1.inventory import PropertyListParams
-from dotenv import load_dotenv
 
 # Load from specific .env* file for this test
 load_dotenv(".env.client_credentials")
@@ -102,33 +106,44 @@ async def main() -> None:
     token_provider = OAuth2ClientCredentialsProvider(
         client_id=os.getenv("APALEO_API_CLIENT_ID"),
         client_secret=os.getenv("APALEO_API_CLIENT_SECRET"),
-        service="Flexible Request Inputs Example Client Credentials - README.md",
+        service="Flexible Request Inputs Example - README.md",
     )
 
     # Create an instance of the client
     client = ApaleoAPIClient(token_provider=token_provider)
 
     # Typed params
-    params_typed = PropertyListParams(country_code=["DE", "AT"], include_archived=False)
-    properties_1 = await client.core.v1.inventory.list_properties(params=params_typed)
+    params_typed = PropertyListParams(
+        country_code=["DE", "AT"], include_archived=False
+    )
+    properties_1 = await client.core.v1.inventory.list_properties(
+        params=params_typed
+    )
     print("Found properties (typed params):", len(properties_1.items))
     # > Found properties (typed params): N>
 
     # Equivalent dict params with snake_case keys
     params_dict = {"country_code": ["DE", "AT"], "include_archived": False}
-    properties_2 = await client.core.v1.inventory.list_properties(params=params_dict)
+    properties_2 = await client.core.v1.inventory.list_properties(
+        params=params_dict
+    )
     print("Found properties (dict params):", len(properties_2.items))
     # > Found properties (dict params): N>
 
     # Equivalent dict params with alias keys (Apaleo API uses camelCase)
     params_alias = {"countryCode": ["DE", "AT"], "includeArchived": False}
-    properties_3 = await client.core.v1.inventory.list_properties(params=params_alias)
+    properties_3 = await client.core.v1.inventory.list_properties(
+        params=params_alias
+    )
     print("Found properties (alias params):", len(properties_3.items))
     # > Found properties (alias params): N>
 
-    # You can also mix snake_case and camelCase keys if you like, the client will handle the conversion
+    # You can also mix snake_case and camelCase keys if you like,
+    # the client will handle the conversion
     params_mixed = {"country_code": ["DE", "AT"], "includeArchived": False}
-    properties_4 = await client.core.v1.inventory.list_properties(params=params_mixed)
+    properties_4 = await client.core.v1.inventory.list_properties(
+        params=params_mixed
+    )
     print("Found properties (mixed params):", len(properties_4.items))
     # > Found properties (mixed params): N>
 
@@ -151,9 +166,10 @@ if __name__ == "__main__":
 import asyncio
 import os
 
+from dotenv import load_dotenv
+
 from apaleoapi import ApaleoAPIClient, OAuth2ClientCredentialsProvider
 from apaleoapi.apaleo.common import Operation, OperationOp
-from dotenv import load_dotenv
 
 # Load from specific .env* file for this test
 load_dotenv(".env.client_credentials")
@@ -164,7 +180,7 @@ async def main() -> None:
     token_provider = OAuth2ClientCredentialsProvider(
         client_id=os.getenv("APALEO_API_CLIENT_ID"),
         client_secret=os.getenv("APALEO_API_CLIENT_SECRET"),
-        service="Flexible Request Inputs Example Client Credentials - README.md",
+        service="Flexible Request Inputs Example - README.md",
     )
 
     # Create an instance of the client
@@ -187,11 +203,13 @@ async def main() -> None:
     # > Property description (before update): <no description>
 
     property_description_after = "Added description for Berlin property"
-    # Using JSON Patch operations for the update, which allows for flexible request inputs
-    # Do not forget to use list of operations as payload for the update method, even if you have just one operation to perform
+    # Using JSON Patch operations for the update,
+    # which allows for flexible request inputs
+    # Do not forget to use list of operations as payload for the update method,
+    # even if you have just one operation to perform
     operations_params = [
         Operation(
-            op=OperationOp.ADD,  # Use the appropriate operation type (e.g., REPLACE, ADD, REMOVE) based on your update needs
+            op=OperationOp.ADD,
             path="/description/en",
             value=property_description_after,
         )
@@ -259,9 +277,10 @@ The example below demonstrates concurrent fetching of properties with flexible r
 import asyncio
 import os
 
+from dotenv import load_dotenv
+
 from apaleoapi import ApaleoAPIClient, OAuth2ClientCredentialsProvider
 from apaleoapi.apaleo.common import Operation, OperationOp
-from dotenv import load_dotenv
 
 # Load from specific .env* file for this test
 load_dotenv(".env.client_credentials")
@@ -272,32 +291,75 @@ async def main() -> None:
     token_provider = OAuth2ClientCredentialsProvider(
         client_id=os.getenv("APALEO_API_CLIENT_ID"),
         client_secret=os.getenv("APALEO_API_CLIENT_SECRET"),
-        service="Concurrent Fetching Example Client Credentials - README.md",
+        service="Flexible Request Inputs Example - README.md",
     )
 
     # Create an instance of the client
-    client = ApaleoAPIClient(token_provider=token_provider, max_concurrent=3)
+    client = ApaleoAPIClient(token_provider=token_provider)
 
-    # List properties concurrently with simple dict params (typed params and alias keys are also supported)
-    properties = await client.core.v1.inventory.list_properties(
-        params={"include_archived": False, "batch_size": 1, "is_concurrently": True}
+    # Typed params
+    property_id = "BER"
+    property_berlin_before = await client.core.v1.inventory.get_property(
+        property_id=property_id
     )
-    # 2026-05-02 11:05:16,010 |     INFO | Fetched page 1 with 1 items.
-    # 2026-05-02 11:05:16,010 |     INFO | Total count to fetch: 6
-    # 2026-05-02 11:05:16,010 |     INFO | Acquired semaphore for page 1.
-    # 2026-05-02 11:05:16,011 |     INFO | Acquired semaphore for page 2.
-    # 2026-05-02 11:05:16,012 |     INFO | Acquired semaphore for page 3.
-    # 2026-05-02 11:05:16,108 |     INFO | Released semaphore for page 1.
-    # 2026-05-02 11:05:16,108 |     INFO | Acquired semaphore for page 4.
-    # 2026-05-02 11:05:16,227 |     INFO | Released semaphore for page 4.
-    # 2026-05-02 11:05:16,227 |     INFO | Acquired semaphore for page 5.
-    # 2026-05-02 11:05:16,301 |     INFO | Released semaphore for page 2.
-    # 2026-05-02 11:05:16,301 |     INFO | Acquired semaphore for page 6.
-    # 2026-05-02 11:05:16,305 |     INFO | Released semaphore for page 3.
-    # 2026-05-02 11:05:16,318 |     INFO | Released semaphore for page 5.
-    # 2026-05-02 11:05:16,397 |     INFO | Released semaphore for page 6.
-    print("Found properties:", len(properties.items))
-    # > Found properties: 6>
+    property_description_before = (
+        property_berlin_before.description.get("en", "")
+        if property_berlin_before.description
+        else ""
+    )
+    print(
+        "Property description (before update):",
+        property_description_before or "<no description>",
+    )
+    # > Property description (before update): <no description>
+
+    property_description_after = "Added description for Berlin property"
+    # Using JSON Patch operations for the update,
+    # which allows for flexible request inputs
+    # Do not forget to use list of operations as payload for the update method,
+    # even if you have just one operation to perform
+    operations_params = [
+        Operation(
+            op=OperationOp.ADD,
+            path="/description/en",
+            value=property_description_after,
+        )
+    ]
+    _ = await client.core.v1.inventory.update_property(
+        property_id=property_id, payload=operations_params
+    )
+    property_berlin_after = await client.core.v1.inventory.get_property(
+        property_id=property_id
+    )
+    property_description_after = (
+        property_berlin_after.description.get("en", "")
+        if property_berlin_after.description
+        else ""
+    )
+    print(
+        "Property description (after update):",
+        property_description_after or "<no description>",
+    )
+    # > Property description (after update): Added description for Berlin property>
+
+    # Revert the change to keep the test idempotent, use dict payload for that
+    revert_operations_params = [{"op": "remove", "path": "/description/en"}]
+    _ = await client.core.v1.inventory.update_property(
+        property_id=property_id, payload=revert_operations_params
+    )
+    property_berlin_after_revert = await client.core.v1.inventory.get_property(
+        property_id=property_id
+    )
+    property_description_after_revert = (
+        property_berlin_after_revert.description.get("en", "")
+        if property_berlin_after_revert.description
+        else ""
+    )
+    print(
+        "Property description (after revert):",
+        property_description_after_revert or "<no description>",
+    )
+    # > Property description (after revert): <no description>
 
     # Close the client when done to clean up resources
     await client.aclose()
