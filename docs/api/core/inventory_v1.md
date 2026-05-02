@@ -10,26 +10,30 @@ Units such as rooms, parking lots, beds, meeting rooms, etc. Units can be combin
     </tr>
   </thead>
   <tbody>
-  <tr>
-    <td><b>Swagger UI</b></td>
-    <td><a href="https://api.apaleo.com/swagger/index.html?urls.primaryName=Inventory+V1">https://api.apaleo.com/swagger/index.html?urls.primaryName=Inventory+V1</a></td>
-  </tr>
-  <tr>
-    <td><b>Client</b></td>
-    <td><code>ApaleoAPIClient</code></td>
-  </tr>
-  <tr>
-    <td><b>API</b></td>
-    <td><code>ApaleoAPIClient.core</code></td>
-  </tr>
-  <tr>
-    <td><b>Version</b></td>
-    <td><code>ApaleoAPIClient.core.v1</code></td>
-  </tr>
-  <tr>
-    <td><b>Resource</b></td>
-    <td><code>ApaleoAPIClient.core.v1.inventory</code></td>
-  </tr>
+    <tr>
+      <td><b>Swagger UI</b></td>
+      <td><a href="https://api.apaleo.com/swagger/index.html?urls.primaryName=Inventory+V1">https://api.apaleo.com/swagger/index.html?urls.primaryName=Inventory+V1</a></td>
+    </tr>
+    <tr>
+      <td><b>Client</b></td>
+      <td><code>ApaleoAPIClient</code></td>
+    </tr>
+    <tr>
+      <td><b>API</b></td>
+      <td><code>ApaleoAPIClient.core</code></td>
+    </tr>
+    <tr>
+      <td><b>Version</b></td>
+      <td><code>ApaleoAPIClient.core.v1</code></td>
+    </tr>
+    <tr>
+      <td><b>Resource</b></td>
+      <td><code>ApaleoAPIClient.core.v1.inventory</code></td>
+    </tr>
+    <tr>
+      <td><b>Centralized Type Imports</b></td>
+      <td><code>from apaleoapi.apaleo.core.v1.inventory import ...</code></td>
+    </tr>
   </tbody>
 </table>
 
@@ -202,6 +206,24 @@ Deletes a property by ID.
 ### Property Actions
 
 ### Types
+
+#### `list_countries`
+
+Returns a list of supported countries.
+
+**Endpoint Mapping**
+
+<code style="color: mediumseagreen;">GET</code> <code>/inventory/v1/types/countries</code>
+
+**SDK Method**
+
+!!! info "`list_countries(self) -> CountryList`"
+
+    ```python title="Basic usage"
+    countries = await client.core.v1.inventory.list_countries()
+    print(countries.count)
+    print(countries.items[:5])
+    ```
 
 ### Unit
 

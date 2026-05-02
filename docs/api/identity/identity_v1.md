@@ -9,26 +9,30 @@
     </tr>
   </thead>
   <tbody>
-  <tr>
-    <td><b>Swagger UI</b></td>
-    <td><a href="https://identity.apaleo.com/swagger/index.html?urls.primaryName=Identity+V1">https://identity.apaleo.com/swagger/index.html?urls.primaryName=Identity+V1</a></td>
-  </tr>
-  <tr>
-    <td><b>Client</b></td>
-    <td><code>ApaleoAPIClient</code></td>
-  </tr>
-  <tr>
-    <td><b>API</b></td>
-    <td><code>ApaleoAPIClient.identity</code></td>
-  </tr>
-  <tr>
-    <td><b>Version</b></td>
-    <td><code>ApaleoAPIClient.identity.v1</code></td>
-  </tr>
-  <tr>
-    <td><b>Resource</b></td>
-    <td><code>ApaleoAPIClient.identity.v1.identity</code></td>
-  </tr>
+    <tr>
+      <td><b>Swagger UI</b></td>
+      <td><a href="https://identity.apaleo.com/swagger/index.html?urls.primaryName=Identity+V1">https://identity.apaleo.com/swagger/index.html?urls.primaryName=Identity+V1</a></td>
+    </tr>
+    <tr>
+      <td><b>Client</b></td>
+      <td><code>ApaleoAPIClient</code></td>
+    </tr>
+    <tr>
+      <td><b>API</b></td>
+      <td><code>ApaleoAPIClient.identity</code></td>
+    </tr>
+    <tr>
+      <td><b>Version</b></td>
+      <td><code>ApaleoAPIClient.identity.v1</code></td>
+    </tr>
+    <tr>
+      <td><b>Resource</b></td>
+      <td><code>ApaleoAPIClient.identity.v1.identity</code></td>
+    </tr>
+    <tr>
+      <td><b>Centralized Type Imports</b></td>
+      <td><code>from apaleoapi.apaleo.identity.v1.identity import ...</code></td>
+    </tr>
   </tbody>
 </table>
 
