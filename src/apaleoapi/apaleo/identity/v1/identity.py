@@ -35,8 +35,31 @@ from apaleoapi.apaleo.identity.v1.contracts.identity.response import (
     UsersList,
 )
 from apaleoapi.apaleo.identity.v1.enums.identity import RoleAccessTo, RoleInvitedTo, UserSortBy
+from apaleoapi.apaleo.identity.v1.schemas.identity.factory import (
+    InvitationListModelDefaultFactory,
+    InvitedUserToAccountResponseModelDefaultFactory,
+    RoleListModelDefaultFactory,
+    UserModelDefaultFactory,
+    UsersListModelDefaultFactory,
+)
+from apaleoapi.apaleo.identity.v1.schemas.identity.payload import CreateInvitationModel
+from apaleoapi.apaleo.identity.v1.schemas.identity.query import (
+    InvitationListParamsModel,
+    UserListParamsModel,
+)
+from apaleoapi.apaleo.identity.v1.schemas.identity.response import (
+    InvitationListModel,
+    InvitationModel,
+    InvitedUserToAccountResponseModel,
+    PropertyRolesItemModel,
+    RoleListModel,
+    UserItemModel,
+    UserModel,
+    UsersListModel,
+)
 
 __all__ = [
+    # Dataclasses - Common
     # Dataclasses - Response
     "User",
     "UserItem",
@@ -51,7 +74,7 @@ __all__ = [
     # Dataclasses - Query Parameters
     "InvitationListParams",
     "UserListParams",
-    # Factories
+    # Dataclasses - Factories
     "RoleListFakerFactory",
     "UserFakerFactory",
     "UsersListFakerFactory",
@@ -61,4 +84,25 @@ __all__ = [
     "RoleAccessTo",
     "RoleInvitedTo",
     "UserSortBy",
+    # Schemas - Common
+    # Schemas - Response
+    "UserModel",
+    "UserItemModel",
+    "UsersListModel",
+    "InvitationModel",
+    "InvitationListModel",
+    "InvitedUserToAccountResponseModel",
+    "PropertyRolesItemModel",
+    "RoleListModel",
+    # Schemas - Payload
+    "CreateInvitationModel",
+    # Schemas - Query Parameters
+    "InvitationListParamsModel",
+    "UserListParamsModel",
+    # Schemas - Factories
+    "UserModelDefaultFactory",
+    "UsersListModelDefaultFactory",
+    "InvitationListModelDefaultFactory",
+    "InvitedUserToAccountResponseModelDefaultFactory",
+    "RoleListModelDefaultFactory",
 ]

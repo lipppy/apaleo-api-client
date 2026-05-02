@@ -3,11 +3,15 @@ import uuid
 import pytest
 
 from apaleoapi import ApaleoAPIClient
-from apaleoapi.apaleo.common.contracts.payload import Operation
-from apaleoapi.apaleo.common.enums import OperationOp
+from apaleoapi.apaleo.common import Operation, OperationOp
 from apaleoapi.apaleo.core.v1.apis.inventory import CoreV1InventoryResource
-from apaleoapi.apaleo.core.v1.contracts.inventory.response import CountryList
-from apaleoapi.apaleo.core.v1.inventory import CreateAddress, CreateProperty, Property, PropertyList
+from apaleoapi.apaleo.core.v1.inventory import (
+    CountryList,
+    CreateAddress,
+    CreateProperty,
+    Property,
+    PropertyList,
+)
 
 pytestmark = [pytest.mark.integration, pytest.mark.live]
 

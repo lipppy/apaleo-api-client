@@ -52,6 +52,13 @@ class ListBaseModel(ExtendedBaseModel, Generic[TModel]):
     count: int = Field(default=0, description="Total number of items in the list.")
 
 
+class ListStringBaseModel(ExtendedBaseModel):
+    """Base model for list responses."""
+
+    items: list[str] = Field(default_factory=list)  # Default to empty list for items
+    count: int = Field(default=0, description="Total number of items in the list.")
+
+
 class ListEnumBaseModel(ExtendedBaseModel, Generic[TEnum]):
     """Base model for list responses."""
 

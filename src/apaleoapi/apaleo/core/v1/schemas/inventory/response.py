@@ -7,7 +7,11 @@ API doc: https://api.apaleo.com/swagger/index.html?urls.primaryName=Inventory+V1
 
 from pydantic import AwareDatetime, Field
 
-from apaleoapi.apaleo.common.schemas.base import ExtendedBaseModel, ListBaseModel
+from apaleoapi.apaleo.common.schemas.base import (
+    ExtendedBaseModel,
+    ListBaseModel,
+    ListStringBaseModel,
+)
 from apaleoapi.apaleo.core.v1.enums.inventory import Action, Code, PropertyStatus
 from apaleoapi.apaleo.core.v1.schemas.inventory.common import AddressModel, BankAccountModel
 
@@ -23,7 +27,7 @@ class ActionModel(ExtendedBaseModel):
     reasons: list[ActionReasonModel] | None = None
 
 
-class CountryListModel(ListBaseModel[str]):
+class CountryListModel(ListStringBaseModel):
     items: list[str] = Field(
         default_factory=list,
         alias="countryCodes",

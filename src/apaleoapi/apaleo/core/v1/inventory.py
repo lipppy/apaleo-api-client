@@ -40,6 +40,30 @@ from apaleoapi.apaleo.core.v1.enums.inventory import Code as PropertyActionCode
 from apaleoapi.apaleo.core.v1.enums.inventory import (
     PropertyStatus,
 )
+from apaleoapi.apaleo.core.v1.schemas.inventory.common import AddressModel, BankAccountModel
+from apaleoapi.apaleo.core.v1.schemas.inventory.factory import (
+    CountryListModelDefaultFactory,
+    PropertyCreatedModelDefaultFactory,
+    PropertyListModelDefaultFactory,
+    PropertyModelDefaultFactory,
+)
+from apaleoapi.apaleo.core.v1.schemas.inventory.payload import (
+    CreateAddressModel,
+    CreatePropertyModel,
+)
+from apaleoapi.apaleo.core.v1.schemas.inventory.query import (
+    PropertyGetParamsModel,
+    PropertyListParamsModel,
+)
+from apaleoapi.apaleo.core.v1.schemas.inventory.response import (
+    ActionModel,
+    ActionReasonModel,
+    CountryListModel,
+    PropertyCreatedModel,
+    PropertyItemModel,
+    PropertyListModel,
+    PropertyModel,
+)
 from apaleoapi.apaleo.identity.v1.contracts.identity.response import PropertyCreated
 
 __all__ = [
@@ -60,7 +84,7 @@ __all__ = [
     # Dataclasses - Query Parameters
     "PropertyGetParams",
     "PropertyListParams",
-    # Factories
+    # Dataclasses - Factories
     "CountryListFakerFactory",
     "PropertyCreatedFakerFactory",
     "PropertyListFakerFactory",
@@ -69,4 +93,26 @@ __all__ = [
     "PropertyAction",
     "PropertyActionCode",
     "PropertyStatus",
+    # Schemas - Common
+    "AddressModel",
+    "BankAccountModel",
+    # Schemas - Response
+    "ActionReasonModel",
+    "ActionModel",
+    "CountryListModel",
+    "PropertyCreatedModel",
+    "PropertyItemModel",
+    "PropertyListModel",
+    "PropertyModel",
+    # Schemas - Payload
+    "CreateAddressModel",
+    "CreatePropertyModel",
+    # Schemas - Query Parameters
+    "PropertyGetParamsModel",
+    "PropertyListParamsModel",
+    # Schemas - Factories
+    "CountryListModelDefaultFactory",
+    "PropertyCreatedModelDefaultFactory",
+    "PropertyListModelDefaultFactory",
+    "PropertyModelDefaultFactory",
 ]
