@@ -1499,31 +1499,41 @@
     </tr>
   </thead>
   <tbody>
-  <tr>
-    <td><b>Swagger UI</b></td>
-    <td><a href="https://identity.apaleo.com/swagger/index.html?urls.primaryName=Identity+V1">https://identity.apaleo.com/swagger/index.html?urls.primaryName=Identity+V1</a></td>
-  </tr>
-  <tr>
-    <td><b>Client</b></td>
-    <td><code>ApaleoAPIClient</code></td>
-  </tr>
-  <tr>
-    <td><b>API</b></td>
-    <td><code>ApaleoAPIClient.identity</code></td>
-  </tr>
-  <tr>
-    <td><b>Version</b></td>
-    <td><code>ApaleoAPIClient.identity.v1</code></td>
-  </tr>
-  <tr>
-    <td><b>Resource</b></td>
-    <td><code>ApaleoAPIClient.identity.v1.identity</code></td>
-  </tr>
+    <tr>
+      <td><b>Swagger UI</b></td>
+      <td><a href="https://identity.apaleo.com/swagger/index.html?urls.primaryName=Identity+V1">https://identity.apaleo.com/swagger/index.html?urls.primaryName=Identity+V1</a></td>
+    </tr>
+    <tr>
+      <td><b>Client</b></td>
+      <td><code>ApaleoAPIClient</code></td>
+    </tr>
+    <tr>
+      <td><b>API</b></td>
+      <td><code>ApaleoAPIClient.identity</code></td>
+    </tr>
+    <tr>
+      <td><b>Version</b></td>
+      <td><code>ApaleoAPIClient.identity.v1</code></td>
+    </tr>
+    <tr>
+      <td><b>Resource</b></td>
+      <td><code>ApaleoAPIClient.identity.v1.identity</code></td>
+    </tr>
+    <tr>
+      <td><b>Centralized Type Imports</b></td>
+      <td><code>from apaleoapi.apaleo.identity.v1.identity import ...</code></td>
+    </tr>
   </tbody>
 </table>
 
 <h2 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h2>
 <p>Method-focused reference for Apaleo Identity API's Identity V1.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>Params</strong> and <strong>payloads</strong> are fully typed for maximum developer experience, but you can also use <strong>plain dictionaries</strong> if you prefer a more dynamic approach. The SDK will handle <em>validation and serialization</em> for you.</p>
+<p>The documentation examples show both approaches, but always just one of them which does not mean that the other one is not supported. Use whatever works best for you!</p>
+<p><strong>Responses</strong> are always fully typed. If you want to work with plain dictionaries, you can always convert the response objects using <code>asdict()</code> function from the <code>dataclasses</code> module.</p>
+</div>
 <h3 id="invitation">Invitation<a class="headerlink" href="#invitation" title="Permanent link">&para;</a></h3>
 <h4 id="list_invitations"><code>list_invitations</code><a class="headerlink" href="#list_invitations" title="Permanent link">&para;</a></h4>
 <p>Returns a list of all invitations to the current account.</p>
@@ -1531,13 +1541,17 @@
 <p><code style="color: skyblue;">GET</code> <code>/api/v1/invitations</code></p>
 <p><strong>SDK Method</strong></p>
 <div class="admonition info">
-<p class="admonition-title"><code>list_invitations(params: InvitationListParams | None = None) -&gt; InvitationList</code></p>
+<p class="admonition-title"><code>list_invitations(params: InvitationListParams | dict[str, Any] | None = None) -&gt; InvitationList</code></p>
 <div class="language-python highlight"><span class="filename">Without parameters</span><pre><span></span><code><span class="c1"># Without parameters</span>
 <span class="n">invitations</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">list_invitations</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">invitations</span><span class="p">)</span>
 </code></pre></div>
 <div class="language-python highlight"><span class="filename">With parameters</span><pre><span></span><code><span class="c1"># With parameters</span>
 <span class="n">params</span> <span class="o">=</span> <span class="n">InvitationListParams</span><span class="p">(</span><span class="n">property_id</span><span class="o">=</span><span class="s2">&quot;BER&quot;</span><span class="p">)</span>
+<span class="n">invitations</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">list_invitations</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">invitations</span><span class="p">)</span>
+</code></pre></div>
+<div class="language-python highlight"><span class="filename">With parameters as a dict</span><pre><span></span><code><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;property_id&quot;</span><span class="p">:</span> <span class="s2">&quot;BER&quot;</span><span class="p">}</span> <span class="c1"># or {&quot;propertyId&quot;: &quot;BER&quot;}</span>
 <span class="n">invitations</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">list_invitations</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">invitations</span><span class="p">)</span>
 </code></pre></div>
@@ -1548,14 +1562,23 @@
 <p><code style="color: lightseagreen;">POST</code> <code>/api/v1/invitations</code></p>
 <p><strong>SDK Method</strong></p>
 <div class="admonition info">
-<p class="admonition-title"><code>create_invitation(payload: CreateInvitation) -&gt; InvitedUserToAccountResponse</code></p>
+<p class="admonition-title"><code>create_invitation(payload: CreateInvitation | dict[str, Any]) -&gt; InvitedUserToAccountResponse</code></p>
 <div class="language-python highlight"><pre><span></span><code><span class="n">payload</span> <span class="o">=</span> <span class="n">CreateInvitation</span><span class="p">(</span>
     <span class="n">email</span><span class="o">=</span><span class="s2">&quot;james.twelvetrees@invalid.com&quot;</span><span class="p">,</span>
     <span class="n">properties</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;BER&quot;</span><span class="p">],</span>
     <span class="n">is_account_admin</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">role</span><span class="o">=</span><span class="n">RoleInvitedTo</span><span class="o">.</span><span class="n">HOUSEKEEPING</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">invited_user</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">create_invitation</span><span class="p">(</span><span class="n">payload</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+<span class="n">invited_user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">create_invitation</span><span class="p">(</span><span class="n">payload</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">invited_user</span><span class="p">)</span>
+</code></pre></div>
+<div class="language-python highlight"><span class="filename">With payload as a dict</span><pre><span></span><code><span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;james.twelvetrees@invalid.com&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;BER&quot;</span><span class="p">],</span>
+  <span class="s2">&quot;is_account_admin&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+  <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;Housekeeping&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">invited_user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">create_invitation</span><span class="p">(</span><span class="n">payload</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">invited_user</span><span class="p">)</span>
 </code></pre></div>
 </div>
@@ -1588,11 +1611,15 @@
 <p><code style="color: skyblue;">GET</code> <code>/api/v1/users</code></p>
 <p><strong>SDK Method</strong></p>
 <div class="admonition note">
-<p class="admonition-title"><code>list_users(self, params: UserListParams | None = None) -&gt; UsersList</code></p>
+<p class="admonition-title"><code>list_users(self, params: UserListParams | dict[str, Any] | None = None) -&gt; UsersList</code></p>
 <div class="language-python highlight"><span class="filename">Without parameters</span><pre><span></span><code><span class="n">users</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">list_users</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">users</span><span class="p">)</span>
 </code></pre></div>
 <div class="language-python highlight"><span class="filename">With parameters, paginated</span><pre><span></span><code><span class="n">params</span> <span class="o">=</span> <span class="n">UserListParams</span><span class="p">(</span><span class="n">property_ids</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;BER&quot;</span><span class="p">,</span> <span class="s2">&quot;VIE&quot;</span><span class="p">],</span> <span class="n">page_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">page_number</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">users</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">list_users</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">users</span><span class="p">)</span>
+</code></pre></div>
+<div class="language-python highlight"><span class="filename">With parameters as a dict</span><pre><span></span><code><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;property_ids&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;BER&quot;</span><span class="p">,</span> <span class="s2">&quot;VIE&quot;</span><span class="p">],</span> <span class="s2">&quot;page_size&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s2">&quot;page_number&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
 <span class="n">users</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">list_users</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">users</span><span class="p">)</span>
 </code></pre></div>
@@ -1622,7 +1649,7 @@
 <p><code style="color: cyan;">PATCH</code> <code>/api/v1/identity/users/<span style="color: mediumpurple;">{subjectId}</span></code></p>
 <p><strong>SDK Method</strong></p>
 <div class="admonition info">
-<p class="admonition-title"><code>update_user(self, user_id: str, payload: list[Operation]) -&gt; None</code></p>
+<p class="admonition-title"><code>update_user(self, user_id: str, payload: list[Operation] | list[dict[str, Any]]) -&gt; None</code></p>
 <div class="language-python highlight"><pre><span></span><code><span class="n">payload</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">Operation</span><span class="p">(</span>
         <span class="n">op</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">,</span>
@@ -1634,6 +1661,23 @@
         <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/properties&quot;</span><span class="p">,</span>
         <span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;BER&quot;</span><span class="p">,</span> <span class="s2">&quot;VIE&quot;</span><span class="p">],</span>
     <span class="p">),</span>
+<span class="p">]</span>
+<span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">update_user</span><span class="p">(</span>
+    <span class="n">user_id</span><span class="o">=</span><span class="s2">&quot;some_subject_id&quot;</span><span class="p">,</span>
+    <span class="n">payload</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<div class="language-python highlight"><span class="filename">With patch payload as a list of dicts</span><pre><span></span><code><span class="n">payload</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;replace&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;/enabled&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;add&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;/properties&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;BER&quot;</span><span class="p">,</span> <span class="s2">&quot;VIE&quot;</span><span class="p">],</span>
+    <span class="p">},</span>
 <span class="p">]</span>
 <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">update_user</span><span class="p">(</span>
     <span class="n">user_id</span><span class="o">=</span><span class="s2">&quot;some_subject_id&quot;</span><span class="p">,</span>

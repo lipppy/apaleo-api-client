@@ -927,6 +927,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#flexible-request-inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flexible Request Inputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#error-handling" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1534,6 +1545,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#flexible-request-inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flexible Request Inputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#error-handling" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1744,6 +1766,31 @@
 <div class="language-python highlight"><pre><span></span><code><span class="c1"># Fetch multiple pages of invitations concurrently</span>
 <span class="n">params</span> <span class="o">=</span> <span class="n">InvitationListParams</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">is_concurrently</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">invitations</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">list_invitations</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="flexible-request-inputs">Flexible Request Inputs<a class="headerlink" href="#flexible-request-inputs" title="Permanent link">&para;</a></h3>
+<p>Request parameters and payloads can be passed either as the SDK's typed dataclasses or as plain dictionaries. Patch operations also accept a <code>list[dict[str, Any]]</code> when that is more convenient.</p>
+<div class="language-python highlight"><pre><span></span><code><span class="c1"># Typed dataclass parameters</span>
+<span class="n">params</span> <span class="o">=</span> <span class="n">InvitationListParams</span><span class="p">(</span><span class="n">property_id</span><span class="o">=</span><span class="s2">&quot;BER&quot;</span><span class="p">)</span>
+<span class="n">invitations</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">list_invitations</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+
+<span class="c1"># Equivalent dict parameters</span>
+<span class="n">invitations</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">list_invitations</span><span class="p">({</span><span class="s2">&quot;property_id&quot;</span><span class="p">:</span> <span class="s2">&quot;BER&quot;</span><span class="p">})</span>
+
+<span class="c1"># Regular payloads can also be dictionaries</span>
+<span class="n">invited_user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">create_invitation</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;james.twelvetrees@invalid.com&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;BER&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;is_account_admin&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;Housekeeping&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c1"># JSON Patch operations can be supplied as list items of dicts</span>
+<span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">identity</span><span class="o">.</span><span class="n">update_user</span><span class="p">(</span>
+    <span class="n">user_id</span><span class="o">=</span><span class="s2">&quot;some_subject_id&quot;</span><span class="p">,</span>
+    <span class="n">payload</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;replace&quot;</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;/enabled&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}],</span>
+<span class="p">)</span>
 </code></pre></div>
 <h3 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h3>
 <p>The SDK provides structured exceptions for different error scenarios:</p>

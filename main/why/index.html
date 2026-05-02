@@ -1763,6 +1763,7 @@
 <ul>
 <li>Full type hints for all methods and responses</li>
 <li>Pydantic models for request/response validation</li>
+<li>Plain <code>dict</code> and <code>list[dict]</code> inputs are also accepted for request convenience and still validated</li>
 <li>IDE autocompletion and error detection</li>
 </ul>
 <div class="language-python highlight"><pre><span></span><code><span class="c1"># Type-safe parameter construction</span>
@@ -1776,6 +1777,16 @@
 <span class="n">properties</span><span class="p">:</span> <span class="n">PropertyList</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">inventory</span><span class="o">.</span><span class="n">list_properties</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
 <span class="k">for</span> <span class="nb">property</span><span class="p">:</span> <span class="n">PropertyItem</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="nb">property</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>  <span class="c1"># IDE knows this is a str</span>
+
+<span class="c1"># The same request validation also works with plain dictionaries</span>
+<span class="n">properties</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">inventory</span><span class="o">.</span><span class="n">list_properties</span><span class="p">(</span>
+    <span class="p">{</span><span class="s2">&quot;page_number&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;page_size&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s2">&quot;include_archived&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c1"># Apaleo&#39;s input also supported as dicts</span>
+<span class="n">properties</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">inventory</span><span class="o">.</span><span class="n">list_properties</span><span class="p">(</span>
+    <span class="p">{</span><span class="s2">&quot;pageNumber&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;pageSize&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s2">&quot;includeArchived&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+<span class="p">)</span>
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
