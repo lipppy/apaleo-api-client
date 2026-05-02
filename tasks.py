@@ -207,6 +207,82 @@ def increase_version(c: Context, part: str = "patch") -> None:
 
 
 @task
+def create_tag(c: Context) -> None:
+    """Create a git tag for the current version."""
+    c.run(f"echo '{BASH_INFO}Creating git tag for the current version...'")
+    result = c.run("poetry version --short", hide=True)
+    if result is None:
+        c.run(f"echo '{BASH_ERROR}Failed to retrieve the current version.'")
+        return
+    version = result.stdout.strip()
+    tag_name = f"v{version}"
+    if confirm(f"Do you want to create a git tag '{tag_name}' for the current version?"):
+        c.run(f"git tag -a {tag_name} -m 'Release {tag_name}'")
+        c.run(f"echo '{BASH_SUCCESS}Git tag '{tag_name}' created successfully.'")
+
+
+@task
+def publish_tag(c: Context) -> None:
+    """Create and push a git tag for the current version."""
+    c.run(f"echo '{BASH_INFO}Creating git tag for the current version...'")
+    # Check if we're on the main branch
+    result = c.run("git symbolic-ref --short HEAD", hide=True)
+    if result is None:
+        c.run(f"echo '{BASH_ERROR}Failed to determine the current git branch.'")
+        return
+    current_branch = result.stdout.strip()
+    if current_branch != "main":
+        c.run(
+            f"echo '{BASH_ERROR}You are currently on the '{current_branch}' branch. "
+            "Please switch to the 'main' branch before creating a tag.'"
+        )
+        return
+    # Check if main branch is up to date with remote
+    result = c.run("git fetch origin main && git diff --quiet origin/main", warn=True, hide=True)
+    if not result or (result and not result.ok):
+        c.run(
+            f"echo '{BASH_ERROR}Your local main branch is not up to date with the remote. "
+            "Please pull the latest changes before creating a tag.'"
+        )
+        return
+    # Check if main branch is clean
+    result = c.run("git diff --quiet", warn=True, hide=True)
+    if not result or (result and not result.ok):
+        c.run(
+            f"echo '{BASH_ERROR}Your git working directory is not clean. Please commit or stash "
+            "your changes before creating a tag.'"
+        )
+        return
+    # Check if the current version is already tagged
+    version = c.run("poetry version --short", hide=True)
+    version_match = c.run("git describe --tags --exact-match", warn=True, hide=True)
+    if version is None:
+        c.run(f"echo '{BASH_ERROR}Failed to retrieve the current version.'")
+        return
+    elif version_match and version_match.ok:
+        c.run(
+            f"echo '{BASH_WARNING}The current version is already tagged. "
+            "No new tag will be created.'"
+        )
+        return
+    version_current = version.stdout.strip()
+    tag_name = f"v{version_current}"
+    if confirm(f"Do you want to create a git tag '{tag_name}' for the current version?"):
+        c.run(f"git tag -a {tag_name} -m 'Release {tag_name}'")
+        c.run(f"echo '{BASH_SUCCESS}Git tag '{tag_name}' created successfully.'")
+        if confirm(f"Do you want to push the git tag '{tag_name}' to the remote repository?"):
+            c.run(f"git push origin {tag_name}")
+            c.run(f"echo '{BASH_SUCCESS}Git tag '{tag_name}' pushed successfully.'")
+        else:
+            c.run(
+                f"echo '{BASH_WARNING}Git tag '{tag_name}' was not pushed to the remote "
+                "repository.'"
+            )
+    else:
+        c.run(f"echo '{BASH_WARNING}Git tag '{tag_name}' was not created.'")
+
+
+@task
 def help(c: Context) -> None:
     """Display help information for tasks."""
     c.run(f"echo '{BASH_INFO}Available tasks:'")
