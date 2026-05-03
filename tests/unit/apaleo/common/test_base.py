@@ -1,7 +1,9 @@
+import re
 from dataclasses import dataclass
 from typing import Any, cast
 from unittest.mock import AsyncMock, Mock
 
+import httpx
 import pytest
 from pydantic import BaseModel, Field, field_serializer
 from pydantic_core import PydanticSerializationError
@@ -12,7 +14,15 @@ from apaleoapi.apaleo.common.contracts.payload import Operation
 from apaleoapi.apaleo.common.enums import OperationOp
 from apaleoapi.apaleo.common.schemas.base import BatchRequestBaseModel, ListBaseModel
 from apaleoapi.apaleo.common.schemas.payload import OperationModel
-from apaleoapi.exceptions import ParameterSerializationError, PayloadSerializationError
+from apaleoapi.exceptions import (
+    APIError,
+    BadRequestError,
+    InternalServerError,
+    ParameterSerializationError,
+    PayloadSerializationError,
+)
+from apaleoapi.http.transport import AuthenticatedTransport
+from apaleoapi.services.url_path_validator import URLPathValidator
 
 pytestmark = [pytest.mark.unit]
 
@@ -355,6 +365,130 @@ class TestBaseAdapterSerializePatchPayload:
             )
 
         assert "Failed to serialize payload item" in str(exc_info.value)
+
+
+class TestBaseAdapterHeadResource:
+    """Test cases for BaseAdapter._head_resource."""
+
+    def setup_method(self) -> None:
+        """Setup test instance."""
+        self.transport = Mock(spec=AuthenticatedTransport)
+        self.transport.request = AsyncMock()
+        # Adapter without dry run mode to test the full flow including transport calls
+        self.adapter = BaseAdapter(transport=self.transport, max_concurrent=2)
+        self.adapter._url_path_validator = Mock(spec=URLPathValidator)
+        self.adapter._url_path_validator.validate = Mock(side_effect=lambda url: f"validated/{url}")
+
+        # Adapter with dry run mode to test short-circuiting before transport calls
+        self.adapter_dry_run = BaseAdapter(transport=self.transport, max_concurrent=2, dry_run=True)
+        self.adapter_dry_run._url_path_validator = Mock(spec=URLPathValidator)
+        self.adapter_dry_run._url_path_validator.validate = Mock(
+            side_effect=lambda url: f"validated/{url}"
+        )
+
+    @pytest.mark.asyncio
+    async def test_head_resource_returns_true_for_success_status(self) -> None:
+        """Test HEAD returns True when the resource exists."""
+        self.transport.request.return_value = Mock(status_code=200)
+
+        result = await self.adapter._head_resource(
+            url="api/v1/resources/BER",
+            error_prefix="Failed to check resource",
+        )
+
+        assert result is True
+        self.transport.request.assert_awaited_once_with("HEAD", "validated/api/v1/resources/BER")
+
+    @pytest.mark.asyncio
+    async def test_head_resource_returns_false_for_not_found(self) -> None:
+        """Test HEAD returns False when the resource is missing."""
+        self.transport.request.return_value = Mock(status_code=404)
+
+        result = await self.adapter._head_resource(
+            url="api/v1/resources/MISSING",
+            error_prefix="Failed to check resource",
+        )
+
+        assert result is False
+        self.transport.request.assert_awaited_once_with(
+            "HEAD", "validated/api/v1/resources/MISSING"
+        )
+
+    @pytest.mark.asyncio
+    async def test_head_resource_returns_true_and_skips_transport_in_dry_run(self) -> None:
+        """Test dry-run mode short-circuits after URL validation."""
+        result = await self.adapter_dry_run._head_resource(
+            url="api/v1/resources/BER",
+            error_prefix="Failed to check resource",
+        )
+
+        assert result is True
+        self.transport.request.assert_not_awaited()
+
+    @pytest.mark.parametrize(
+        ("status_code", "response_json", "expected_exception", "match"),
+        [
+            (
+                201,
+                b'{"unexpected": "response"}',
+                APIError,
+                (
+                    "Failed to check resource: Unexpected response (201) for "
+                    "HEAD request to validated/api/v1/resources/BER."
+                ),
+            ),
+            (
+                400,
+                None,
+                BadRequestError,
+                "Bad request.",
+            ),
+            (
+                419,
+                None,
+                APIError,
+                "Unexpected status code: 419",
+            ),
+            (
+                422,
+                {"messages": ["Invalid propertyId."]},
+                APIError,
+                (
+                    "Validation errors in the request body or query params. "
+                    "Details: Invalid propertyId."
+                ),
+            ),
+            (
+                500,
+                None,
+                InternalServerError,
+                "An unexpected error occurred.",
+            ),
+        ],
+    )
+    @pytest.mark.asyncio
+    async def test_head_resource_raises_error_for_unexpected_unhandled_status(
+        self, status_code: int, response_json: bytes, expected_exception: type[APIError], match: str
+    ) -> None:
+        """Test adapter raises a generic APIError when the response handler does not."""
+        response = Mock(
+            spec=httpx.Response,
+            status_code=status_code,
+            headers={"content-type": "application/json"},
+            text="Error or unexpected response",
+        )
+        self.transport.request.return_value = response
+        if response_json is not None:
+            response.json = Mock(return_value=response_json)
+
+        with pytest.raises(expected_exception, match=re.escape(match)) as exc_info:
+            await self.adapter._head_resource(
+                url="api/v1/resources/BER",
+                error_prefix="Failed to check resource",
+            )
+
+        assert exc_info.value.response is response
+        self.transport.request.assert_awaited_once_with("HEAD", "validated/api/v1/resources/BER")
 
 
 class TestBaseAdapterGetResourceConcurrently:

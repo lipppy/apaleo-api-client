@@ -182,8 +182,13 @@ class BaseAdapter:
             _ = self._response_handler.handle(response=response)
             # If no error was raised until this point, a generic APIError is raised to indicate
             # an unexpected response status code.
+            error_msg = (
+                f"{error_prefix}: Unexpected response ({response.status_code}) "
+                f"for HEAD request to {validated_url}."
+            )
+            log.error(error_msg)
             raise APIError(
-                f"{error_prefix}: Unexpected response for HEAD request to {validated_url}.",
+                error_msg,
                 response=response,
             )
 
