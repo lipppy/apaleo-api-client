@@ -9,7 +9,7 @@ See: https://identity.apaleo.com/swagger/index.html?urls.primaryName=Identity+V1
 
 from typing import Any
 
-from apaleoapi.apaleo.common.base import BaseAdapter
+from apaleoapi.apaleo.base import BaseAdapter
 from apaleoapi.apaleo.common.contracts.payload import Operation
 from apaleoapi.apaleo.identity.v1.contracts.identity.factory import (
     InvitationListFakerFactory,

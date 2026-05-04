@@ -8,7 +8,7 @@ import pytest
 from pydantic import BaseModel, Field, field_serializer
 from pydantic_core import PydanticSerializationError
 
-from apaleoapi.apaleo.common.base import BaseAdapter
+from apaleoapi.apaleo.base import BaseAdapter
 from apaleoapi.apaleo.common.contracts.base import BatchRequest
 from apaleoapi.apaleo.common.contracts.payload import Operation
 from apaleoapi.apaleo.common.enums import OperationOp
@@ -658,7 +658,9 @@ class TestBaseAdapterDeleteResource:
         """Test DELETE succeeds for the expected 204 response."""
         self.transport.request.return_value = Mock(status_code=204)
 
-        result = await self.adapter._delete_resource("api/v1/resources/BER")
+        result = await self.adapter._delete_resource(
+            url="api/v1/resources/BER",
+        )  # type: ignore[func-returns-value]
 
         assert result is None
         self.transport.request.assert_awaited_once_with("DELETE", "validated/api/v1/resources/BER")
@@ -666,7 +668,9 @@ class TestBaseAdapterDeleteResource:
     @pytest.mark.asyncio
     async def test_delete_resource_skips_transport_in_dry_run(self) -> None:
         """Test dry-run mode short-circuits after URL validation."""
-        result = await self.adapter_dry_run._delete_resource("api/v1/resources/BER")
+        result = await self.adapter_dry_run._delete_resource(
+            url="api/v1/resources/BER",
+        )  # type: ignore[func-returns-value]
 
         assert result is None
         self.transport.request.assert_not_awaited()
@@ -687,8 +691,10 @@ class TestBaseAdapterDeleteResource:
             "DELETE request to validated/api/v1/resources/BER returned unexpected status code: 200"
         )
 
-        with patch("apaleoapi.apaleo.common.base.log.warning") as warning_mock:
-            result = await self.adapter._delete_resource("api/v1/resources/BER")
+        with patch("apaleoapi.apaleo.base.log.warning") as warning_mock:
+            result = await self.adapter._delete_resource(
+                url="api/v1/resources/BER",
+            )  # type: ignore[func-returns-value]
 
         assert result is None
         self.transport.request.assert_awaited_once_with("DELETE", "validated/api/v1/resources/BER")

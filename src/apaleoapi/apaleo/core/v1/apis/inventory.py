@@ -6,7 +6,7 @@ See: https://api.apaleo.com/swagger/index.html?urls.primaryName=Inventory+V1
 
 from typing import Any
 
-from apaleoapi.apaleo.common.base import BaseAdapter
+from apaleoapi.apaleo.base import BaseAdapter
 from apaleoapi.apaleo.common.contracts.payload import Operation
 from apaleoapi.apaleo.core.v1.contracts.inventory.factory import (
     CountryListFakerFactory,
