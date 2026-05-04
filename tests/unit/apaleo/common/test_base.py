@@ -1,7 +1,7 @@
 import re
 from dataclasses import dataclass
 from typing import Any, cast
-from unittest.mock import AsyncMock, Mock
+from unittest.mock import AsyncMock, Mock, patch
 
 import httpx
 import pytest
@@ -633,3 +633,97 @@ class TestBaseAdapterGetResourceConcurrently:
         assert self.transport.request.await_count == 1  # 1 for count, no pages since no results
         assert result.count == 0
         assert [item.id for item in result.items] == []
+
+
+class TestBaseAdapterDeleteResource:
+    """Test cases for BaseAdapter._delete_resource."""
+
+    def setup_method(self) -> None:
+        """Setup test instance."""
+        self.transport = Mock(spec=AuthenticatedTransport)
+        self.transport.request = AsyncMock()
+
+        self.adapter = BaseAdapter(transport=self.transport, max_concurrent=2)
+        self.adapter._url_path_validator = Mock(spec=URLPathValidator)
+        self.adapter._url_path_validator.validate = Mock(side_effect=lambda url: f"validated/{url}")
+
+        self.adapter_dry_run = BaseAdapter(transport=self.transport, max_concurrent=2, dry_run=True)
+        self.adapter_dry_run._url_path_validator = Mock(spec=URLPathValidator)
+        self.adapter_dry_run._url_path_validator.validate = Mock(
+            side_effect=lambda url: f"validated/{url}"
+        )
+
+    @pytest.mark.asyncio
+    async def test_delete_resource_returns_none_for_no_content_response(self) -> None:
+        """Test DELETE succeeds for the expected 204 response."""
+        self.transport.request.return_value = Mock(status_code=204)
+
+        result = await self.adapter._delete_resource("api/v1/resources/BER")
+
+        assert result is None
+        self.transport.request.assert_awaited_once_with("DELETE", "validated/api/v1/resources/BER")
+
+    @pytest.mark.asyncio
+    async def test_delete_resource_skips_transport_in_dry_run(self) -> None:
+        """Test dry-run mode short-circuits after URL validation."""
+        result = await self.adapter_dry_run._delete_resource("api/v1/resources/BER")
+
+        assert result is None
+        self.transport.request.assert_not_awaited()
+
+    @pytest.mark.asyncio
+    async def test_delete_resource_tolerates_unexpected_success_payload_and_status(self) -> None:
+        """Test DELETE logs warnings but still succeeds when no handler error is raised."""
+        response = Mock(
+            spec=httpx.Response, status_code=200, headers={"content-type": "application/json"}
+        )
+        response.json = Mock(return_value={"deleted": True})
+        self.transport.request.return_value = response
+        warning_msg_1 = (
+            "DELETE request to validated/api/v1/resources/BER returned unexpected data: "
+            "{'deleted': True}"
+        )
+        warning_msg_2 = (
+            "DELETE request to validated/api/v1/resources/BER returned unexpected status code: 200"
+        )
+
+        with patch("apaleoapi.apaleo.common.base.log.warning") as warning_mock:
+            result = await self.adapter._delete_resource("api/v1/resources/BER")
+
+        assert result is None
+        self.transport.request.assert_awaited_once_with("DELETE", "validated/api/v1/resources/BER")
+
+        warning_mock.assert_any_call(warning_msg_1)
+        warning_mock.assert_any_call(warning_msg_2)
+
+    @pytest.mark.parametrize(
+        ("status_code", "response_json", "expected_exception", "match"),
+        [
+            (400, None, BadRequestError, "Bad request."),
+            (419, None, APIError, "Unexpected status code: 419"),
+        ],
+    )
+    @pytest.mark.asyncio
+    async def test_delete_resource_propagates_response_handler_errors(
+        self,
+        status_code: int,
+        response_json: bytes | dict[str, Any] | None,
+        expected_exception: type[APIError],
+        match: str,
+    ) -> None:
+        """Test DELETE propagates API errors raised by the response handler."""
+        response = Mock(
+            spec=httpx.Response,
+            status_code=status_code,
+            headers={"content-type": "application/json"},
+            text="Error response",
+        )
+        self.transport.request.return_value = response
+        if response_json is not None:
+            response.json = Mock(return_value=response_json)
+
+        with pytest.raises(expected_exception, match=re.escape(match)) as exc_info:
+            await self.adapter._delete_resource("api/v1/resources/BER")
+
+        assert exc_info.value.response is response
+        self.transport.request.assert_awaited_once_with("DELETE", "validated/api/v1/resources/BER")
