@@ -18,11 +18,10 @@ from apaleoapi.exceptions import (
     PayloadSerializationError,
     UpdateResourceError,
 )
+from apaleoapi.http.response_handler import ResponseHandler
+from apaleoapi.http.response_validator import ResponseValidator
 from apaleoapi.logging import get_logger
 from apaleoapi.ports.http.transport import AsyncTransportPort
-from apaleoapi.services.response_handler import ResponseHandler
-from apaleoapi.services.response_validator import ResponseValidator
-from apaleoapi.services.url_path_validator import URLPathValidator
 from apaleoapi.typing import (
     TBatchModel,
     TDomain,
@@ -35,6 +34,7 @@ from apaleoapi.typing import (
     TPayload,
     TPayloadModel,
 )
+from apaleoapi.validation.url_path_validator import URLPathValidator
 
 log = get_logger(__name__)
 

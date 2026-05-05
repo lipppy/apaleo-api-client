@@ -15,7 +15,7 @@ from apaleoapi.exceptions import (
     UnauthorizedError,
     ValidationError,
 )
-from apaleoapi.services.response_handler import ResponseHandler
+from apaleoapi.http.response_handler import ResponseHandler
 
 pytestmark = [pytest.mark.unit]
 

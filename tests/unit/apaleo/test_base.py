@@ -22,7 +22,7 @@ from apaleoapi.exceptions import (
     PayloadSerializationError,
 )
 from apaleoapi.http.transport import AuthenticatedTransport
-from apaleoapi.services.url_path_validator import URLPathValidator
+from apaleoapi.validation.url_path_validator import URLPathValidator
 
 pytestmark = [pytest.mark.unit]
 
