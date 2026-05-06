@@ -11,9 +11,12 @@ from apaleoapi.constants import (
     APALEO_API_PROFILE_URL,
     APALEO_API_WEBHOOK_URL,
 )
+from apaleoapi.http.response_handler import ResponseHandler
+from apaleoapi.http.response_validator import ResponseValidator
 from apaleoapi.http.transport import AuthenticatedTransport
 from apaleoapi.ports.client import ApaleoAPIClientPort
 from apaleoapi.ports.http.auth import TokenProviderPort
+from apaleoapi.validation.url_path_validator import URLPathValidator
 
 
 class ApaleoAPIClient(ApaleoAPIClientPort):
@@ -95,14 +98,27 @@ class ApaleoAPIClient(ApaleoAPIClientPort):
         self.__transport_profile_api = transport_profile_api
         self.__transport_webhook_api = transport_webhook_api
 
+        # Helpers, handlers, validators, and adapters for API endpoints
+        self.__response_handler = ResponseHandler()  # Initialize response handler
+        self.__response_validator = ResponseValidator()  # Initialize response validator
+        self.__url_path_validator = URLPathValidator()  # Initialize URL path validator
+
         # Core API adapters
         self.core = CoreAPI(
-            transport=transport_core_api, max_concurrent=self._max_concurrent, dry_run=self._dry_run
+            transport=transport_core_api,
+            response_handler=self.__response_handler,
+            response_validator=self.__response_validator,
+            url_path_validator=self.__url_path_validator,
+            max_concurrent=self._max_concurrent,
+            dry_run=self._dry_run,
         )
         # Fiscalization API adapters
         # Identity API adapters
         self.identity = IdentityAPI(
             transport=transport_identity_api,
+            response_handler=self.__response_handler,
+            response_validator=self.__response_validator,
+            url_path_validator=self.__url_path_validator,
             max_concurrent=self._max_concurrent,
             dry_run=self._dry_run,
         )
