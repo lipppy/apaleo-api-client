@@ -5,12 +5,13 @@ from pydantic import ValidationError as PydanticValidationError
 
 from apaleoapi.exceptions import ValidationError
 from apaleoapi.logging import get_logger
+from apaleoapi.ports.http.response_validator import ResponseValidatorPort
 from apaleoapi.typing import TModel
 
 log = get_logger(__name__)
 
 
-class ResponseValidator:
+class ResponseValidator(ResponseValidatorPort):
     @staticmethod
     def validate(
         *,

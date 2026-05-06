@@ -18,10 +18,12 @@ from apaleoapi.exceptions import (
     PayloadSerializationError,
     UpdateResourceError,
 )
-from apaleoapi.http.response_handler import ResponseHandler
-from apaleoapi.http.response_validator import ResponseValidator
 from apaleoapi.logging import get_logger
+from apaleoapi.ports.apaleo.base import BasePort
+from apaleoapi.ports.http.response_handler import ResponseHandlerPort
+from apaleoapi.ports.http.response_validator import ResponseValidatorPort
 from apaleoapi.ports.http.transport import AsyncTransportPort
+from apaleoapi.ports.validation.url_path_validator import URLPathValidatorPort
 from apaleoapi.typing import (
     TBatchModel,
     TDomain,
@@ -34,21 +36,28 @@ from apaleoapi.typing import (
     TPayload,
     TPayloadModel,
 )
-from apaleoapi.validation.url_path_validator import URLPathValidator
 
 log = get_logger(__name__)
 
 
-class BaseAdapter:
+class BaseResourceAdapter(BasePort):
     def __init__(
-        self, transport: AsyncTransportPort, max_concurrent: int, dry_run: bool = False
+        self,
+        transport: AsyncTransportPort,
+        response_handler: ResponseHandlerPort,
+        response_validator: ResponseValidatorPort,
+        url_path_validator: URLPathValidatorPort,
+        max_concurrent: int,
+        dry_run: bool = False,
     ) -> None:
-        self._t = transport
-        self._max_concurrent = max_concurrent
-        self._dry_run = dry_run
-        self._response_handler = ResponseHandler()
-        self._response_validator = ResponseValidator()
-        self._url_path_validator = URLPathValidator()
+        super().__init__(
+            transport=transport,
+            response_handler=response_handler,
+            response_validator=response_validator,
+            url_path_validator=url_path_validator,
+            max_concurrent=max_concurrent,
+            dry_run=dry_run,
+        )
 
     async def _serialize_params(
         self, params: TParams | dict[str, Any] | None, params_model_cls: Type[TParamsModel] | None

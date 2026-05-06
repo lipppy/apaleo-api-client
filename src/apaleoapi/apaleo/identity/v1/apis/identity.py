@@ -9,7 +9,7 @@ See: https://identity.apaleo.com/swagger/index.html?urls.primaryName=Identity+V1
 
 from typing import Any
 
-from apaleoapi.apaleo.base import BaseAdapter
+from apaleoapi.apaleo.base import BaseResourceAdapter
 from apaleoapi.apaleo.common.contracts.payload import Operation
 from apaleoapi.apaleo.identity.v1.contracts.identity.factory import (
     InvitationListFakerFactory,
@@ -51,16 +51,34 @@ from apaleoapi.apaleo.identity.v1.schemas.identity.response import (
 )
 from apaleoapi.logging import get_logger
 from apaleoapi.ports.apaleo.identity.v1.apis.identity import IdentityV1IdentityResourcePort
+from apaleoapi.ports.http.response_handler import ResponseHandlerPort
+from apaleoapi.ports.http.response_validator import ResponseValidatorPort
 from apaleoapi.ports.http.transport import AsyncTransportPort
+from apaleoapi.ports.validation.url_path_validator import URLPathValidatorPort
 
 log = get_logger(__name__)
 
 
-class IdentityV1IdentityResource(BaseAdapter, IdentityV1IdentityResourcePort):
+class IdentityV1IdentityResource(BaseResourceAdapter, IdentityV1IdentityResourcePort):
     """Adapter for Identity V1 Identity API endpoints."""
 
-    def __init__(self, transport: AsyncTransportPort, max_concurrent: int, dry_run: bool = False):
-        super().__init__(transport=transport, max_concurrent=max_concurrent, dry_run=dry_run)
+    def __init__(
+        self,
+        transport: AsyncTransportPort,
+        response_handler: ResponseHandlerPort,
+        response_validator: ResponseValidatorPort,
+        url_path_validator: URLPathValidatorPort,
+        max_concurrent: int,
+        dry_run: bool = False,
+    ):
+        super().__init__(
+            transport=transport,
+            response_handler=response_handler,
+            response_validator=response_validator,
+            url_path_validator=url_path_validator,
+            max_concurrent=max_concurrent,
+            dry_run=dry_run,
+        )
         self._version = "v1"
         self._base_path = f"{self._path}/{self._version}"
 

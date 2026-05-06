@@ -8,7 +8,7 @@ import pytest
 from pydantic import BaseModel, Field, field_serializer
 from pydantic_core import PydanticSerializationError
 
-from apaleoapi.apaleo.base import BaseAdapter
+from apaleoapi.apaleo.base import BaseResourceAdapter
 from apaleoapi.apaleo.common.contracts.base import BatchRequest
 from apaleoapi.apaleo.common.contracts.payload import Operation
 from apaleoapi.apaleo.common.enums import OperationOp
@@ -21,8 +21,9 @@ from apaleoapi.exceptions import (
     ParameterSerializationError,
     PayloadSerializationError,
 )
-from apaleoapi.http.transport import AuthenticatedTransport
-from apaleoapi.validation.url_path_validator import URLPathValidator
+from apaleoapi.ports.http.response_handler import ResponseHandlerPort
+from apaleoapi.ports.http.response_validator import ResponseValidatorPort
+from apaleoapi.ports.validation.url_path_validator import URLPathValidatorPort
 
 pytestmark = [pytest.mark.unit]
 
@@ -134,12 +135,68 @@ class SampleListFakerFactory:
         return SampleListResponse(items=[], count=0)
 
 
-class TestBaseAdapterSerializeParams:
-    """Test cases for BaseAdapter._serialize_params."""
-
-    def setup_method(self) -> None:
+class TestBaseResourceAdapter:
+    @pytest.fixture(autouse=True)
+    def setup_adapter(
+        self,
+        mock_transport: Mock,
+        mock_response_handler: Mock,
+        mock_response_validator: Mock,
+        mock_url_path_validator: Mock,
+    ) -> None:
         """Setup test instance."""
-        self.adapter = BaseAdapter(transport=Mock(), max_concurrent=2)
+        self.transport = mock_transport
+        self.adapter = BaseResourceAdapter(
+            transport=self.transport,
+            response_handler=mock_response_handler,
+            response_validator=mock_response_validator,
+            url_path_validator=mock_url_path_validator,
+            max_concurrent=2,
+        )
+
+    @pytest.fixture
+    def adapter_with_dependencies(
+        self,
+        mock_transport: Mock,
+        response_handler: ResponseHandlerPort,
+        response_validator: ResponseValidatorPort,
+        url_path_validator: URLPathValidatorPort,
+    ) -> BaseResourceAdapter:
+        """
+        Setup test instance with real dependencies for testing integration of serialization logic
+        with validation and response handling.
+        """
+        adapter = BaseResourceAdapter(
+            transport=mock_transport,
+            response_handler=response_handler,
+            response_validator=response_validator,
+            url_path_validator=url_path_validator,
+            max_concurrent=2,
+        )
+        return adapter
+
+    @pytest.fixture
+    def adapter_dry_run(
+        self,
+        mock_transport: Mock,
+        mock_response_handler: Mock,
+        mock_response_validator: Mock,
+        mock_url_path_validator: Mock,
+    ) -> BaseResourceAdapter:
+        """Setup test instance in dry-run mode, which short-circuits after URL validation."""
+        adapter = BaseResourceAdapter(
+            transport=mock_transport,
+            response_handler=mock_response_handler,
+            response_validator=mock_response_validator,
+            url_path_validator=mock_url_path_validator,
+            max_concurrent=2,
+            dry_run=True,
+        )
+        return adapter
+
+
+class TestBaseResourceAdapterSerializeParams(TestBaseResourceAdapter):
+    """Test cases for BaseResourceAdapter._serialize_params."""
 
     @pytest.mark.asyncio
     @pytest.mark.parametrize(
@@ -205,12 +262,8 @@ class TestBaseAdapterSerializeParams:
         assert "Failed to serialize query parameters" in str(exc_info.value)
 
 
-class TestBaseAdapterSerializePayload:
-    """Test cases for BaseAdapter._serialize_payload."""
-
-    def setup_method(self) -> None:
-        """Setup test instance."""
-        self.adapter = BaseAdapter(transport=Mock(), max_concurrent=2)
+class TestBaseResourceAdapterSerializePayload(TestBaseResourceAdapter):
+    """Test cases for BaseResourceAdapter._serialize_payload."""
 
     @pytest.mark.asyncio
     @pytest.mark.parametrize(
@@ -275,12 +328,8 @@ class TestBaseAdapterSerializePayload:
         assert "Failed to serialize payload" in str(exc_info.value)
 
 
-class TestBaseAdapterSerializePatchPayload:
-    """Test cases for BaseAdapter._serialize_patch_payload."""
-
-    def setup_method(self) -> None:
-        """Setup test instance."""
-        self.adapter = BaseAdapter(transport=Mock(), max_concurrent=2)
+class TestBaseResourceAdapterSerializePatchPayload(TestBaseResourceAdapter):
+    """Test cases for BaseResourceAdapter._serialize_patch_payload."""
 
     @pytest.mark.asyncio
     @pytest.mark.parametrize(
@@ -367,24 +416,8 @@ class TestBaseAdapterSerializePatchPayload:
         assert "Failed to serialize payload item" in str(exc_info.value)
 
 
-class TestBaseAdapterHeadResource:
-    """Test cases for BaseAdapter._head_resource."""
-
-    def setup_method(self) -> None:
-        """Setup test instance."""
-        self.transport = Mock(spec=AuthenticatedTransport)
-        self.transport.request = AsyncMock()
-        # Adapter without dry run mode to test the full flow including transport calls
-        self.adapter = BaseAdapter(transport=self.transport, max_concurrent=2)
-        self.adapter._url_path_validator = Mock(spec=URLPathValidator)
-        self.adapter._url_path_validator.validate = Mock(side_effect=lambda url: f"validated/{url}")
-
-        # Adapter with dry run mode to test short-circuiting before transport calls
-        self.adapter_dry_run = BaseAdapter(transport=self.transport, max_concurrent=2, dry_run=True)
-        self.adapter_dry_run._url_path_validator = Mock(spec=URLPathValidator)
-        self.adapter_dry_run._url_path_validator.validate = Mock(
-            side_effect=lambda url: f"validated/{url}"
-        )
+class TestBaseResourceAdapterHeadResource(TestBaseResourceAdapter):
+    """Test cases for BaseResourceAdapter._head_resource."""
 
     @pytest.mark.asyncio
     async def test_head_resource_returns_true_for_success_status(self) -> None:
@@ -415,15 +448,17 @@ class TestBaseAdapterHeadResource:
         )
 
     @pytest.mark.asyncio
-    async def test_head_resource_returns_true_and_skips_transport_in_dry_run(self) -> None:
+    async def test_head_resource_returns_true_and_skips_transport_in_dry_run(
+        self, adapter_dry_run: BaseResourceAdapter, mock_transport: Mock
+    ) -> None:
         """Test dry-run mode short-circuits after URL validation."""
-        result = await self.adapter_dry_run._head_resource(
+        result = await adapter_dry_run._head_resource(
             url="api/v1/resources/BER",
             error_prefix="Failed to check resource",
         )
 
         assert result is True
-        self.transport.request.assert_not_awaited()
+        mock_transport.request.assert_not_awaited()
 
     @pytest.mark.parametrize(
         ("status_code", "response_json", "expected_exception", "match"),
@@ -434,7 +469,7 @@ class TestBaseAdapterHeadResource:
                 APIError,
                 (
                     "Failed to check resource: Unexpected response (201) for "
-                    "HEAD request to validated/api/v1/resources/BER."
+                    "HEAD request to /api/v1/resources/BER."
                 ),
             ),
             (
@@ -468,7 +503,13 @@ class TestBaseAdapterHeadResource:
     )
     @pytest.mark.asyncio
     async def test_head_resource_raises_error_for_unexpected_unhandled_status(
-        self, status_code: int, response_json: bytes, expected_exception: type[APIError], match: str
+        self,
+        status_code: int,
+        response_json: bytes,
+        expected_exception: type[APIError],
+        match: str,
+        adapter_with_dependencies: BaseResourceAdapter,
+        mock_transport: Mock,
     ) -> None:
         """Test adapter raises a generic APIError when the response handler does not."""
         response = Mock(
@@ -477,28 +518,41 @@ class TestBaseAdapterHeadResource:
             headers={"content-type": "application/json"},
             text="Error or unexpected response",
         )
-        self.transport.request.return_value = response
+        mock_transport.request.return_value = response
         if response_json is not None:
             response.json = Mock(return_value=response_json)
 
         with pytest.raises(expected_exception, match=re.escape(match)) as exc_info:
-            await self.adapter._head_resource(
+            await adapter_with_dependencies._head_resource(
                 url="api/v1/resources/BER",
                 error_prefix="Failed to check resource",
             )
 
         assert exc_info.value.response is response
-        self.transport.request.assert_awaited_once_with("HEAD", "validated/api/v1/resources/BER")
+        mock_transport.request.assert_awaited_once_with("HEAD", "/api/v1/resources/BER")
 
 
-class TestBaseAdapterGetResourceConcurrently:
-    """Test cases for BaseAdapter._get_resource_concurrently."""
+class TestBaseResourceAdapterGetResourceConcurrently:
+    """Test cases for BaseResourceAdapter._get_resource_concurrently."""
 
-    def setup_method(self) -> None:
+    @pytest.fixture(autouse=True)
+    def setup_adapter(
+        self,
+        mock_transport: Mock,
+        mock_response_handler: Mock,
+        mock_response_validator: Mock,
+        mock_url_path_validator: Mock,
+    ) -> None:
         """Setup test instance."""
-        self.transport = Mock()
+        self.transport = mock_transport
         self.transport.request = AsyncMock()
-        self.adapter = BaseAdapter(transport=self.transport, max_concurrent=2)
+        self.adapter = BaseResourceAdapter(
+            transport=self.transport,
+            response_handler=mock_response_handler,
+            response_validator=mock_response_validator,
+            url_path_validator=mock_url_path_validator,
+            max_concurrent=2,
+        )
         cast(Any, self.adapter._response_handler).handle = Mock(
             side_effect=lambda response: response.payload
         )
@@ -635,23 +689,8 @@ class TestBaseAdapterGetResourceConcurrently:
         assert [item.id for item in result.items] == []
 
 
-class TestBaseAdapterDeleteResource:
-    """Test cases for BaseAdapter._delete_resource."""
-
-    def setup_method(self) -> None:
-        """Setup test instance."""
-        self.transport = Mock(spec=AuthenticatedTransport)
-        self.transport.request = AsyncMock()
-
-        self.adapter = BaseAdapter(transport=self.transport, max_concurrent=2)
-        self.adapter._url_path_validator = Mock(spec=URLPathValidator)
-        self.adapter._url_path_validator.validate = Mock(side_effect=lambda url: f"validated/{url}")
-
-        self.adapter_dry_run = BaseAdapter(transport=self.transport, max_concurrent=2, dry_run=True)
-        self.adapter_dry_run._url_path_validator = Mock(spec=URLPathValidator)
-        self.adapter_dry_run._url_path_validator.validate = Mock(
-            side_effect=lambda url: f"validated/{url}"
-        )
+class TestBaseResourceAdapterDeleteResource(TestBaseResourceAdapter):
+    """Test cases for BaseResourceAdapter._delete_resource."""
 
     @pytest.mark.asyncio
     async def test_delete_resource_returns_none_for_no_content_response(self) -> None:
@@ -666,38 +705,41 @@ class TestBaseAdapterDeleteResource:
         self.transport.request.assert_awaited_once_with("DELETE", "validated/api/v1/resources/BER")
 
     @pytest.mark.asyncio
-    async def test_delete_resource_skips_transport_in_dry_run(self) -> None:
+    async def test_delete_resource_skips_transport_in_dry_run(
+        self, adapter_dry_run: BaseResourceAdapter, mock_transport: Mock
+    ) -> None:
         """Test dry-run mode short-circuits after URL validation."""
-        result = await self.adapter_dry_run._delete_resource(
+        result = await adapter_dry_run._delete_resource(
             url="api/v1/resources/BER",
         )  # type: ignore[func-returns-value]
 
         assert result is None
-        self.transport.request.assert_not_awaited()
+        mock_transport.request.assert_not_awaited()
 
     @pytest.mark.asyncio
-    async def test_delete_resource_tolerates_unexpected_success_payload_and_status(self) -> None:
+    async def test_delete_resource_tolerates_unexpected_success_payload_and_status(
+        self, adapter_with_dependencies: BaseResourceAdapter, mock_transport: Mock
+    ) -> None:
         """Test DELETE logs warnings but still succeeds when no handler error is raised."""
         response = Mock(
             spec=httpx.Response, status_code=200, headers={"content-type": "application/json"}
         )
         response.json = Mock(return_value={"deleted": True})
-        self.transport.request.return_value = response
+        mock_transport.request.return_value = response
         warning_msg_1 = (
-            "DELETE request to validated/api/v1/resources/BER returned unexpected data: "
-            "{'deleted': True}"
+            "DELETE request to /api/v1/resources/BER returned unexpected data: {'deleted': True}"
         )
         warning_msg_2 = (
-            "DELETE request to validated/api/v1/resources/BER returned unexpected status code: 200"
+            "DELETE request to /api/v1/resources/BER returned unexpected status code: 200"
         )
 
         with patch("apaleoapi.apaleo.base.log.warning") as warning_mock:
-            result = await self.adapter._delete_resource(
+            result = await adapter_with_dependencies._delete_resource(
                 url="api/v1/resources/BER",
             )  # type: ignore[func-returns-value]
 
         assert result is None
-        self.transport.request.assert_awaited_once_with("DELETE", "validated/api/v1/resources/BER")
+        mock_transport.request.assert_awaited_once_with("DELETE", "/api/v1/resources/BER")
 
         warning_mock.assert_any_call(warning_msg_1)
         warning_mock.assert_any_call(warning_msg_2)
@@ -716,6 +758,8 @@ class TestBaseAdapterDeleteResource:
         response_json: bytes | dict[str, Any] | None,
         expected_exception: type[APIError],
         match: str,
+        adapter_with_dependencies: BaseResourceAdapter,
+        mock_transport: Mock,
     ) -> None:
         """Test DELETE propagates API errors raised by the response handler."""
         response = Mock(
@@ -724,12 +768,12 @@ class TestBaseAdapterDeleteResource:
             headers={"content-type": "application/json"},
             text="Error response",
         )
-        self.transport.request.return_value = response
+        mock_transport.request.return_value = response
         if response_json is not None:
             response.json = Mock(return_value=response_json)
 
         with pytest.raises(expected_exception, match=re.escape(match)) as exc_info:
-            await self.adapter._delete_resource("api/v1/resources/BER")
+            await adapter_with_dependencies._delete_resource("api/v1/resources/BER")
 
         assert exc_info.value.response is response
-        self.transport.request.assert_awaited_once_with("DELETE", "validated/api/v1/resources/BER")
+        mock_transport.request.assert_awaited_once_with("DELETE", "/api/v1/resources/BER")

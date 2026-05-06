@@ -7,6 +7,13 @@ import pytest
 
 from apaleoapi.client import ApaleoAPIClient
 from apaleoapi.http.auth import OAuth2ClientCredentialsProvider
+from apaleoapi.http.response_handler import ResponseHandler
+from apaleoapi.http.response_validator import ResponseValidator
+from apaleoapi.http.transport import AuthenticatedTransport
+from apaleoapi.ports.http.response_handler import ResponseHandlerPort
+from apaleoapi.ports.http.response_validator import ResponseValidatorPort
+from apaleoapi.ports.validation.url_path_validator import URLPathValidatorPort
+from apaleoapi.validation.url_path_validator import URLPathValidator
 
 
 @pytest.fixture
@@ -30,7 +37,8 @@ def sample_base_url() -> str:
 @pytest.fixture
 def mock_transport() -> AsyncMock:
     """Mock transport for testing."""
-    transport = AsyncMock()
+    transport = AsyncMock(spec=AuthenticatedTransport)
+    transport.request = AsyncMock()
     transport.aclose = AsyncMock()
     return transport
 
@@ -38,11 +46,54 @@ def mock_transport() -> AsyncMock:
 @pytest.fixture
 def mock_token_provider() -> Mock:
     """Mock token provider for testing."""
-    token_provider = Mock()
+    token_provider = Mock(spec=OAuth2ClientCredentialsProvider)
     token_provider.get_token = AsyncMock(return_value="mock-token")
     token_provider.auth_header = AsyncMock(return_value={"Authorization": "Bearer mock-token"})
     token_provider.close = AsyncMock()
     return token_provider
+
+
+@pytest.fixture
+def mock_response_handler() -> Mock:
+    """Mock response handler for testing."""
+    handler = Mock(spec=ResponseHandlerPort)
+    return handler
+
+
+@pytest.fixture
+def response_handler() -> ResponseHandlerPort:
+    """Real response handler for testing."""
+    handler = ResponseHandler()
+    return handler
+
+
+@pytest.fixture
+def mock_response_validator() -> Mock:
+    """Mock response validator for testing."""
+    validator = Mock(spec=ResponseValidatorPort)
+    return validator
+
+
+@pytest.fixture
+def response_validator() -> ResponseValidatorPort:
+    """Real response validator for testing."""
+    validator = ResponseValidator()
+    return validator
+
+
+@pytest.fixture
+def mock_url_path_validator() -> Mock:
+    """Mock URL path validator for testing."""
+    validator = Mock(spec=URLPathValidatorPort)
+    validator.validate = Mock(side_effect=lambda url: f"validated/{url}")
+    return validator
+
+
+@pytest.fixture
+def url_path_validator() -> URLPathValidatorPort:
+    """Real URL path validator for testing."""
+    validator = URLPathValidator()
+    return validator
 
 
 @pytest.fixture
