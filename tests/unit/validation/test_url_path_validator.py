@@ -2,7 +2,7 @@ from typing import cast
 
 import pytest
 
-from apaleoapi.services.url_path_validator import URLPathValidationError, URLPathValidator
+from apaleoapi.validation.url_path_validator import URLPathValidationError, URLPathValidator
 
 pytestmark = [pytest.mark.unit]
 

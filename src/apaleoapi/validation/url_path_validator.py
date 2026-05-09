@@ -1,12 +1,14 @@
 from posixpath import normpath
 from urllib.parse import unquote, urlparse
 
+from apaleoapi.ports.validation.url_path_validator import URLPathValidatorPort
+
 
 class URLPathValidationError(ValueError):
     """Raised when an API path is invalid or unsafe."""
 
 
-class URLPathValidator:
+class URLPathValidator(URLPathValidatorPort):
     def validate(self, value: str) -> str:
         """Validate and normalize an API path, ensuring it is safe and well-formed."""
         if not isinstance(value, str):

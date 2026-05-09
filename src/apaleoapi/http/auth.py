@@ -48,7 +48,7 @@ class BaseTokenProvider(TokenProviderPort):
         """To be implemented by concrete providers."""
         raise NotImplementedError
 
-    async def close(self) -> None:
+    async def aclose(self) -> None:
         """Default no-op close."""
         log.debug(f"No-op close for token provider {self._service}.")
         # No resources to close by default

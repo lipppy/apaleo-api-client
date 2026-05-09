@@ -14,11 +14,12 @@ from apaleoapi.exceptions import (
     ValidationError,
 )
 from apaleoapi.logging import get_logger
+from apaleoapi.ports.http.response_handler import ResponseHandlerPort
 
 log = get_logger(__name__)
 
 
-class ResponseHandler:
+class ResponseHandler(ResponseHandlerPort):
     """
     Handles API responses, raising exceptions for error statuses
     and returning parsed data for successful responses.
@@ -36,10 +37,7 @@ class ResponseHandler:
         pass
 
     def handle(self, response: httpx.Response) -> str | dict[str, Any] | list[Any] | None:
-        """
-        Main entry point.
-        Returns parsed success response or raises appropriate exception.
-        """
+        """Returns parsed success response or raises appropriate exception."""
         status = response.status_code
 
         match status:

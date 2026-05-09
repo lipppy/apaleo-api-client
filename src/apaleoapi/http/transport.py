@@ -21,11 +21,12 @@ class AuthenticatedTransport(AsyncTransportPort):
         token_provider: TokenProviderPort,
         timeout: float = 10.0,
         retries: int = 1,
+        backoff_factor: float = 0.5,
         header_content_type: str = "application/json",
     ) -> None:
         self.base_url = base_url.rstrip("/")
         self.token_provider = token_provider
-        retry = Retry(total=retries, backoff_factor=0.5)
+        retry = Retry(total=retries, backoff_factor=backoff_factor)
         transport = RetryTransport(retry=retry)
         self.client = httpx.AsyncClient(timeout=timeout, transport=transport, verify=True)
         self._header_content_type = header_content_type

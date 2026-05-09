@@ -22,6 +22,6 @@ class TokenProviderPort(Protocol):
         """Get the authorization header value."""
         pass
 
-    async def close(self) -> None:
+    async def aclose(self) -> None:
         """Close any resources held by the token provider."""
         pass

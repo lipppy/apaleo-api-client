@@ -89,42 +89,91 @@ class TestApaleoAPIClient:
             assert hasattr(client, "identity")
             assert isinstance(client.identity, IdentityAPI)
 
-    def test_core_adapter_initialization(self) -> None:
-        """Test core adapter initialization."""
-        mock_transport = Mock()
-        adapter = CoreAPI(transport=mock_transport, max_concurrent=5, dry_run=False)
+    def test_core_api_initialization(
+        self,
+        mock_transport: Mock,
+        mock_response_handler: Mock,
+        mock_response_validator: Mock,
+        mock_url_path_validator: Mock,
+    ) -> None:
+        """Test Core API initialization."""
+        adapter = CoreAPI(
+            transport=mock_transport,
+            response_handler=mock_response_handler,
+            response_validator=mock_response_validator,
+            url_path_validator=mock_url_path_validator,
+            max_concurrent=5,
+            dry_run=False,
+        )
 
         assert hasattr(adapter, "v1")
         assert hasattr(adapter, "nsfw")
         assert isinstance(adapter.v1, CoreV1Version)
         assert isinstance(adapter.nsfw, CoreNSFWVersion)
 
-    def test_core_v1_adapter_initialization(self) -> None:
-        """Test core V1 adapter initialization."""
-        mock_transport = Mock()
-        adapter = CoreV1Version(transport=mock_transport, max_concurrent=5, dry_run=False)
+    def test_core_v1_version_initialization(
+        self,
+        mock_transport: Mock,
+        mock_response_handler: Mock,
+        mock_response_validator: Mock,
+        mock_url_path_validator: Mock,
+    ) -> None:
+        """Test Core API V1 version initialization."""
+        adapter = CoreV1Version(
+            transport=mock_transport,
+            response_handler=mock_response_handler,
+            response_validator=mock_response_validator,
+            url_path_validator=mock_url_path_validator,
+            max_concurrent=5,
+            dry_run=False,
+        )
 
         assert hasattr(adapter, "inventory")
 
-    def test_identity_adapter_initialization(self) -> None:
-        """Test identity adapter initialization."""
-        mock_transport = Mock()
-        adapter = IdentityAPI(transport=mock_transport, max_concurrent=5, dry_run=False)
+    def test_identity_api_initialization(
+        self,
+        mock_transport: Mock,
+        mock_response_handler: Mock,
+        mock_response_validator: Mock,
+        mock_url_path_validator: Mock,
+    ) -> None:
+        """Test Identity API initialization."""
+        adapter = IdentityAPI(
+            transport=mock_transport,
+            response_handler=mock_response_handler,
+            response_validator=mock_response_validator,
+            url_path_validator=mock_url_path_validator,
+            max_concurrent=5,
+            dry_run=False,
+        )
 
         assert hasattr(adapter, "v1")
         assert isinstance(adapter.v1, IdentityV1Version)
 
-    def test_identity_v1_adapter_initialization(self) -> None:
-        """Test identity V1 adapter initialization."""
-        mock_transport = Mock()
-        adapter = IdentityV1Version(transport=mock_transport, max_concurrent=5, dry_run=False)
+    def test_identity_v1_version_initialization(
+        self,
+        mock_transport: Mock,
+        mock_response_handler: Mock,
+        mock_response_validator: Mock,
+        mock_url_path_validator: Mock,
+    ) -> None:
+        """Test Identity API V1 version initialization."""
+        adapter = IdentityV1Version(
+            transport=mock_transport,
+            response_handler=mock_response_handler,
+            response_validator=mock_response_validator,
+            url_path_validator=mock_url_path_validator,
+            max_concurrent=5,
+            dry_run=False,
+        )
 
         assert hasattr(adapter, "identity")
 
-    def test_client_transports_initialization(self, mock_token_provider: Mock) -> None:
+    def test_client_transports_initialization(
+        self, mock_token_provider: Mock, mock_transport: Mock
+    ) -> None:
         """Test that all transport instances are properly initialized."""
         with patch("apaleoapi.client.AuthenticatedTransport") as mock_transport_class:
-            mock_transport = Mock()
             mock_transport_class.return_value = mock_transport
 
             _ = ApaleoAPIClient(token_provider=mock_token_provider)

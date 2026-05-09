@@ -6,7 +6,7 @@ See: https://api.apaleo.com/swagger/index.html?urls.primaryName=Inventory+V1
 
 from typing import Any
 
-from apaleoapi.apaleo.common.base import BaseAdapter
+from apaleoapi.apaleo.base import BaseResourceAdapter
 from apaleoapi.apaleo.common.contracts.payload import Operation
 from apaleoapi.apaleo.core.v1.contracts.inventory.factory import (
     CountryListFakerFactory,
@@ -44,16 +44,34 @@ from apaleoapi.apaleo.core.v1.schemas.inventory.response import (
 from apaleoapi.apaleo.identity.v1.contracts.identity.response import PropertyCreated
 from apaleoapi.logging import get_logger
 from apaleoapi.ports.apaleo.core.v1.apis.inventory import CoreV1InventoryResourcePort
+from apaleoapi.ports.http.response_handler import ResponseHandlerPort
+from apaleoapi.ports.http.response_validator import ResponseValidatorPort
 from apaleoapi.ports.http.transport import AsyncTransportPort
+from apaleoapi.ports.validation.url_path_validator import URLPathValidatorPort
 
 log = get_logger(__name__)
 
 
-class CoreV1InventoryResource(BaseAdapter, CoreV1InventoryResourcePort):
+class CoreV1InventoryResource(BaseResourceAdapter, CoreV1InventoryResourcePort):
     """Adapter for Core V1 Inventory API endpoints."""
 
-    def __init__(self, transport: AsyncTransportPort, max_concurrent: int, dry_run: bool = False):
-        super().__init__(transport=transport, max_concurrent=max_concurrent, dry_run=dry_run)
+    def __init__(
+        self,
+        transport: AsyncTransportPort,
+        response_handler: ResponseHandlerPort,
+        response_validator: ResponseValidatorPort,
+        url_path_validator: URLPathValidatorPort,
+        max_concurrent: int,
+        dry_run: bool = False,
+    ):
+        super().__init__(
+            transport=transport,
+            response_handler=response_handler,
+            response_validator=response_validator,
+            url_path_validator=url_path_validator,
+            max_concurrent=max_concurrent,
+            dry_run=dry_run,
+        )
         self._version = "v1"
         self._base_path = f"{self._path}/{self._version}"
 

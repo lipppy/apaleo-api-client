@@ -1,16 +1,11 @@
-from typing import Any, Type
+from typing import Any, Protocol, Type
 
 import httpx
-from pydantic import ValidationError as PydanticValidationError
 
-from apaleoapi.exceptions import ValidationError
-from apaleoapi.logging import get_logger
 from apaleoapi.typing import TModel
 
-log = get_logger(__name__)
 
-
-class ResponseValidator:
+class ResponseValidatorPort(Protocol):
     @staticmethod
     def validate(
         *,
@@ -25,8 +20,4 @@ class ResponseValidator:
         Raises ValidationError if Pydantic validation fails,
         with message prefixed by `error_prefix`.
         """
-        try:
-            model = model_cls.model_validate(response_data)
-        except PydanticValidationError as e:
-            raise ValidationError(f"{error_prefix}: {e}", response) from e
-        return model
+        pass
