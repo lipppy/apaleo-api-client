@@ -49,7 +49,7 @@ def mock_token_provider() -> Mock:
     token_provider = Mock(spec=OAuth2ClientCredentialsProvider)
     token_provider.get_token = AsyncMock(return_value="mock-token")
     token_provider.auth_header = AsyncMock(return_value={"Authorization": "Bearer mock-token"})
-    token_provider.close = AsyncMock()
+    token_provider.aclose = AsyncMock()
     return token_provider
 
 
