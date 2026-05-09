@@ -466,6 +466,7 @@ class BaseResourceAdapter(BasePort):
         # In dry run mode we do not skip the validation and serialization of the payload,
         # to ensure that the payload is valid and can be serialized correctly.
         if self._dry_run:
+            log.info(f"Dry run enabled - skipping POST request to {validated_url}")
             fake_response = faker_factory().build()
             return cast(TDomain, fake_response)
 
@@ -499,6 +500,51 @@ class BaseResourceAdapter(BasePort):
             data=validated_response.model_dump(),
         )
 
+    async def _put_resource(
+        self,
+        url: str,
+        payload: TPayload | dict[str, Any] | None = None,
+        *,
+        payload_model_cls: Type[TPayloadModel] | None = None,
+        success_codes: set[int],
+        error_prefix: str,
+    ) -> None:
+        """
+        Helper for PUT resources.
+
+        Handles dry run by logging and skipping the actual API call.
+        Raises exceptions for error responses and logs warnings for unexpected responses.
+        """
+
+        # Validate URL path to prevent injection and ensure it conforms to expected patterns
+        validated_url = self._url_path_validator.validate(url)
+
+        # Validate and serialize payload
+        if payload is not None and payload_model_cls is not None:
+            payload_request = await self._serialize_payload(payload, payload_model_cls)
+        else:
+            payload_request = {}
+
+        # In dry run mode we do not skip the validation and serialization of the payload,
+        # to ensure that the payload is valid and can be serialized correctly.
+        if self._dry_run:
+            log.info(f"Dry run enabled - skipping PUT request to {validated_url}")
+            return None
+
+        # Make the API request and handle the response
+        response = await self._t.request("PUT", validated_url, json=payload_request)
+        response_data = self._response_handler.handle(response=response)
+
+        # No response data is expected for a successful PUT
+        if response.status_code in success_codes and response_data is None:
+            return None
+
+        log.warning(f"PUT request to {validated_url} returned unexpected data: {response_data}")
+        raise UpdateResourceError(
+            f"{error_prefix}: Unexpected response data for PUT request.",
+            response,
+        )
+
     async def _patch_resource(
         self,
         url: str,
@@ -524,6 +570,7 @@ class BaseResourceAdapter(BasePort):
         # In dry run mode we do not skip the validation and serialization of the payload,
         # to ensure that the payload is valid and can be serialized correctly.
         if self._dry_run:
+            log.info(f"Dry run enabled - skipping PATCH request to {validated_url}")
             return None
 
         response = await self._t.request("PATCH", validated_url, json=serialized_payload)
