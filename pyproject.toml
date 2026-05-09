@@ -51,6 +51,7 @@ coverage = "^7.8"
 freezegun = "^1.5.2"
 pytest-asyncio = "^1.0.0"
 pytest-dotenv = "^0.5.2"
+respx = "^0.23.1"
 
 [tool.poetry.group.docs]
 optional = true
