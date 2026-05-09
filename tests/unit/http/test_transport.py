@@ -64,6 +64,7 @@ class TestAuthenticatedTransportRetries:
             base_url=FAKE_HOST,
             token_provider=token_provider,
             retries=3,
+            backoff_factor=0.1,  # Use a smaller backoff factor for faster tests
         )
 
     def teardown_method(self) -> None:
