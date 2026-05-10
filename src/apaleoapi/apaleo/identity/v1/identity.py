@@ -12,13 +12,6 @@ Usage:
     from apaleoapi.apaleo.identity.v1.contracts.identity.response import User
 """
 
-from apaleoapi.apaleo.identity.v1.contracts.identity.factory import (
-    InvitationListFakerFactory,
-    InvitedUserToAccountResponseFakerFactory,
-    RoleListFakerFactory,
-    UserFakerFactory,
-    UsersListFakerFactory,
-)
 from apaleoapi.apaleo.identity.v1.contracts.identity.payload import CreateInvitation
 from apaleoapi.apaleo.identity.v1.contracts.identity.query import (
     InvitationListParams,
@@ -35,12 +28,17 @@ from apaleoapi.apaleo.identity.v1.contracts.identity.response import (
     UsersList,
 )
 from apaleoapi.apaleo.identity.v1.enums.identity import RoleAccessTo, RoleInvitedTo, UserSortBy
-from apaleoapi.apaleo.identity.v1.schemas.identity.factory import (
+from apaleoapi.apaleo.identity.v1.factories.identity import (
     InvitationListModelDefaultFactory,
+    InvitationListModelFakerFactory,
     InvitedUserToAccountResponseModelDefaultFactory,
+    InvitedUserToAccountResponseModelFakerFactory,
     RoleListModelDefaultFactory,
+    RoleListModelFakerFactory,
     UserModelDefaultFactory,
+    UserModelFakerFactory,
     UsersListModelDefaultFactory,
+    UsersListModelFakerFactory,
 )
 from apaleoapi.apaleo.identity.v1.schemas.identity.payload import CreateInvitationModel
 from apaleoapi.apaleo.identity.v1.schemas.identity.query import (
@@ -59,6 +57,10 @@ from apaleoapi.apaleo.identity.v1.schemas.identity.response import (
 )
 
 __all__ = [
+    # Enums
+    "RoleAccessTo",
+    "RoleInvitedTo",
+    "UserSortBy",
     # Dataclasses - Common
     # Dataclasses - Response
     "User",
@@ -74,16 +76,6 @@ __all__ = [
     # Dataclasses - Query Parameters
     "InvitationListParams",
     "UserListParams",
-    # Dataclasses - Factories
-    "RoleListFakerFactory",
-    "UserFakerFactory",
-    "UsersListFakerFactory",
-    "InvitationListFakerFactory",
-    "InvitedUserToAccountResponseFakerFactory",
-    # Enums
-    "RoleAccessTo",
-    "RoleInvitedTo",
-    "UserSortBy",
     # Schemas - Common
     # Schemas - Response
     "UserModel",
@@ -99,10 +91,15 @@ __all__ = [
     # Schemas - Query Parameters
     "InvitationListParamsModel",
     "UserListParamsModel",
-    # Schemas - Factories
+    # Factories
     "UserModelDefaultFactory",
     "UsersListModelDefaultFactory",
     "InvitationListModelDefaultFactory",
     "InvitedUserToAccountResponseModelDefaultFactory",
     "RoleListModelDefaultFactory",
+    "RoleListModelFakerFactory",
+    "UserModelFakerFactory",
+    "UsersListModelFakerFactory",
+    "InvitationListModelFakerFactory",
+    "InvitedUserToAccountResponseModelFakerFactory",
 ]

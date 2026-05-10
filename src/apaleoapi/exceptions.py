@@ -50,7 +50,7 @@ class DeleteResourceError(APIError):
     pass
 
 
-class UpdateResourceError(APIError):
+class UnexpectedResponseError(APIError):
     pass
 
 

@@ -58,8 +58,39 @@ class CoreV1InventoryResourcePort(Protocol):
         """Delete property by ID."""
         pass
 
+    # Property Actions methods
+
+    async def clone_property(
+        self,
+        property_id: str,
+        payload: CreateProperty | dict[str, Any],
+        idempotency_key: str | None = None,
+    ) -> PropertyCreated:
+        """Clone a property by ID."""
+        pass
+
+    async def archive_property(self, property_id: str) -> None:
+        """Archive a live property by ID."""
+        pass
+
+    async def activate_property(self, property_id: str) -> None:
+        """Set a test property live by ID."""
+        pass
+
+    async def reset_property(self, property_id: str) -> None:
+        """Reset a test property by ID."""
+        pass
+
     # Types methods
 
     async def list_countries(self) -> CountryList:
         """List available countries."""
         pass
+
+    # Unit methods
+
+    # Unit Actions methods
+
+    # Unit Attribute methods
+
+    # Unit Group methods

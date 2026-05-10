@@ -1,10 +1,10 @@
 from pydantic import Field
 
 from apaleoapi.apaleo.common.schemas.base import ExtendedBaseModel
-from apaleoapi.apaleo.core.v1.schemas.inventory.common import AddressModel, BankAccountModel
+from apaleoapi.apaleo.core.v1.schemas.inventory.common import BankAccountModel
 
 
-class CreateAddressModel(AddressModel):
+class CreateAddressModel(ExtendedBaseModel):
     address_line1: str = Field(..., alias="addressLine1", min_length=1)
     address_line2: str | None = Field(None, alias="addressLine2")
     postal_code: str = Field(..., alias="postalCode", min_length=1)

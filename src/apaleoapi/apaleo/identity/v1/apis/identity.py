@@ -11,13 +11,6 @@ from typing import Any
 
 from apaleoapi.apaleo.base import BaseResourceAdapter
 from apaleoapi.apaleo.common.contracts.payload import Operation
-from apaleoapi.apaleo.identity.v1.contracts.identity.factory import (
-    InvitationListFakerFactory,
-    InvitedUserToAccountResponseFakerFactory,
-    RoleListFakerFactory,
-    UserFakerFactory,
-    UsersListFakerFactory,
-)
 from apaleoapi.apaleo.identity.v1.contracts.identity.payload import CreateInvitation
 from apaleoapi.apaleo.identity.v1.contracts.identity.query import (
     InvitationListParams,
@@ -30,12 +23,14 @@ from apaleoapi.apaleo.identity.v1.contracts.identity.response import (
     User,
     UsersList,
 )
-from apaleoapi.apaleo.identity.v1.schemas.identity.factory import (
+from apaleoapi.apaleo.identity.v1.factories.identity import (
     InvitationListModelDefaultFactory,
-    InvitedUserToAccountResponseModelDefaultFactory,
-    RoleListModelDefaultFactory,
-    UserModelDefaultFactory,
+    InvitationListModelFakerFactory,
+    InvitedUserToAccountResponseModelFakerFactory,
+    RoleListModelFakerFactory,
+    UserModelFakerFactory,
     UsersListModelDefaultFactory,
+    UsersListModelFakerFactory,
 )
 from apaleoapi.apaleo.identity.v1.schemas.identity.payload import CreateInvitationModel
 from apaleoapi.apaleo.identity.v1.schemas.identity.query import (
@@ -95,11 +90,11 @@ class IdentityV1IdentityResource(BaseResourceAdapter, IdentityV1IdentityResource
             params=params,
             params_model_cls=InvitationListParamsModel,
             model_cls=InvitationListModel,
-            faker_factory=InvitationListFakerFactory,
+            faker_factory=InvitationListModelFakerFactory,
             default_factory=InvitationListModelDefaultFactory,
+            return_cls=InvitationList,
             success_codes={200, 204},
             error_prefix="Failed to list invitations for the current account",
-            return_cls=InvitationList,
         )
 
     async def create_invitation(self, payload: CreateInvitation) -> InvitedUserToAccountResponse:
@@ -111,11 +106,10 @@ class IdentityV1IdentityResource(BaseResourceAdapter, IdentityV1IdentityResource
             payload=payload,
             payload_model_cls=CreateInvitationModel,
             model_cls=InvitedUserToAccountResponseModel,
-            faker_factory=InvitedUserToAccountResponseFakerFactory,
-            default_factory=InvitedUserToAccountResponseModelDefaultFactory,
+            faker_factory=InvitedUserToAccountResponseModelFakerFactory,
+            return_cls=InvitedUserToAccountResponse,
             success_codes={200},
             error_prefix="Failed to create an invitation for the current account",
-            return_cls=InvitedUserToAccountResponse,
         )
 
     async def delete_invitation(self, email: str) -> None:
@@ -133,11 +127,10 @@ class IdentityV1IdentityResource(BaseResourceAdapter, IdentityV1IdentityResource
         return await self._get_resource(
             url=url,
             model_cls=RoleListModel,
-            faker_factory=RoleListFakerFactory,
-            default_factory=RoleListModelDefaultFactory,
-            success_codes={200, 204},
-            error_prefix="Failed to list roles for the current account",
+            faker_factory=RoleListModelFakerFactory,
             return_cls=RoleList,
+            success_codes={200},
+            error_prefix="Failed to list roles for the current account",
         )
 
     # Users methods
@@ -151,11 +144,11 @@ class IdentityV1IdentityResource(BaseResourceAdapter, IdentityV1IdentityResource
             params=params,
             params_model_cls=UserListParamsModel,
             model_cls=UsersListModel,
-            faker_factory=UsersListFakerFactory,
+            faker_factory=UsersListModelFakerFactory,
             default_factory=UsersListModelDefaultFactory,
+            return_cls=UsersList,
             success_codes={200, 204},
             error_prefix="Failed to list users for the current account",
-            return_cls=UsersList,
         )
 
     async def get_user(self, user_id: str) -> User:
@@ -165,9 +158,8 @@ class IdentityV1IdentityResource(BaseResourceAdapter, IdentityV1IdentityResource
         return await self._get_resource(
             url=url,
             model_cls=UserModel,
-            faker_factory=UserFakerFactory,
-            default_factory=UserModelDefaultFactory,
-            success_codes={200, 204},
+            faker_factory=UserModelFakerFactory,
+            success_codes={200},
             error_prefix=f"Failed to get user with ID {user_id} for the current account",
             return_cls=User,
         )
@@ -189,9 +181,8 @@ class IdentityV1IdentityResource(BaseResourceAdapter, IdentityV1IdentityResource
         return await self._get_resource(
             url=url,
             model_cls=UserModel,
-            faker_factory=UserFakerFactory,
-            default_factory=UserModelDefaultFactory,
-            success_codes={200, 204},
+            faker_factory=UserModelFakerFactory,
+            success_codes={200},
             error_prefix="Failed to get the current user for the current account",
             return_cls=User,
         )

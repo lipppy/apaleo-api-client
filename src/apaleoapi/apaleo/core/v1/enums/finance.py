@@ -1,17 +1,56 @@
 from enum import Enum
 
 
+class Action(str, Enum):
+    CANCEL = "Cancel"
+    ONLINE_REFUND = "OnlineRefund"
+    MANUAL_REFUND = "ManualRefund"
+
+
+class Command(str, Enum):
+    POST_CHARGE = "PostCharge"
+    POST_PAYMENT = "PostPayment"
+    MOVE_LINE_ITEM = "MoveLineItem"
+    POST_PREPAYMENT = "PostPrepayment"
+    POST_TO_ACCOUNTS_RECEIVABLES = "PostToAccountsReceivables"
+    POST_PREPAYMENT_VAT = "PostPrepaymentVat"
+    POST_TO_LOSS_OF_ACCOUNTS_RECEIVABLES = "PostToLossOfAccountsReceivables"
+    SYSTEM = "System"
+
+
+class CreateInvoiceAction(str, Enum):
+    CANNOT_CREATE_INVOICE = "CannotCreateInvoice"
+    CREATES_INVOICE = "CreatesInvoice"
+    CREATES_INVOICE_AND_CLOSES_FOLIO = "CreatesInvoiceAndClosesFolio"
+    CREATES_AR_INVOICE_AND_CLOSES_FOLIO = "CreatesArInvoiceAndClosesFolio"
+
+
+class ReasonCode(str, Enum):
+    CHANGE_OF_RECIPIENT_DETAILS = "ChangeOfRecipientDetails"
+    CHANGE_OF_INVOICE_RECIPIENT = "ChangeOfInvoiceRecipient"
+    CHANGE_OF_PAYMENT_METHOD = "ChangeOfPaymentMethod"
+    CHANGE_OF_INVOICE_TRANSACTIONS = "ChangeOfInvoiceTransactions"
+    OTHER = "Other"
+
+
+class ReferenceType(str, Enum):
+    HOUSE = "House"
+    GUEST = "Guest"
+    EXTERNAL = "External"
+    BOOKING = "Booking"
+
+
 class ServiceType(str, Enum):
     OTHER = "Other"
     ACCOMMODATION = "Accommodation"
     FOOD_AND_BEVERAGES = "FoodAndBeverages"
+    CANCELLATION_FEES = "CancellationFees"
+    NO_SHOW = "NoShow"
     CITY_TAX = "CityTax"
-    SECONND_CITY_TAX = "SecondCityTax"
+    SECOND_CITY_TAX = "SecondCityTax"
 
 
 class VatType(str, Enum):
-    """VAT type enum."""
-
     NULL = "Null"
     VERY_REDUCED = "VeryReduced"
     REDUCED = "Reduced"
