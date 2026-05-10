@@ -16,7 +16,7 @@ from apaleoapi.exceptions import (
     APIError,
     ParameterSerializationError,
     PayloadSerializationError,
-    UpdateResourceError,
+    UnexpectedResponseError,
 )
 from apaleoapi.logging import get_logger
 from apaleoapi.ports.apaleo.base import BasePort
@@ -239,10 +239,12 @@ class BaseResourceAdapter(BasePort):
         response_data = self._response_handler.handle(response=response)
 
         # Validate the response data, handling empty responses for success codes
-        if response_data is None and response.status_code in success_codes:
-            if empty_log_message:
-                log.debug(empty_log_message)
-            validated_response = default_factory.build()
+        if response.status_code not in success_codes:
+            log.warning(f"GET request to {validated_url} returned unexpected data: {response_data}")
+            raise UnexpectedResponseError(
+                f"{error_prefix}: Unexpected response data for GET request.",
+                response,
+            )
         else:
             validated_response = self._response_validator.validate(
                 response_data=response_data,
@@ -482,10 +484,14 @@ class BaseResourceAdapter(BasePort):
         response_data = self._response_handler.handle(response=response)
 
         # Validate the response data, handling empty responses for success codes
-        if response_data is None and response.status_code in success_codes:
-            if empty_log_message:
-                log.debug(empty_log_message)
-            validated_response = default_factory.build()
+        if response.status_code not in success_codes:
+            log.warning(
+                f"POST request to {validated_url} returned unexpected data: {response_data}"
+            )
+            raise UnexpectedResponseError(
+                f"{error_prefix}: Unexpected response data for POST request.",
+                response,
+            )
         else:
             validated_response = self._response_validator.validate(
                 response_data=response_data,
@@ -540,7 +546,7 @@ class BaseResourceAdapter(BasePort):
             return None
 
         log.warning(f"PUT request to {validated_url} returned unexpected data: {response_data}")
-        raise UpdateResourceError(
+        raise UnexpectedResponseError(
             f"{error_prefix}: Unexpected response data for PUT request.",
             response,
         )
@@ -581,7 +587,7 @@ class BaseResourceAdapter(BasePort):
             return None
 
         log.warning(f"PATCH request to {validated_url} returned unexpected data: {response_data}")
-        raise UpdateResourceError(
+        raise UnexpectedResponseError(
             f"{error_prefix}: Unexpected response data for PATCH request.",
             response,
         )
