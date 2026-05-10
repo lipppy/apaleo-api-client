@@ -5,20 +5,14 @@ for all dataclasses, enums, and parameters.
 
 Usage:
     # Import specific entities
-    from apaleoapi.apaleo.core.v1.inventory import Property, PropertyList, PropertyStatus
+    from apaleoapi.apaleo.core.v1.inventory import Property, PropertyList
 
     # Or import from sub-modules for organization
     from apaleoapi.apaleo.core.v1.contracts.inventory.response import Property
-    from apaleoapi.apaleo.core.v1.enums.inventory import PropertyStatus
+    from apaleoapi.apaleo.core.v1.enums.inventory import Status
 """
 
 from apaleoapi.apaleo.core.v1.contracts.inventory.common import Address, BankAccount
-from apaleoapi.apaleo.core.v1.contracts.inventory.factory import (
-    CountryListFakerFactory,
-    PropertyCreatedFakerFactory,
-    PropertyFakerFactory,
-    PropertyListFakerFactory,
-)
 from apaleoapi.apaleo.core.v1.contracts.inventory.payload import (
     CreateAddress,
     CreateProperty,
@@ -37,16 +31,18 @@ from apaleoapi.apaleo.core.v1.contracts.inventory.response import (
 )
 from apaleoapi.apaleo.core.v1.enums.inventory import Action as PropertyAction
 from apaleoapi.apaleo.core.v1.enums.inventory import Code as PropertyActionCode
-from apaleoapi.apaleo.core.v1.enums.inventory import (
-    PropertyStatus,
-)
-from apaleoapi.apaleo.core.v1.schemas.inventory.common import AddressModel, BankAccountModel
-from apaleoapi.apaleo.core.v1.schemas.inventory.factory import (
+from apaleoapi.apaleo.core.v1.enums.inventory import Status as PropertyStatus
+from apaleoapi.apaleo.core.v1.factories.inventory import (
     CountryListModelDefaultFactory,
+    CountryListModelFakerFactory,
     PropertyCreatedModelDefaultFactory,
+    PropertyCreatedModelFakerFactory,
     PropertyListModelDefaultFactory,
+    PropertyListModelFakerFactory,
     PropertyModelDefaultFactory,
+    PropertyModelFakerFactory,
 )
+from apaleoapi.apaleo.core.v1.schemas.inventory.common import BankAccountModel
 from apaleoapi.apaleo.core.v1.schemas.inventory.payload import (
     CreateAddressModel,
     CreatePropertyModel,
@@ -58,6 +54,7 @@ from apaleoapi.apaleo.core.v1.schemas.inventory.query import (
 from apaleoapi.apaleo.core.v1.schemas.inventory.response import (
     ActionModel,
     ActionReasonModel,
+    AddressModel,
     CountryListModel,
     PropertyCreatedModel,
     PropertyItemModel,
@@ -67,6 +64,10 @@ from apaleoapi.apaleo.core.v1.schemas.inventory.response import (
 from apaleoapi.apaleo.identity.v1.contracts.identity.response import PropertyCreated
 
 __all__ = [
+    # Enums
+    "PropertyAction",
+    "PropertyActionCode",
+    "PropertyStatus",
     # Dataclasses - Common
     "Address",
     "BankAccount",
@@ -84,15 +85,6 @@ __all__ = [
     # Dataclasses - Query Parameters
     "PropertyGetParams",
     "PropertyListParams",
-    # Dataclasses - Factories
-    "CountryListFakerFactory",
-    "PropertyCreatedFakerFactory",
-    "PropertyListFakerFactory",
-    "PropertyFakerFactory",
-    # Enums
-    "PropertyAction",
-    "PropertyActionCode",
-    "PropertyStatus",
     # Schemas - Common
     "AddressModel",
     "BankAccountModel",
@@ -110,7 +102,11 @@ __all__ = [
     # Schemas - Query Parameters
     "PropertyGetParamsModel",
     "PropertyListParamsModel",
-    # Schemas - Factories
+    # Factories
+    "CountryListModelFakerFactory",
+    "PropertyCreatedModelFakerFactory",
+    "PropertyListModelFakerFactory",
+    "PropertyModelFakerFactory",
     "CountryListModelDefaultFactory",
     "PropertyCreatedModelDefaultFactory",
     "PropertyListModelDefaultFactory",

@@ -8,12 +8,6 @@ from typing import Any
 
 from apaleoapi.apaleo.base import BaseResourceAdapter
 from apaleoapi.apaleo.common.contracts.payload import Operation
-from apaleoapi.apaleo.core.v1.contracts.inventory.factory import (
-    CountryListFakerFactory,
-    PropertyCreatedFakerFactory,
-    PropertyFakerFactory,
-    PropertyListFakerFactory,
-)
 from apaleoapi.apaleo.core.v1.contracts.inventory.payload import CreateProperty
 from apaleoapi.apaleo.core.v1.contracts.inventory.query import (
     PropertyGetParams,
@@ -24,11 +18,12 @@ from apaleoapi.apaleo.core.v1.contracts.inventory.response import (
     Property,
     PropertyList,
 )
-from apaleoapi.apaleo.core.v1.schemas.inventory.factory import (
-    CountryListModelDefaultFactory,
-    PropertyCreatedModelDefaultFactory,
+from apaleoapi.apaleo.core.v1.factories.inventory import (
+    CountryListModelFakerFactory,
+    PropertyCreatedModelFakerFactory,
     PropertyListModelDefaultFactory,
-    PropertyModelDefaultFactory,
+    PropertyListModelFakerFactory,
+    PropertyModelFakerFactory,
 )
 from apaleoapi.apaleo.core.v1.schemas.inventory.payload import CreatePropertyModel
 from apaleoapi.apaleo.core.v1.schemas.inventory.query import (
@@ -88,7 +83,7 @@ class CoreV1InventoryResource(BaseResourceAdapter, CoreV1InventoryResourcePort):
             params=params,
             params_model_cls=PropertyListParamsModel,
             model_cls=PropertyListModel,
-            faker_factory=PropertyListFakerFactory,
+            faker_factory=PropertyListModelFakerFactory,
             default_factory=PropertyListModelDefaultFactory,
             success_codes={200, 204},
             error_prefix="Failed to list properties for the current account",
@@ -107,9 +102,8 @@ class CoreV1InventoryResource(BaseResourceAdapter, CoreV1InventoryResourcePort):
             idempotency_key=idempotency_key,
             payload_model_cls=CreatePropertyModel,
             model_cls=PropertyCreatedModel,
-            faker_factory=PropertyCreatedFakerFactory,
-            default_factory=PropertyCreatedModelDefaultFactory,
-            success_codes={200},
+            faker_factory=PropertyCreatedModelFakerFactory,
+            success_codes={201},
             error_prefix="Failed to create a new property",
             return_cls=PropertyCreated,
         )
@@ -143,9 +137,8 @@ class CoreV1InventoryResource(BaseResourceAdapter, CoreV1InventoryResourcePort):
             params=params,
             params_model_cls=PropertyGetParamsModel,
             model_cls=PropertyModel,
-            faker_factory=PropertyFakerFactory,
-            default_factory=PropertyModelDefaultFactory,
-            success_codes={200, 204},
+            faker_factory=PropertyModelFakerFactory,
+            success_codes={200},
             error_prefix=f"Failed to get property with ID {property_id}",
             return_cls=Property,
         )
@@ -168,6 +161,59 @@ class CoreV1InventoryResource(BaseResourceAdapter, CoreV1InventoryResourcePort):
 
         await self._delete_resource(url=url)
 
+    # Property Actions methods
+
+    async def clone_property(
+        self,
+        property_id: str,
+        payload: CreateProperty | dict[str, Any],
+        idempotency_key: str | None = None,
+    ) -> PropertyCreated:
+        """Clone a property by ID."""
+        url = f"{self._base_path}/property-actions/{property_id}/clone"
+
+        return await self._post_resource(
+            url=url,
+            payload=payload,
+            idempotency_key=idempotency_key,
+            payload_model_cls=CreatePropertyModel,
+            model_cls=PropertyCreatedModel,
+            faker_factory=PropertyCreatedModelFakerFactory,
+            success_codes={201},
+            error_prefix=f"Failed to clone property with ID {property_id}",
+            return_cls=PropertyCreated,
+        )
+
+    async def archive_property(self, property_id: str) -> None:
+        """Archive a live property by ID."""
+        url = f"{self._base_path}/property-actions/{property_id}/archive"
+
+        await self._put_resource(
+            url=url,
+            success_codes={204},
+            error_prefix=f"Failed to archive property with ID {property_id}",
+        )
+
+    async def activate_property(self, property_id: str) -> None:
+        """Set a test property live by ID."""
+        url = f"{self._base_path}/property-actions/{property_id}/set-live"
+
+        await self._put_resource(
+            url=url,
+            success_codes={204},
+            error_prefix=f"Failed to activate property with ID {property_id}",
+        )
+
+    async def reset_property(self, property_id: str) -> None:
+        """Reset a test property by ID."""
+        url = f"{self._base_path}/property-actions/{property_id}/reset"
+
+        await self._put_resource(
+            url=url,
+            success_codes={204},
+            error_prefix=f"Failed to reset property with ID {property_id}",
+        )
+
     # Types methods
 
     async def list_countries(self) -> CountryList:
@@ -179,9 +225,16 @@ class CoreV1InventoryResource(BaseResourceAdapter, CoreV1InventoryResourcePort):
         return await self._get_resource(
             url=url,
             model_cls=CountryListModel,
-            faker_factory=CountryListFakerFactory,
-            default_factory=CountryListModelDefaultFactory,
-            success_codes={200, 204},
-            error_prefix="Failed to list countries",
+            faker_factory=CountryListModelFakerFactory,
             return_cls=CountryList,
+            success_codes={200},
+            error_prefix="Failed to list countries",
         )
+
+    # Unit methods
+
+    # Unit Actions methods
+
+    # Unit Attribute methods
+
+    # Unit Group methods

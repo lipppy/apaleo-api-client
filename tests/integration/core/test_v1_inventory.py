@@ -1,17 +1,25 @@
 import uuid
 
 import pytest
+from dacite import from_dict
 
 from apaleoapi import ApaleoAPIClient
 from apaleoapi.apaleo.common import Operation, OperationOp
 from apaleoapi.apaleo.core.v1.apis.inventory import CoreV1InventoryResource
+from apaleoapi.apaleo.core.v1.factories.inventory import CreatePropertyModelFakerFactory
 from apaleoapi.apaleo.core.v1.inventory import (
     CountryList,
     CreateAddress,
     CreateProperty,
     Property,
     PropertyList,
+    PropertyStatus,
 )
+from apaleoapi.apaleo.identity.v1.contracts.identity.response import PropertyCreated
+from apaleoapi.exceptions import ForbiddenError
+from apaleoapi.logging import get_logger
+
+log = get_logger(__name__)
 
 pytestmark = [pytest.mark.integration, pytest.mark.live]
 
@@ -212,6 +220,90 @@ class TestCoreV1InventoryResource:
             # Clean up by deleting the created property
             if await self.adapter.check_property(property_id=property_id):
                 await self.adapter.delete_property(property_id=property_id)
+
+    @pytest.mark.asyncio
+    async def test_property_actions(self) -> None:
+        """Test property actions like clone, archive, activate, and reset."""
+
+        # Set VIE property as template to ensure we have a consistent property to clone from
+        if not await self.adapter.check_property(property_id="VIE"):
+            pytest.skip("VIE property does not exist, skipping clone property action test.")
+        await self.adapter.update_property(
+            property_id="VIE",
+            payload=[
+                Operation(
+                    op=OperationOp.REPLACE,
+                    path="/isTemplate",
+                    value=True,
+                ),
+                # Operation(
+                #     op=OperationOp.REPLACE,
+                #     path="/status",
+                #     value=PropertyStatus.TEST.value,
+                # ),
+            ],
+        )
+
+        # Clone VIE property to create a new property for testing actions
+        clone_payload = from_dict(
+            CreateProperty,
+            CreatePropertyModelFakerFactory.build_custom(country_code="AT").model_dump(),
+        )
+        print(clone_payload)
+        cloned_property_code = clone_payload.code
+        cloned_property = await self.adapter.clone_property(
+            property_id="VIE", payload=clone_payload, idempotency_key=str(uuid.uuid4())
+        )
+        assert cloned_property is not None
+        assert isinstance(cloned_property, PropertyCreated)
+        assert cloned_property.id != "VIE"  # Ensure it's a new property
+        assert cloned_property.id == cloned_property_code
+
+        # Check that the cloned property is in TEST status
+        property_details_after_cloning = await self.adapter.get_property(
+            property_id=cloned_property.id
+        )
+        assert property_details_after_cloning is not None
+        assert isinstance(property_details_after_cloning, Property)
+        assert property_details_after_cloning.id == cloned_property.id
+        assert property_details_after_cloning.status == PropertyStatus.TEST.value
+        assert property_details_after_cloning.is_archived is False
+
+        # Try to activate the cloned property
+        try:
+            await self.adapter.activate_property(property_id=cloned_property.id)
+        except ForbiddenError:
+            log.warning("Activation failed due to missing permissions, skipping activation test.")
+        else:
+            # Check that the property status is now LIVE
+            property_details_after_activation = await self.adapter.get_property(
+                property_id=cloned_property.id
+            )
+            assert property_details_after_activation is not None
+            assert isinstance(property_details_after_activation, Property)
+            assert property_details_after_activation.id == cloned_property.id
+            assert property_details_after_activation.status == PropertyStatus.LIVE.value
+
+        # Reset the cloned property back to TEST status
+        try:
+            await self.adapter.reset_property(property_id=cloned_property.id)
+        except ForbiddenError:
+            log.warning("Reset failed due to missing permissions, skipping reset test.")
+
+        # Archive the cloned property
+        try:
+            await self.adapter.archive_property(property_id=cloned_property.id)
+        except ForbiddenError:
+            log.warning("Archiving failed due to missing permissions, skipping archive test.")
+        else:
+            # Check that the property status is now ARCHIVED
+            property_details_after_archiving = await self.adapter.get_property(
+                property_id=cloned_property.id
+            )
+            assert property_details_after_archiving is not None
+            assert isinstance(property_details_after_archiving, Property)
+            assert property_details_after_archiving.id == cloned_property.id
+            assert property_details_after_archiving.is_archived is True
 
     @pytest.mark.asyncio
     async def test_list_countries(self) -> None:

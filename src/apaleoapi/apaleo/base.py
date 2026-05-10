@@ -6,10 +6,11 @@ from dacite import from_dict
 from pydantic import ValidationError
 from pydantic_core import PydanticSerializationError
 
-from apaleoapi.apaleo.common.contracts.factory import CountFakerFactory
 from apaleoapi.apaleo.common.contracts.payload import Operation
 from apaleoapi.apaleo.common.contracts.response import Count
-from apaleoapi.apaleo.common.schemas.factory import CountModelDefaultFactory
+from apaleoapi.apaleo.common.factories import (
+    CountModelFakerFactory,
+)
 from apaleoapi.apaleo.common.schemas.payload import OperationModel
 from apaleoapi.apaleo.common.schemas.response import CountModel
 from apaleoapi.exceptions import (
@@ -27,7 +28,6 @@ from apaleoapi.ports.validation.url_path_validator import URLPathValidatorPort
 from apaleoapi.typing import (
     TBatchModel,
     TDomain,
-    TDomainFactory,
     TListModel,
     TModel,
     TModelFactory,
@@ -208,14 +208,20 @@ class BaseResourceAdapter(BasePort):
         *,
         params_model_cls: Type[TParamsModel] | None = None,
         model_cls: Type[TModel],
-        faker_factory: Type[TDomainFactory],
-        default_factory: Type[TModelFactory],
+        faker_factory: Type[TModelFactory],
+        default_factory: Type[TModelFactory] | None = None,
         return_cls: Type[TDomain],
         success_codes: set[int],
         error_prefix: str,
-        empty_log_message: str = "No item(s) found.",
     ) -> TDomain:
-        """Helper for GET item or list resources without batching or concurrency."""
+        """
+        Helper for GET item or list resources without batching or concurrency.
+
+        Handles dry run by logging and skipping the actual API call, returning fake data instead.
+        Raises exceptions for error responses and logs warnings for unexpected responses.
+        """
+
+        success_codes = success_codes.union({200})
 
         # Validate URL path to prevent injection and ensure it conforms to expected patterns
         validated_url = self._url_path_validator.validate(url)
@@ -240,11 +246,24 @@ class BaseResourceAdapter(BasePort):
 
         # Validate the response data, handling empty responses for success codes
         if response.status_code not in success_codes:
-            log.warning(f"GET request to {validated_url} returned unexpected data: {response_data}")
+            log.warning(
+                f"GET request to {validated_url} returned {response.status_code} "
+                f"with unexpected data: {response_data}"
+            )
             raise UnexpectedResponseError(
                 f"{error_prefix}: Unexpected response data for GET request.",
                 response,
             )
+        elif (
+            response_data is None
+            and response.status_code in success_codes
+            and default_factory is not None
+        ):
+            log.debug(
+                f"GET request to {validated_url} returned empty response with status "
+                f"{response.status_code}. Using default factory to create a default instance."
+            )
+            validated_response = cast(TModel, default_factory.build())
         else:
             validated_response = self._response_validator.validate(
                 response_data=response_data,
@@ -284,12 +303,10 @@ class BaseResourceAdapter(BasePort):
             params=params,
             params_model_cls=params_model_cls,
             model_cls=CountModel,
-            faker_factory=CountFakerFactory,
-            default_factory=CountModelDefaultFactory,
+            faker_factory=CountModelFakerFactory,
             return_cls=Count,
             success_codes={200},
             error_prefix=error_prefix,
-            empty_log_message="Count returned no data, defaulting to 0.",
         )
         return count_entity.count
 
@@ -300,12 +317,11 @@ class BaseResourceAdapter(BasePort):
         *,
         params_model_cls: Type[TBatchModel] | None = None,
         model_cls: Type[TListModel],
-        faker_factory: Type[TDomainFactory],
+        faker_factory: Type[TModelFactory],
         default_factory: Type[TModelFactory],
         return_cls: Type[TDomain],
         success_codes: set[int],
         error_prefix: str,
-        empty_log_message: str = "No items found.",
     ) -> TDomain:
         """Helper for GET list resources with batching and concurrency."""
 
@@ -322,8 +338,11 @@ class BaseResourceAdapter(BasePort):
             response_data = self._response_handler.handle(response)
             # Validate the response data, handling empty responses for success codes
             if response_data is None and response.status_code in success_codes:
-                if empty_log_message:
-                    log.debug(empty_log_message)
+                log.debug(
+                    f"GET request to {validated_url} with params {params_dict} returned empty "
+                    f"response with status {response.status_code}. Using default factory to create "
+                    "a default instance."
+                )
                 validated_response = cast(TListModel, default_factory.build())
             else:
                 validated_response = self._response_validator.validate(
@@ -445,12 +464,10 @@ class BaseResourceAdapter(BasePort):
         *,
         payload_model_cls: Type[TPayloadModel],
         model_cls: Type[TModel],
-        faker_factory: Type[TDomainFactory],
-        default_factory: Type[TModelFactory],
+        faker_factory: Type[TModelFactory],
         return_cls: Type[TDomain],
         success_codes: set[int],
         error_prefix: str,
-        empty_log_message: str = "No item(s) found.",
     ) -> TDomain:
         """
         Helper for POST resources.
@@ -486,7 +503,8 @@ class BaseResourceAdapter(BasePort):
         # Validate the response data, handling empty responses for success codes
         if response.status_code not in success_codes:
             log.warning(
-                f"POST request to {validated_url} returned unexpected data: {response_data}"
+                f"POST request to {validated_url} returned {response.status_code} "
+                f"with unexpected data: {response_data}"
             )
             raise UnexpectedResponseError(
                 f"{error_prefix}: Unexpected response data for POST request.",
@@ -545,7 +563,10 @@ class BaseResourceAdapter(BasePort):
         if response.status_code in success_codes and response_data is None:
             return None
 
-        log.warning(f"PUT request to {validated_url} returned unexpected data: {response_data}")
+        log.warning(
+            f"PUT request to {validated_url} returned {response.status_code} "
+            f"with unexpected data: {response_data}"
+        )
         raise UnexpectedResponseError(
             f"{error_prefix}: Unexpected response data for PUT request.",
             response,
@@ -586,7 +607,10 @@ class BaseResourceAdapter(BasePort):
         if response.status_code in success_codes and response_data is None:
             return None
 
-        log.warning(f"PATCH request to {validated_url} returned unexpected data: {response_data}")
+        log.warning(
+            f"PATCH request to {validated_url} returned {response.status_code} "
+            f"with unexpected data: {response_data}"
+        )
         raise UnexpectedResponseError(
             f"{error_prefix}: Unexpected response data for PATCH request.",
             response,
